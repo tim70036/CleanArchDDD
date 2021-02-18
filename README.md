@@ -1,4 +1,5 @@
-# backend-prototype
+# clean-arch-ddd
+Illustrate Clean Architecture and Domain Driven Design through TypeScript implementation. Can be used as starter template for future application.
 
 ## Prerequisites
 
