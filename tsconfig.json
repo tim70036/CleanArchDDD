@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        // Compile output directory.
+        "outDir": "build",
+
+        // Node 14
+        // See https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+        "lib": ["ES2020"],
+        "module": "commonjs",
+        "target": "ES2020",
+
+        // Rule.
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+
+        // Improve for importing module.
+        // To provide backwards compatibility, Node.js allows you to import CommonJS packages with a default import. This flag tells TypeScript that it's okay to use import on CommonJS modules.
+        "esModuleInterop": true
+    },
+
+    // Specifies an array of filenames or patterns to include for compiling. These filenames are resolved relative to the directory containing the tsconfig.json file.
+    "include": ["src/**/*"]
+}
