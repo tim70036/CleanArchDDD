@@ -28,7 +28,7 @@ class MemberInfo extends BaseModel {
 
     public static readonly idColumn: string = 'memId';
 
-    public static readonly relationMappings: RelationMappings = {
+    public static readonly relationMappings = {
         tavernInfo: {
             relation: Model.BelongsToOneRelation,
             modelClass: TavernInfo,
@@ -134,11 +134,39 @@ class UserAccount extends BaseModel {
     public static async FetchWithMemberGraph (uid: string): Promise<UserAccount> {
         // Fetch will get data using multiple queries.
         // const query1 = UserAccount.query().findById(uid).withGraphFetched('[userMemberInfo, mySelf]');
-        const query1 = UserAccount.query().findById(uid).withGraphFetched('[userMemberInfo.tavernInfo]');
+        const query1 = UserAccount.query()
+            .findById(uid)
+            .withGraphFetched('[userMemberInfo.tavernInfo]');
         // const query1 = UserAccount.query().findById(uid).withGraphFetched('[userMemberInfo, mySelf.mySelf.mySelf]');
 
         // Joined will get data using only 1 query.
-        const query2 = UserAccount.query().findById(uid).withGraphJoined('userMemberInfo');
+        const query2 = UserAccount.query()
+            .findById(uid)
+            .withGraphJoined('userMemberInfo');
+
+        // Unfortunately, we cannot print query under this eager loading shit.
+
+        const result = await query2;
+        return result;
+    }
+
+
+    public static async FetchWithMemberGraphModify (uid: string): Promise<UserAccount> {
+        // Fetched is a little weird.
+        const query1 = UserAccount.query()
+            .findById(uid)
+            .withGraphFetched('[userMemberInfo, userCashTx]')
+            .modifyGraph('userCashTx', (builder) => {
+                builder.where('amount', '>', '2000');
+            });
+
+        // Joined is more natural, but could have perfomance issue?
+        // Note that relationMappings already give other relations alias.
+        // For example, we have CashTransaction as userCashTx.
+        const query2 = UserAccount.query()
+            .findById(uid)
+            .withGraphJoined('[userMemberInfo, userCashTx]')
+            .where('userCashTx.amount', '>', '2000');
 
         // Unfortunately, we cannot print query under this eager loading shit.
 
