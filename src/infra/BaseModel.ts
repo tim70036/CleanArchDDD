@@ -5,13 +5,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import { Model } from 'objection';
+import { Model, QueryBuilder } from 'objection';
 import { knexClient } from './Database';
+
 
 class BaseModel extends Model {
     // Override query() from Model.
     // Allow us to choose which knex instance to use in query.
-    public static query () {
+    public static query (): QueryBuilder<Model, Model[]> {
         return super.query(knexClient);
     }
 }

@@ -44,7 +44,7 @@ module.exports = {
                 'consistent'
             ],
             'default-case': 'error',
-            'dot-notation': ['error', { 'allowKeywords': false }],
+            'dot-notation': ['error', { 'allowKeywords': true }],
             'eqeqeq': ['error', 'always'],
             'no-caller': 'error',
             'no-else-return': 'error',

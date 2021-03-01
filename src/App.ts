@@ -36,6 +36,6 @@ RunServer();
 
 // Demo.
 (async (): Promise<void> => {
-    const result: UserAccount[] = await UserAccount.FetchAllMembers();
-    console.log(result);
+    const result = await UserAccount.FetchWithMemberGraph('105');
+    console.log(JSON.stringify(result, null, 2));
 })();
