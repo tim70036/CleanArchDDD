@@ -1,10 +1,10 @@
 
 import { GetAnnouncementUseCase } from './GetAnnouncementUseCase';
-import { BaseController } from '../../../../../core/BaseController';
+import { Controller } from '../../../../../core/Controller';
 import * as express from 'express';
 import { InternalServerError } from '../../../../../common/CommonError';
 
-class GetAnnouncementController extends BaseController {
+class GetAnnouncementController extends Controller {
     private readonly getAnnouncementUseCase: GetAnnouncementUseCase;
 
     public constructor (getAnnouncementUseCase: GetAnnouncementUseCase) {

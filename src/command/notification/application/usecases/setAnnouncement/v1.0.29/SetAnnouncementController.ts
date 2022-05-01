@@ -1,10 +1,10 @@
 
 import { SetAnnouncementUseCase } from './SetAnnouncementUseCase';
 import { SetAnnouncementCTO } from './SetAnnouncementDTO';
-import { BaseController } from '../../../../../../core/BaseController';
+import { Controller } from '../../../../../../core/Controller';
 import * as express from 'express';
 import { InternalServerError } from '../../../../../../common/CommonError';
-class SetAnnouncementController extends BaseController {
+class SetAnnouncementController extends Controller {
     private readonly useCase: SetAnnouncementUseCase;
 
     public constructor (useCase: SetAnnouncementUseCase) {

@@ -1,14 +1,14 @@
 import * as express from 'express';
 import semver from 'semver';
 import { CreateLogger } from '../common/Logger';
-import { BaseController } from './BaseController';
+import { Controller } from './Controller';
 
 class Dispatcher {
     protected logger;
 
-    protected versionMap: Record<string, BaseController>;
+    protected versionMap: Record<string, Controller>;
 
-    public constructor (versionMap: Record<string, BaseController>) {
+    public constructor (versionMap: Record<string, Controller>) {
         this.logger = CreateLogger(this.constructor.name);
         const isValid = this.ValidateVersionMap(versionMap);
         if (!isValid)
@@ -53,7 +53,7 @@ class Dispatcher {
         return floorVersion;
     }
 
-    private ValidateVersionMap (versionMap: Record<string, BaseController>): boolean {
+    private ValidateVersionMap (versionMap: Record<string, Controller>): boolean {
         const versions: string[] = Object.keys(versionMap);
         const invalidVersion = versions.find((e) => semver.valid(e) === null);
 

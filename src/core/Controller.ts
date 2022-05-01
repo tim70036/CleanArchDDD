@@ -4,7 +4,7 @@ import { CreateLogger } from '../common/Logger';
 import { DomainError } from './DomainError';
 import { ResponseCode } from './ResponseCode';
 
-abstract class BaseController {
+abstract class Controller {
     protected logger;
 
     public constructor () {
@@ -61,5 +61,5 @@ abstract class BaseController {
 }
 
 export {
-    BaseController
+    Controller
 };

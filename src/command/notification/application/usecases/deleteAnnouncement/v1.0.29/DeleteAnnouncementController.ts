@@ -1,10 +1,10 @@
 
 import { DeleteAnnouncementUseCase } from './DeleteAnnouncementUseCase';
-import { BaseController } from '../../../../../../core/BaseController';
+import { Controller } from '../../../../../../core/Controller';
 import * as express from 'express';
 import { InternalServerError } from '../../../../../../common/CommonError';
 
-class DeleteAnnouncementController extends BaseController {
+class DeleteAnnouncementController extends Controller {
     private readonly useCase: DeleteAnnouncementUseCase;
 
     public constructor (useCase: DeleteAnnouncementUseCase) {
