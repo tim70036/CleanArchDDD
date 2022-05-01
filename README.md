@@ -27,7 +27,6 @@ Below is a list of all the scripts this template has available:
 | `build`                   | Compiles all source `.ts` files to `.js` files in the `build` folder                              |
 | `test`                    | Runs tests.                                                                                       |
 | `dev`                     | Runs the build app in development mode. Useful for local development.                             |
-| `start`                   | Run the built app in production mode. (using PM2).                                                |
 
 
 ## Project Structure
@@ -37,7 +36,6 @@ Below is a list of all the scripts this template has available:
 | **node_modules**         | Contains all your npm dependencies                                                            |
 | **src**                  | Contains your source code that will be compiled to the build dir                              |
 | **src/App.ts**           | Entry point to your express app                                                               |
-| **pm2.config.js**        | Configuration for running pm2 in production. (See npm script settings)                        |
 | .vscode                  | Contains VS Code specific settings                                                            |
 | .gitlab-ci.yml           | Used to configure Gitlab CI/CD build                                                          |
 | .gitignore               | File to exclude from git version control                                                      |
