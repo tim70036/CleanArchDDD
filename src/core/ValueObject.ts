@@ -1,7 +1,7 @@
 abstract class ValueObject<T> {
     protected readonly props: T;
 
-    public constructor (props: T) {
+    protected constructor (props: T) {
         this.props = props;
         // I had considered using Object.freeze(props) to prevent creator of this object modify the incoming argument later on.
         // However, Object.freeze() only do shallow freeze, so it's not fully safe. Instead, we should force type T to have only readonly members.

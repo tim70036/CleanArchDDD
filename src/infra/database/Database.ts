@@ -1,16 +1,16 @@
-// Sorry, but knex has too less support for TypeScript...
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/naming-convention */
 import Knex from 'knex';
+import { CreateLogger } from '../../common/Logger';
 
+const knexLogger = CreateLogger('KnexClient');
 const knexClient = Knex({
     client: 'mysql',
     connection: {
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PWD,
-        database: process.env.DB_SCHEMA,
+        database: process.env.DB_NAME,
+        timezone: 'Z'
     },
 
     // Stack trace capture for all query builders, raw queries and schema builders.
@@ -19,13 +19,14 @@ const knexClient = Knex({
 
     // Connection pool.
     pool: {
-        min: 0,
-        max: 10,
+        min: 2,
+        max: 15,
 
         // This is called when the pool aquires a new connection from the database server.
         // Also, done(err, connection) callback must be called for knex to be able to decide if the connection is ok or it should be discarded.
-        afterCreate: function (conn: any, done: any): void {
-            done(null, conn);
+        afterCreate: function (connection: any, done: any): void {
+            knexLogger.debug(`connection created threadId[${connection.threadId}]`);
+            done(null, connection);
         },
     },
 
@@ -38,16 +39,16 @@ const knexClient = Knex({
     // Different log functions can be used for separate knex instances.
     log: {
         warn (message: string): void {
-            console.log(message);
+            knexLogger.warn(message);
         },
         error (message: string): void {
-            console.log(message);
+            knexLogger.error(message);
         },
         deprecate (message: string): void {
-            console.log(message);
+            knexLogger.debug(message);
         },
         debug (message: string): void {
-            console.log(message);
+            knexLogger.debug(message);
         },
     },
 });

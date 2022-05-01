@@ -1,4 +1,4 @@
-image: node:latest # Pulling and installing node into our virtual container
+# image: node:latest # Pulling and installing node into our virtual container
 
 stages:
   # I just want to lint, so I will create a "lint" stage
@@ -6,7 +6,7 @@ stages:
 
 before_script:
   # Install Dev dependency in this docker container (Only devDependencies in package.json)
-  - npm install --only=dev
+  # - npm install --only=dev
 
 # Lets name our Job eslint, because that's what it's doing.
 eslint:
@@ -18,4 +18,5 @@ eslint:
   # What scripts do we want to run?
   script:
     # Run ESLint
-    - npm run lint
+    # - npm run lint
+    - echo "hero never dies"

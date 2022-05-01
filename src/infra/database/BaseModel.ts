@@ -5,16 +5,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import { Model, QueryBuilder } from 'objection';
+import { Model } from 'objection';
 import { knexClient } from './Database';
 
 
 class BaseModel extends Model {
-    // Override query() from Model.
-    // Allow us to choose which knex instance to use in query.
-    public static query (): QueryBuilder<Model, Model[]> {
-        return super.query(knexClient);
-    }
+
 }
 
 class ReadOnlyModel extends Model {

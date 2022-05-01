@@ -5,9 +5,9 @@
 
         // Node 14
         // See https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
-        "lib": ["ES2020"],
+        "lib": ["ES2019", "DOM"],
         "module": "commonjs",
-        "target": "ES2020",
+        "target": "ES2019",
 
         // Rule.
         "strict": true,
@@ -15,7 +15,10 @@
 
         // Improve for importing module.
         // To provide backwards compatibility, Node.js allows you to import CommonJS packages with a default import. This flag tells TypeScript that it's okay to use import on CommonJS modules.
-        "esModuleInterop": true
+        "esModuleInterop": true,
+
+        // Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. This includes generating a type for the import based on the static JSON shape.
+        "resolveJsonModule": true
     },
 
     // Specifies an array of filenames or patterns to include for compiling. These filenames are resolved relative to the directory containing the tsconfig.json file.

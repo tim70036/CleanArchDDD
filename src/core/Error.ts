@@ -55,18 +55,29 @@ type Either<TF, TS> = Failure<TF, TS> | Success<TF, TS>;
 // For example: let result: Either = execute(); We can use Result to create return value inside execute().
 // We can also use Combine to check multiple results together.
 class Result {
-    public static Fail<TF, TS> (failure: TF): Either<TF, TS> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static Fail<TF> (failure: TF): Either<TF, any> {
         return new Failure(failure);
     }
 
-    public static Ok<TF, TS> (success?: TS): Either<TF, TS> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static Ok<TS> (success?: TS): Either<any, TS> {
         return new Success(success);
     }
 
-    public static Combine<TF, TS> (results: Either<TF, TS>[]): Either<TF, TS> {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static Combine (results: Either<any, any>[]): Either<any, any> {
         for (const result of results)
             if (result.IsFailure()) return result;
         return Result.Ok();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static ExistError (results: Either<any, any>[]): boolean {
+        for (const result of results)
+            if (result.IsFailure()) return true;
+        return false;
     }
 }
 

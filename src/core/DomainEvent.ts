@@ -1,27 +1,43 @@
-interface DomainEvent {
-    name: string;
+import { CreateLogger } from '../common/Logger';
+
+type EventName = string;
+
+abstract class DomainEvent {
+    public static get Name (): EventName {
+        return this.name;
+    }
+
+    public get Name (): EventName {
+        return this.constructor.name;
+    }
 }
 
-interface DomainEventHandler {
-    (event: DomainEvent): void;
+interface EventPublisher {
+    Publish (event: DomainEvent): void;
+}
+
+interface EventHandler <T extends DomainEvent> {
+    (event: T): void;
 }
 
 class EventBus {
-    private static handlers: Record<string, DomainEventHandler[]> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private static handlers: Record<EventName, EventHandler<any>[]> = {};
 
-    public static Subscribe (event: DomainEvent, handler: DomainEventHandler): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static Subscribe (eventName: EventName, handler: EventHandler<any>): void {
         // eslint-disable-next-line no-prototype-builtins
-        if (!EventBus.handlers.hasOwnProperty(event.name)) EventBus.handlers[event.name] = [];
+        if (!EventBus.handlers.hasOwnProperty(eventName)) EventBus.handlers[eventName] = [];
 
-        EventBus.handlers[event.name].push(handler);
+        EventBus.handlers[eventName].push(handler);
     }
 
     public static Publish (event: DomainEvent): void {
         // eslint-disable-next-line no-prototype-builtins
-        if (!EventBus.handlers.hasOwnProperty(event.name)) return;
+        if (!EventBus.handlers.hasOwnProperty(event.Name)) return;
 
         // TODO: What if one of the handlers failed?
-        for (const handler of EventBus.handlers[event.name]) handler(event);
+        for (const handler of EventBus.handlers[event.Name]) handler(event);
     }
 
     // TODO: Should we provide unsubscribe function? Most subscriber will not be shut down.
@@ -31,7 +47,42 @@ class EventBus {
     }
 }
 
+class QueEventPublisher implements EventPublisher {
+    public queEvent: DomainEvent[] = [];
+
+    public Publish (event: DomainEvent): void {
+        this.queEvent.push(event);
+    }
+
+    public FireQueEvent (): void {
+        for (const event of this.queEvent)
+            EventBus.Publish(event);
+
+        this.queEvent.splice(0, this.queEvent.length);
+    }
+}
+
+class InstantEventPublisher implements EventPublisher {
+    public Publish (event: DomainEvent): void {
+        EventBus.Publish(event);
+    }
+}
+
+abstract class EventSubscriber {
+    protected logger;
+
+    protected constructor () {
+        this.logger = CreateLogger(this.constructor.name);
+    }
+
+    public abstract Init (): void;
+}
+
 export {
     DomainEvent,
-    EventBus
+    EventBus,
+    EventPublisher,
+    QueEventPublisher,
+    InstantEventPublisher,
+    EventSubscriber
 };
