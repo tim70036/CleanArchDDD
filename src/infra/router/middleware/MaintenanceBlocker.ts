@@ -30,7 +30,7 @@ class MaintenanceBlocker {
 
     private readonly blockAllExcludeDomains = ['admin', 'test'];
 
-    private readonly blockUsersExcludeDomains = ['admin', 'game', 'worker', 'test'];
+    private readonly blockUsersExcludeDomains = ['admin', 'test'];
 
     private readonly blockUsersExcludePaths = ['/api/user/heartbeat', '/api/buddy/buddies', '/api/buddy/applications'];
 
@@ -128,6 +128,5 @@ class MaintenanceBlocker {
 
 const maintenanceInstance = new MaintenanceBlocker();
 const maintenanceBlocker = maintenanceInstance.Create();
-const maintenanceStatus = maintenanceInstance.GetStatus();
 
-export { maintenanceBlocker, maintenanceStatus, maintenancePrefix, MaintenanceSetting };
+export { maintenanceBlocker };

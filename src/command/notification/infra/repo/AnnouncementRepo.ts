@@ -1,10 +1,12 @@
+import { DomainErrorOr } from '../../../../core/DomainError';
+import { EntityId } from '../../../../core/EntityId';
 import { redisClient } from '../../../../infra/database/Redis';
 import { Announcement } from '../../domain/model/Announcement';
 import { IAnnouncementRepo } from '../../domain/repo/AnnouncementRepo';
 
 const prefix = 'announcement:';
 
-class AnnouncementRepo implements IAnnouncementRepo {
+class AnnouncementRepo extends IAnnouncementRepo {
     public async Save (announcement: Announcement): Promise<void> {
         const data = {
             uid: announcement.Id.Value,
@@ -20,10 +22,16 @@ class AnnouncementRepo implements IAnnouncementRepo {
         return;
     }
 
+    public Exists (id: EntityId): Promise<boolean> {
+        throw new Error('Not Implemented!');
+    }
+
+    public Get (id: EntityId): Promise<DomainErrorOr<Announcement>> {
+        throw new Error('Not Implemented!');
+    }
+
     public async Delete (): Promise<void> {
         await redisClient.DelAsync(`${prefix}`);
-
-        return;
     }
 }
 

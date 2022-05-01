@@ -43,11 +43,11 @@ abstract class Repo<T extends AggregateRoot<any>> {
         return typeof this.trx === 'undefined' || this.trx.isCompleted();
     }
 
-    public abstract Exists(id: EntityId): Promise<boolean>;
+    public abstract Exists (id: EntityId): Promise<boolean>;
 
-    public abstract Get(id: EntityId): Promise<DomainErrorOr<T>>;
+    public abstract Get (id: EntityId): Promise<DomainErrorOr<T>>;
 
-    public abstract Save(t: T): Promise<void>;
+    public abstract Save (t: T): Promise<void>;
 }
 
 export {
