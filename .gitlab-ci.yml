@@ -1,4 +1,4 @@
-# image: node:latest # Pulling and installing node into our virtual container
+image: node:latest # Pulling and installing node into our virtual container
 
 stages:
   # I just want to lint, so I will create a "lint" stage
