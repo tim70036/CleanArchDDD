@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/unbound-method */
 import redis, { RedisClient } from 'redis';
 import { CreateLogger } from '../../common/Logger';

@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DomainErrorOr } from './DomainError';
-import * as Errors from '../common/CommonError';
 import { Result } from './Error';
 import { saferJoi } from '../common/SaferJoi';
 
