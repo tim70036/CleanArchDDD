@@ -1,4 +1,3 @@
-import { DomainErrorOr } from '../../../../core/DomainError';
 import { DomainService } from '../../../../core/DomainService';
 import { Config } from '../model/Config';
 import { MaintenanceStatus } from '../model/MaintenanceStatus';

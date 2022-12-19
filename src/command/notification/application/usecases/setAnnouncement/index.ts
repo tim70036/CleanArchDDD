@@ -8,9 +8,8 @@ const announcementRepo = new AnnouncementRepo();
 const setAnnouncementUseCaseV1029 = new SetAnnouncementUseCaseV1029(announcementRepo);
 const setAnnouncementControllerV1029 = new SetAnnouncementControllerV1029(setAnnouncementUseCaseV1029);
 
-const versionMap = {
-    '1.0.29': setAnnouncementControllerV1029
-};
+const versionMap = new Map();
+versionMap.set('1.0.29', setAnnouncementControllerV1029);
 
 const setAnnouncementDispatcher = new Dispatcher(versionMap);
 

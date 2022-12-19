@@ -6,9 +6,9 @@ import { Controller } from './Controller';
 class Dispatcher {
     protected logger;
 
-    protected versionMap: Record<string, Controller>;
+    protected versionMap: Map<string, Controller>;
 
-    public constructor (versionMap: Record<string, Controller>) {
+    public constructor (versionMap: Map<string, Controller>) {
         this.logger = CreateLogger(this.constructor.name);
         const isValid = this.ValidateVersionMap(versionMap);
         if (!isValid)
@@ -27,13 +27,17 @@ class Dispatcher {
 
         this.logger.debug(`-> ${req.method} ${req.path}, req version: [${reqVersion}], dispatch to version [${version}]`);
 
-        const matchedController = this.versionMap[version];
+        const matchedController = this.versionMap.get(version);
+        if (typeof matchedController === 'undefined') {
+            this.logger.error(`cannot find matched controller for version[${version}]`);
+            return;
+        }
 
         await matchedController.Execute(req, res);
     }
 
     private GetVersion (reqVersion: string): string {
-        if (typeof this.versionMap[reqVersion] !== 'undefined')
+        if (typeof this.versionMap.get(reqVersion) !== 'undefined')
             return reqVersion;
 
         const versions: string[] = Object.keys(this.versionMap);
@@ -53,8 +57,8 @@ class Dispatcher {
         return floorVersion;
     }
 
-    private ValidateVersionMap (versionMap: Record<string, Controller>): boolean {
-        const versions: string[] = Object.keys(versionMap);
+    private ValidateVersionMap (versionMap: Map<string, Controller>): boolean {
+        const versions: string[] = Array.from(versionMap.keys());
         const invalidVersion = versions.find((e) => semver.valid(e) === null);
 
         if (typeof invalidVersion !== 'undefined') {

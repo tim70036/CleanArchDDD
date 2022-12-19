@@ -19,7 +19,7 @@ class Announcement extends AggregateRoot<AnnouncementProps> {
         text: saferJoi.object().instance(Text),
         startTime: saferJoi.object().instance(moment),
         endTime: saferJoi.object().instance(moment)
-    })
+    });
 
     public get Title (): Title {
         return this.props.title;

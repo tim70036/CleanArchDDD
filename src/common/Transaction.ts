@@ -63,7 +63,7 @@ class Transaction {
             clearInterval(this.timer);
 
         Transaction.logger.warn(`source[${this.source}] running too long, lifeTime[${this.lifeTime}] ms`);
-    }
+    };
 }
 
 

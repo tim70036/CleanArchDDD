@@ -8,9 +8,8 @@ const announcementRepo = new AnnouncementRepo();
 const deleteAnnouncementUseCaseV1029 = new DeleteAnnouncementUseCaseV1029(announcementRepo);
 const deleteAnnouncementControllerV1029 = new DeleteAnnouncementControllerV1029(deleteAnnouncementUseCaseV1029);
 
-const versionMap = {
-    '1.0.29': deleteAnnouncementControllerV1029
-};
+const versionMap = new Map();
+versionMap.set('1.0.29', deleteAnnouncementControllerV1029);
 
 const deleteAnnouncementDispatcher = new Dispatcher(versionMap);
 

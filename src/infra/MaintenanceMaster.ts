@@ -70,7 +70,7 @@ class MaintenanceMaster {
         } catch (err: unknown) {
             this.logger.error(`${(err as Error).stack}`);
         }
-    }
+    };
 
     private ShouldMaintenanceStart (startTime: Moment): boolean {
         const now = moment().utc();
