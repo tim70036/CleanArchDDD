@@ -8,7 +8,7 @@ class AnnouncementReadOnlyRepo implements IAnnouncementReadOnlyRepo {
     public async Get (): Promise<AnnouncementDTO> {
         let announcement = this.GetDefaultAnnouncement();
 
-        const redisAnnouncement = await redisClient.GetAsync(`${prefix}`);
+        const redisAnnouncement = await redisClient.get(`${prefix}`);
         if (redisAnnouncement !== null)
             announcement = JSON.parse(redisAnnouncement) as AnnouncementDTO;
 

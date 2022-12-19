@@ -79,8 +79,8 @@ module.exports = {
             // Vars (eslint)
             'no-unused-vars': ['error', { 'args': 'none' }],
             'no-label-var': 'error',
-            'no-undefined': 'error',
             'no-unmodified-loop-condition': 'error',
+            'no-undef': 'off', // https://typescript-eslint.io/linting/troubleshooting#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
 
             // Node.js and CommonJS (eslint)
             'callback-return': 'error',

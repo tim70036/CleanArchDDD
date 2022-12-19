@@ -8,6 +8,7 @@ import { Text } from '../../../../domain/model/Text';
 import { Title } from '../../../../domain/model/Title';
 import { IAnnouncementRepo } from '../../../../domain/repo/AnnouncementRepo';
 import { SetAnnouncementCTO } from './SetAnnouncementDTO';
+import { Transaction } from '../../../../../../common/Transaction';
 
 type Response = DomainErrorOr<void>;
 
@@ -42,11 +43,14 @@ class SetAnnouncementUseCase extends UseCase<SetAnnouncementCTO, void> {
             return new InvalidDataError(`${announcementOrError.Error}`);
         const announcement = announcementOrError.Value;
 
+        const trx = await Transaction.Acquire(this.constructor.name);
         try {
-            await this.announcementRepo.Save(announcement);
+            await this.announcementRepo.Save(announcement, trx.Raw);
+            trx.Commit();
             this.logger.info(`set announcement with title[${announcement.Title.Value}]`);
             return Result.Ok();
         } catch (err: unknown) {
+            trx.Rollback();
             return new InternalServerError(`${(err as Error).stack}`);
         }
     }

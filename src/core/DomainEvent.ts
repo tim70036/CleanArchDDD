@@ -54,6 +54,10 @@ class QueEventPublisher implements EventPublisher {
         this.queEvent.push(event);
     }
 
+    public Delete (): void {
+        this.queEvent = [];
+    }
+
     public FireQueEvent (): void {
         for (const event of this.queEvent)
             EventBus.Publish(event);

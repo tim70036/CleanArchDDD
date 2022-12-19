@@ -25,7 +25,7 @@ class Dispatcher {
 
         const version = this.GetVersion(reqVersion);
 
-        this.logger.info(`-> ${req.method} ${req.path}, req version: [${reqVersion}], dispatch to version [${version}]`);
+        this.logger.debug(`-> ${req.method} ${req.path}, req version: [${reqVersion}], dispatch to version [${version}]`);
 
         const matchedController = this.versionMap[version];
 

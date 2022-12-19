@@ -10,6 +10,10 @@ class Id<T> {
         this.value = value;
     }
 
+    public get Value (): T {
+        return this.value;
+    }
+
     public Equals (id: Id<T>): boolean {
         if (typeof id === 'undefined') return false;
         if (!(id instanceof this.constructor)) return false;
@@ -18,10 +22,6 @@ class Id<T> {
 
     public ToString (): string {
         return String(this.value);
-    }
-
-    public get Value (): T {
-        return this.value;
     }
 }
 

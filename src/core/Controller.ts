@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { IgnoreError, DoesNotExistError, DuplicatedError, InvalidDataError, InvalidOperationError, NotAuthenticatedError, NotAuthorizedError } from '../common/CommonError';
+import { IgnoreError, DoesNotExistError, DuplicatedError, InvalidDataError, InvalidOperationError, NotAuthenticatedError, NotAuthorizedError, ExpireError, GoneError, UnavailableError } from '../common/CommonError';
 import { CreateLogger } from '../common/Logger';
 import { DomainError } from './DomainError';
 import { ResponseCode } from './ResponseCode';
@@ -12,18 +12,14 @@ abstract class Controller {
     }
 
     public async Execute (req: express.Request, res: express.Response): Promise<void> {
-        this.logger.info(`-> ${req.method} ${req.path}`);
-
         try {
             await this.Run(req, res);
         } catch (err: unknown) {
-            this.logger.error(err);
+            this.logger.error(`${(err as Error).stack}`);
         }
     }
 
     protected Success<T> (res: express.Response, payload?: T): void {
-        this.logger.info(`<- ${ResponseCode.OK} OK`);
-
         res.json({
             data: payload ?? null
         });
@@ -31,11 +27,24 @@ abstract class Controller {
 
     protected Fail (res: express.Response, error: DomainError): void {
         const responseCode = this.GetResponseCode(error);
-        if (!(error instanceof IgnoreError)) {
-            this.logger.info(`<- ${responseCode}`);
+        this.logger.info(`<- ${responseCode}`);
+
+        if (!(error instanceof IgnoreError))
             this.logger.error(`error: [${error.Error.message}]`);
-        }
+
         res.sendStatus(responseCode);
+    }
+
+    protected FailWithMessageReturn (res: express.Response, error: DomainError): void {
+        const responseCode = this.GetResponseCode(error);
+        this.logger.info(`<- ${responseCode}`);
+
+        if (!(error instanceof IgnoreError))
+            this.logger.error(`error: [${error.Error.message}]`);
+
+        res.status(responseCode).json({
+            data: error.Error.message
+        });
     }
 
     protected GetResponseCode (error: DomainError): ResponseCode {
@@ -53,6 +62,12 @@ abstract class Controller {
             return ResponseCode.Conflict;
         if (error instanceof IgnoreError)
             return ResponseCode.NotAcceptable;
+        if (error instanceof ExpireError)
+            return ResponseCode.Expired;
+        if (error instanceof GoneError)
+            return ResponseCode.Gone;
+        if (error instanceof UnavailableError)
+            return ResponseCode.ServiceUnavailable;
 
         return ResponseCode.InternalServerError;
     }

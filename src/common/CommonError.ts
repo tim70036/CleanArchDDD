@@ -48,6 +48,24 @@ class IgnoreError extends DomainError {
     }
 }
 
+class ExpireError extends DomainError {
+    public constructor (message: string) {
+        super({ message: `server error: ${message}` });
+    }
+}
+
+class GoneError extends DomainError {
+    public constructor (message: string) {
+        super({ message: `server error: ${message}` });
+    }
+}
+
+class UnavailableError extends DomainError {
+    public constructor (message: string) {
+        super({ message: `server error: ${message}` });
+    }
+}
+
 export {
     InvalidDataError,
     NotAuthorizedError,
@@ -56,5 +74,8 @@ export {
     DoesNotExistError,
     DuplicatedError,
     InternalServerError,
-    IgnoreError
+    IgnoreError,
+    ExpireError,
+    GoneError,
+    UnavailableError
 };

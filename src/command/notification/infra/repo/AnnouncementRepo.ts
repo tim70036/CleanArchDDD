@@ -1,3 +1,4 @@
+import Objection from 'objection';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
 import { redisClient } from '../../../../infra/database/Redis';
@@ -7,7 +8,7 @@ import { IAnnouncementRepo } from '../../domain/repo/AnnouncementRepo';
 const prefix = 'announcement:';
 
 class AnnouncementRepo extends IAnnouncementRepo {
-    public async Save (announcement: Announcement): Promise<void> {
+    public async Save (announcement: Announcement, trx: Objection.Transaction): Promise<void> {
         const data = {
             uid: announcement.Id.Value,
             title: announcement.Title.Value,
@@ -17,7 +18,7 @@ class AnnouncementRepo extends IAnnouncementRepo {
         };
 
         // Announcement will alive 30 days
-        await redisClient.SetExpireAsync(`${prefix}`, JSON.stringify(data), 'EX', 60 * 60 * 24 * 30);
+        await redisClient.setEx(`${prefix}`, 60 * 60 * 24 * 30, JSON.stringify(data));
 
         return;
     }
@@ -31,7 +32,7 @@ class AnnouncementRepo extends IAnnouncementRepo {
     }
 
     public async Delete (): Promise<void> {
-        await redisClient.DelAsync(`${prefix}`);
+        await redisClient.del(`${prefix}`);
     }
 }
 
