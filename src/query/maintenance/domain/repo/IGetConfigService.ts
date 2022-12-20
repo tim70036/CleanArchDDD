@@ -1,8 +1,8 @@
 import { DomainErrorOr } from '../../../../core/DomainError';
-import { DomainService } from '../../../../core/DomainService';
+import { Service } from '../../../../core/Service';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
 
-interface IGetConfigService extends DomainService {
+interface IGetConfigService extends Service {
     Get (): Promise<DomainErrorOr<GetConfigSTO>>;
 }
 

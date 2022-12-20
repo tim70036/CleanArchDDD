@@ -1,0 +1,7 @@
+interface Service {
+
+}
+
+export {
+    Service,
+};

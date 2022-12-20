@@ -18,18 +18,6 @@ class Config extends ValueObject<ConfigProps> {
         ipWhitelist: saferJoi.array().items(saferJoi.string().ip()).min(0).max(100),
     });
 
-    public get StartTime (): dayjs.Dayjs {
-        return this.props.startTime;
-    }
-
-    public get Announcement (): string {
-        return this.props.announcement;
-    }
-
-    public get IpWhitelist (): string[] {
-        return this.props.ipWhitelist;
-    }
-
     public static Create (props: ConfigProps): DomainErrorOr<Config> {
         const { error } = Config.schema.validate(props);
         if (error) return Result.Fail(`Failed creating class[${Config.name}] with message[${error.message}]`);

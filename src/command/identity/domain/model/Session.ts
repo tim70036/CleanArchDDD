@@ -2,75 +2,62 @@ import { AggregateRoot } from '../../../../core/AggregateRoot';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
 import { Result } from '../../../../core/Error';
-import moment from 'moment';
+import { sign } from 'jsonwebtoken';
+import dayjs from 'dayjs';
+import { saferJoi } from '../../../../common/SaferJoi';
 
 interface SessionProps {
-    uid: EntityId;
+    isActive: boolean;
     jwt: string;
-    createTime: string; // TODO: change to moment type.
-    lastHeartbeatIP: string;
-    lastHeartbeat: string; // TODO: change to moment type.
+    ip: string;
+    createTime: dayjs.Dayjs;
+    startTime: dayjs.Dayjs;
+    endTime: dayjs.Dayjs;
 }
 
-interface SessionData {
-    uid: string;
-    jwt: string;
-    createTime: string; // TODO: change to moment type.
-    lastHeartbeatIP: string;
-    lastHeartbeat: string; // TODO: change to moment type.
-}
-
-// 她媽都在亂寫，到底在寫三小
-// TODO: Aggregate id? never saved.
 class Session extends AggregateRoot<SessionProps> {
-    public get Uid (): EntityId {
-        return this.props.uid;
-    }
+    private static readonly schema = saferJoi.object({
+        isActive: saferJoi.bool(),
+        jwt: saferJoi.string().min(1),
+        ip: saferJoi.string().ip().allow(''),
+        createTime: saferJoi.object().instance(dayjs.Dayjs),
+        startTime: saferJoi.object().instance(dayjs.Dayjs),
+        endTime: saferJoi.object().instance(dayjs.Dayjs),
+    });
 
-    public get LastHeartbeat (): string {
-        return this.props.lastHeartbeat;
-    }
+    public static CreateNew (id: EntityId): DomainErrorOr<Session> {
+        const jwt = sign({ uid: id.Value }, process.env.JWT_KEY as string);
+        const session = new Session({
+            isActive: false,
+            jwt: jwt,
+            ip: '',
+            createTime: dayjs.utc(),
+            startTime: dayjs.utc(),
+            endTime: dayjs.utc(),
+        }, id)
 
-    public get LastHeartbeatIP (): string {
-        return this.props.lastHeartbeatIP;
-    }
-
-    public get Jwt (): string {
-        return this.props.jwt;
-    }
-
-    public get CreateTime (): string {
-        return this.props.createTime;
-    }
-
-    public static Create (props: SessionProps): DomainErrorOr<Session> {
-        const sessionData = new Session({
-            ...props
-        });
-
-        return Result.Ok(sessionData);
+        return Result.Ok(session);
     }
 
     public static CreateFrom (props: SessionProps, id: EntityId): DomainErrorOr<Session> {
-        const sessionData = new Session(props, id);
+        const { error } = Session.schema.validate(props);
+        if (error) return Result.Fail(`Failed creating class[${Session.name}] with message[${error.message}]`);
 
-        return Result.Ok(sessionData);
+        const session = new Session(props, id);
+        return Result.Ok(session);
     }
 
-    public Heartbeat (ip: string): DomainErrorOr<void> {
-        const curHeartbeatTime = moment();
-        const lastHeartbeatTime = moment(this.props.lastHeartbeat);
+    public Start (ip: string): DomainErrorOr<void> {
+        this.props.isActive = true;
+        this.props.ip = ip;
+        this.props.startTime = dayjs.utc();
+        return Result.Ok();
+    }
 
-        this.props.lastHeartbeat = curHeartbeatTime.utc().format();
-        this.props.lastHeartbeatIP = ip;
-
-        // We need to have a way detect a brand new session. Do not fire heartbeat event for new session.
-        // Case: user goes offline for a while then online again.
-        // Last heartbeat time will be very old. We cannot view it as user has stayed online for a long time.
-        // In the future, we can add SessionStartTime and SessionEndTime to Session props. (populated by websocket)
-        if (curHeartbeatTime.diff(lastHeartbeatTime, 'seconds') > 120) return Result.Ok();
-
+    public End (): DomainErrorOr<void> {
+        this.props.isActive = false;
+        this.props.endTime = dayjs.utc();
         return Result.Ok();
     }
 }
-export { Session, SessionProps, SessionData };
+export { Session, SessionProps };

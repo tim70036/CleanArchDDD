@@ -11,10 +11,6 @@ interface TitleProps {
 class Title extends ValueObject<TitleProps> {
     private static readonly schema = saferJoi.string().min(0).max(20);
 
-    public get Value (): string {
-        return this.props.value;
-    }
-
     public static Create (title: string): DomainErrorOr<Title> {
         const { error } = Title.schema.validate(title);
         if (error) return Result.Fail(`Failed creating class[${Title.name}] with message[${error.message}]`);

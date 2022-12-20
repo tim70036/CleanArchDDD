@@ -21,22 +21,6 @@ class Announcement extends AggregateRoot<AnnouncementProps> {
         endTime: saferJoi.object().instance(dayjs.Dayjs)
     });
 
-    public get Title (): Title {
-        return this.props.title;
-    }
-
-    public get Text (): Text {
-        return this.props.text;
-    }
-
-    public get StartTime (): dayjs.Dayjs {
-        return this.props.startTime;
-    }
-
-    public get EndTime (): dayjs.Dayjs {
-        return this.props.endTime;
-    }
-
     public static Create (props: AnnouncementProps): DomainErrorOr<Announcement> {
         const validateOrError = this.IsValidAnnouncement(props);
         if (validateOrError.IsFailure())

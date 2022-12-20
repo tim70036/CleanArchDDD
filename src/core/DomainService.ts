@@ -1,7 +1,0 @@
-interface DomainService {
-
-}
-
-export {
-    DomainService,
-};

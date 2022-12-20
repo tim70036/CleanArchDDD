@@ -10,11 +10,7 @@ interface TextProps {
 
 class Text extends ValueObject<TextProps> {
     private static readonly schema = saferJoi.string().min(0).max(200);
-
-    public get Value (): string {
-        return this.props.value;
-    }
-
+    
     public static Create (text: string): DomainErrorOr<Text> {
         const { error } = Text.schema.validate(text);
         if (error) return Result.Fail(`Failed creating class[${Text.name}] with message[${error.message}]`);

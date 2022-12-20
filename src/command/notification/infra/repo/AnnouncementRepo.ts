@@ -10,11 +10,11 @@ const prefix = 'announcement:';
 class AnnouncementRepo extends IAnnouncementRepo {
     public async Save (announcement: Announcement, trx: Objection.Transaction): Promise<void> {
         const data = {
-            uid: announcement.Id.Value,
-            title: announcement.Title.Value,
-            text: announcement.Text.Value,
-            startTime: announcement.StartTime.format(),
-            endTime: announcement.EndTime.format()
+            uid: announcement.id.Value,
+            title: announcement.props.title.props.value,
+            text: announcement.props.text.props.value,
+            startTime: announcement.props.startTime.format(),
+            endTime: announcement.props.endTime.format()
         };
 
         // Announcement will alive 30 days

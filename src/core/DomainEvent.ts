@@ -1,78 +1,71 @@
 import { CreateLogger } from '../common/Logger';
+import { AggregateRoot } from './AggregateRoot';
 
-type EventName = string;
+type DomainEventName = string;
 
 abstract class DomainEvent {
-    public static get Name (): EventName {
+    public static get Name (): DomainEventName {
         return this.name;
     }
 
-    public get Name (): EventName {
+    public get Name (): DomainEventName {
         return this.constructor.name;
     }
 }
 
-interface EventPublisher {
-    Publish (event: DomainEvent): void;
-}
-
-interface EventHandler <T extends DomainEvent> {
+interface DomainEventHandler <T extends DomainEvent> {
     (event: T): void;
 }
 
-class EventBus {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static handlers: Record<EventName, EventHandler<any>[]> = {};
+class DomainEventBus {
+    private static logger = CreateLogger(DomainEventBus.name);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static Subscribe (eventName: EventName, handler: EventHandler<any>): void {
+    private static handlers: Record<DomainEventName, DomainEventHandler<any>[]> = {};
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static Subscribe (eventName: DomainEventName, handler: DomainEventHandler<any>): void {
         // eslint-disable-next-line no-prototype-builtins
-        if (!EventBus.handlers.hasOwnProperty(eventName)) EventBus.handlers[eventName] = [];
+        if (!DomainEventBus.handlers.hasOwnProperty(eventName)) DomainEventBus.handlers[eventName] = [];
 
-        EventBus.handlers[eventName].push(handler);
+        DomainEventBus.handlers[eventName].push(handler);
     }
 
     public static Publish (event: DomainEvent): void {
         // eslint-disable-next-line no-prototype-builtins
-        if (!EventBus.handlers.hasOwnProperty(event.Name)) return;
+        if (!DomainEventBus.handlers.hasOwnProperty(event.Name)) return;
 
-        // TODO: What if one of the handlers failed?
-        for (const handler of EventBus.handlers[event.Name]) handler(event);
+        for (const handler of DomainEventBus.handlers[event.Name]) {
+            try {
+                handler(event);
+            } catch (error) {
+                // TODO
+                DomainEventBus.logger.error(`publish error eventName[${event.Name}] error[${error}]`);
+            }
+        }
     }
 
     // TODO: Should we provide unsubscribe function? Most subscriber will not be shut down.
 
     public static Clear (): void {
-        EventBus.handlers = {};
+        DomainEventBus.handlers = {};
     }
 }
 
-class QueEventPublisher implements EventPublisher {
-    public queEvent: DomainEvent[] = [];
-
-    public Publish (event: DomainEvent): void {
-        this.queEvent.push(event);
+class DomainEventPublisher {
+    public static Publish (event: DomainEvent): void {
+        DomainEventBus.Publish(event);
     }
 
-    public Delete (): void {
-        this.queEvent = [];
-    }
-
-    public FireQueEvent (): void {
-        for (const event of this.queEvent)
-            EventBus.Publish(event);
-
-        this.queEvent.splice(0, this.queEvent.length);
+    public static PublishForAggregate (aggr: AggregateRoot<any>): void {
+        for (const event of aggr.domainEvents) {
+            DomainEventPublisher.Publish(event);
+        }
+        aggr.domainEvents.splice(0, aggr.domainEvents.length); // Empty the array.
     }
 }
 
-class InstantEventPublisher implements EventPublisher {
-    public Publish (event: DomainEvent): void {
-        EventBus.Publish(event);
-    }
-}
-
-abstract class EventSubscriber {
+abstract class DomainEventSubscriber {
     protected logger;
 
     protected constructor () {
@@ -84,9 +77,7 @@ abstract class EventSubscriber {
 
 export {
     DomainEvent,
-    EventBus,
-    EventPublisher,
-    QueEventPublisher,
-    InstantEventPublisher,
-    EventSubscriber
+    DomainEventBus,
+    DomainEventPublisher,
+    DomainEventSubscriber,
 };

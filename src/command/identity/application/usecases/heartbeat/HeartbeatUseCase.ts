@@ -4,7 +4,7 @@ import { QueEventPublisher } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
 import { Result } from '../../../../../core/Error';
 import { UseCase } from '../../../../../core/UseCase';
-import { ISessionRepo } from '../../../domain/repo/SessionRepo';
+import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
 import { HeartbeatClientWsEvent } from './HeartbeatClientWsEvent';
 
 
