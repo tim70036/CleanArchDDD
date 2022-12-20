@@ -1,5 +1,4 @@
 import { CreateLogger } from '../common/Logger';
-import { EventPublisher } from './DomainEvent';
 import { EntityId } from './EntityId';
 
 abstract class Entity<T> {

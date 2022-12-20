@@ -5,6 +5,8 @@ import { saferJoi } from "../../../../common/SaferJoi";
 import { PasswordAuth } from "./PasswordAuth";
 import { DeviceAuth } from "./DeviceAuth";
 import { DomainErrorOr } from "../../../../core/DomainError";
+import { Result } from "../../../../core/Error";
+import { UserCreatedEvent } from "../event/UserCreatedEvent";
 
 interface UserProps {
     shortUid: number;
@@ -32,7 +34,13 @@ class User extends AggregateRoot<UserProps> {
     });
 
     public static Create(props: UserProps): DomainErrorOr<User> {
+        const { error } = User.schema.validate(props);
+        if (error) return Result.Fail(`Failed creating class[${User.name}] with message[${error.message}]`);
 
+        const user = new User(props);
+        user.domainEvents.push(new UserCreatedEvent(user.id));
+
+        return Result.Ok(user);
     }
 }
 

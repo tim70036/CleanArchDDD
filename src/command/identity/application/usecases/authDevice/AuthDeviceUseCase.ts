@@ -7,10 +7,10 @@ import { PasswordAuth } from '../../../domain/model/PasswordAuth';
 import { Name } from '../../../domain/model/Name';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { DeviceAuth } from '../../../domain/model/DeviceAuth';
-import { QueEventPublisher } from '../../../../../core/DomainEvent';
 import { DuplicatedError, InternalServerError, InvalidDataError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';
 import { Transaction } from '../../../../../common/Transaction';
 import { IRegisterService } from '../../../domain/service/IRegisterService';
+import { DomainEventPublisher } from '../../../../../core/DomainEvent';
 
 type Response = DomainErrorOr<User>;
 
@@ -28,8 +28,6 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, User> {
     // 1. exists -> check if user is banned, deleted or shit. -> update shit -> create session -> save
     // 2. not exists -> gen valid shortuid -> create new user -> create session -> save
     public async Run (request: AuthDeviceCTO): Promise<Response> {
-        const eventPublisher = new QueEventPublisher();
-
         let user;
         let isNewUser: boolean = false;
         try {
@@ -64,6 +62,8 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, User> {
             } else {
                 this.logger.info(`uid[${user.Id.Value}] deviceAuth successfully`);
             }
+
+            DomainEventPublisher.PublishForAggregate(user);
 
             return Result.Ok(user);
         } catch (err: unknown) {

@@ -31,9 +31,19 @@ class DomainEventBus {
         DomainEventBus.handlers[eventName].push(handler);
     }
 
+    public static PublishForAggregate (aggr: AggregateRoot<any>): void {
+        for (const event of aggr.domainEvents) {
+            DomainEventBus.Publish(event);
+        }
+        aggr.domainEvents.splice(0, aggr.domainEvents.length); // Empty the array.
+    }
+
     public static Publish (event: DomainEvent): void {
         // eslint-disable-next-line no-prototype-builtins
-        if (!DomainEventBus.handlers.hasOwnProperty(event.Name)) return;
+        if (!DomainEventBus.handlers.hasOwnProperty(event.Name)) {
+            DomainEventBus.logger.warn(`no handler exist for eventName[${event.Name}]`);
+            return;
+        }
 
         for (const handler of DomainEventBus.handlers[event.Name]) {
             try {
@@ -52,32 +62,7 @@ class DomainEventBus {
     }
 }
 
-class DomainEventPublisher {
-    public static Publish (event: DomainEvent): void {
-        DomainEventBus.Publish(event);
-    }
-
-    public static PublishForAggregate (aggr: AggregateRoot<any>): void {
-        for (const event of aggr.domainEvents) {
-            DomainEventPublisher.Publish(event);
-        }
-        aggr.domainEvents.splice(0, aggr.domainEvents.length); // Empty the array.
-    }
-}
-
-abstract class DomainEventSubscriber {
-    protected logger;
-
-    protected constructor () {
-        this.logger = CreateLogger(this.constructor.name);
-    }
-
-    public abstract Init (): void;
-}
-
 export {
     DomainEvent,
     DomainEventBus,
-    DomainEventPublisher,
-    DomainEventSubscriber,
 };
