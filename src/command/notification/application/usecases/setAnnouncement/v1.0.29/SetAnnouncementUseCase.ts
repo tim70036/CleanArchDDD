@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs'
 import { InternalServerError, InvalidDataError } from '../../../../../../common/CommonError';
 import { DomainErrorOr } from '../../../../../../core/DomainError';
 import { Result } from '../../../../../../core/Error';
@@ -32,8 +32,8 @@ class SetAnnouncementUseCase extends UseCase<SetAnnouncementCTO, void> {
         const title = titleOrError.Value as Title;
         const text = textOrError.Value as Text;
 
-        const startTime = moment(request.startTime).utc();
-        const endTime = moment(request.endTime).utc();
+        const startTime = dayjs(request.startTime).utc();
+        const endTime = dayjs(request.endTime).utc();
 
         if (!startTime.isValid() || !endTime.isValid())
             return new InvalidDataError(`Invalid Date`);

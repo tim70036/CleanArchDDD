@@ -3,22 +3,22 @@ import { Result } from '../../../../core/Error';
 import { ValueObject } from '../../../../core/ValueObject';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { saferJoi } from '../../../../common/SaferJoi';
-import moment, { Moment } from 'moment';
+import dayjs from 'dayjs';
 
 interface ConfigProps {
-    startTime: Moment;
+    startTime: dayjs.Dayjs;
     announcement: string;
     ipWhitelist: string[];
 }
 
 class Config extends ValueObject<ConfigProps> {
     private static readonly schema = saferJoi.object({
-        startTime: saferJoi.object().instance(moment),
+        startTime: saferJoi.object().instance(dayjs.Dayjs),
         announcement: saferJoi.string().min(0).max(1000),
         ipWhitelist: saferJoi.array().items(saferJoi.string().ip()).min(0).max(100),
     });
 
-    public get StartTime (): Moment {
+    public get StartTime (): dayjs.Dayjs {
         return this.props.startTime;
     }
 

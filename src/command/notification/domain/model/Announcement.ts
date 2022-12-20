@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import dayjs from 'dayjs'
 import { saferJoi } from '../../../../common/SaferJoi';
 import { AggregateRoot } from '../../../../core/AggregateRoot';
 import { DomainErrorOr } from '../../../../core/DomainError';
@@ -9,16 +9,16 @@ import { Title } from './Title';
 interface AnnouncementProps {
     title: Title;
     text: Text;
-    startTime: Moment;
-    endTime: Moment;
+    startTime: dayjs.Dayjs;
+    endTime: dayjs.Dayjs;
 }
 
 class Announcement extends AggregateRoot<AnnouncementProps> {
     private static readonly schema = saferJoi.object({
         title: saferJoi.object().instance(Title),
         text: saferJoi.object().instance(Text),
-        startTime: saferJoi.object().instance(moment),
-        endTime: saferJoi.object().instance(moment)
+        startTime: saferJoi.object().instance(dayjs.Dayjs),
+        endTime: saferJoi.object().instance(dayjs.Dayjs)
     });
 
     public get Title (): Title {
@@ -29,11 +29,11 @@ class Announcement extends AggregateRoot<AnnouncementProps> {
         return this.props.text;
     }
 
-    public get StartTime (): Moment {
+    public get StartTime (): dayjs.Dayjs {
         return this.props.startTime;
     }
 
-    public get EndTime (): Moment {
+    public get EndTime (): dayjs.Dayjs {
         return this.props.endTime;
     }
 

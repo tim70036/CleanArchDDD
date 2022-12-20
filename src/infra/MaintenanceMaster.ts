@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import dayjs from 'dayjs';
 import { MaintenanceStatus } from '../command/maintenance/domain/model/MaintenanceStatus';
 import { ConfigService } from '../command/maintenance/infra/service/ConfigService';
 import { CreateLogger } from '../common/Logger';
@@ -13,7 +13,7 @@ class MaintenanceMaster {
 
     private readonly configService: ConfigService;
 
-    private startTime: Moment = moment('1996-07-18').utc();
+    private startTime: dayjs.Dayjs = dayjs('1996-07-18').utc();
 
     private announcement: string = '';
 
@@ -26,7 +26,7 @@ class MaintenanceMaster {
         this.configService = new ConfigService();
     }
 
-    public get StartTime (): Moment {
+    public get StartTime (): dayjs.Dayjs {
         return this.startTime;
     }
 
@@ -56,7 +56,7 @@ class MaintenanceMaster {
             }
 
             const config = configOrError.Value;
-            this.startTime = moment(config.startTime).utc();
+            this.startTime = dayjs(config.startTime).utc();
             this.announcement = config.announcement;
             this.ipWhitelist = config.ipWhitelist;
             this.status = Number(config.status);
@@ -72,9 +72,9 @@ class MaintenanceMaster {
         }
     };
 
-    private ShouldMaintenanceStart (startTime: Moment): boolean {
-        const now = moment().utc();
-        const milisecSinceStartTime = moment.duration(now.diff(startTime)).asMilliseconds();
+    private ShouldMaintenanceStart (startTime: dayjs.Dayjs): boolean {
+        const now = dayjs().utc();
+        const milisecSinceStartTime = dayjs.duration(now.diff(startTime)).asMilliseconds();
 
         return (milisecSinceStartTime >= 0 && milisecSinceStartTime < this.refreshInterval * 2);
     }

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import http from 'http';
 import net from 'net';
 import * as jwt from 'jsonwebtoken';
@@ -14,7 +15,6 @@ import { maintenanceMaster } from '../MaintenanceMaster';
 import { MaintenanceStatus } from '../../command/maintenance/domain/model/MaintenanceStatus';
 import { NewsServerWsEvent } from './NewsServerWsEvent';
 import { WsMessage } from '../../core/WsMessage';
-import moment from 'moment';
 
 interface SmartSocket extends WebSocket {
     isAlive: boolean;
@@ -38,7 +38,8 @@ class WsApp {
 
     protected readonly wss: WebSocketServer;
 
-    // Each user has a websocket instance. This map stores the mapping of uid <-> ws instance.
+    // Each user corespond to a websocket instance. This map stores
+    // the mapping of uid <-> ws instance.
     protected readonly wsMap: Map<string, SmartSocket>;
 
     protected readonly router: WsRouter;
@@ -168,7 +169,7 @@ class WsApp {
         ws.on('error', (error) => this.logger.error(`on error uid[${uid}] error[${error}]`));
 
         // Send maintenance news if needed.
-        const minsTillMaintenance = moment.duration(maintenanceMaster.StartTime.diff(moment.utc())).asMinutes();
+        const minsTillMaintenance = dayjs.duration(maintenanceMaster.StartTime.diff(dayjs.utc())).asMinutes();
         if (minsTillMaintenance > 0 && minsTillMaintenance <= 30) {
             const newsServerEvent = NewsServerWsEvent.Create(`伺服器將在 ${Math.floor(minsTillMaintenance)} 分鐘後進行維修`);
             const message = WsMessage.Create(NewsServerWsEvent.code, newsServerEvent, 'server');
@@ -227,7 +228,7 @@ class WsApp {
         });
 
         if (this.ShouldSendMaintenanceNews()) {
-            const minsTillMaintenance = moment.duration(maintenanceMaster.StartTime.diff(moment.utc())).asMinutes();
+            const minsTillMaintenance = dayjs.duration(maintenanceMaster.StartTime.diff(dayjs.utc())).asMinutes();
             const newsServerEvent = NewsServerWsEvent.Create(`伺服器將在 ${Math.floor(minsTillMaintenance)} 分鐘後進行維修`);
             const message = WsMessage.Create(NewsServerWsEvent.code, newsServerEvent, 'server');
             this.logger.info(`sending maintenance news to all ws`);
@@ -244,10 +245,10 @@ class WsApp {
     };
 
     protected readonly ShouldSendMaintenanceNews = (): boolean => {
-        const now = moment.utc();
+        const now = dayjs.utc();
         for (const minsBeforeMaintenance of [30, 15, 10, 5]) {
-            const sendNewsTime = maintenanceMaster.StartTime.clone().subtract(minsBeforeMaintenance, 'minutes'); // Be careful, we need to clone, since subtract() will mutate original moment object.
-            const milisecTillSendNews = moment.duration(sendNewsTime.diff(now)).asMilliseconds();
+            const sendNewsTime = maintenanceMaster.StartTime.subtract(minsBeforeMaintenance, 'minutes');
+            const milisecTillSendNews = dayjs.duration(sendNewsTime.diff(now)).asMilliseconds();
             this.logger.debug(`checking sendNewsTime[${sendNewsTime}] milisecTillSendNews[${milisecTillSendNews}]`);
             if (milisecTillSendNews >= 0 && milisecTillSendNews < WsApp.checkMaintenanceInterval) return true;
         }

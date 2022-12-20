@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { InternalServerError, InvalidDataError } from '../../../../../common/CommonError';
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { Result } from '../../../../../core/Error';
@@ -18,7 +18,7 @@ class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
     }
 
     public async Run (request: SetConfigCTO): Promise<Response> {
-        const startTime = moment(request.startTime).utc();
+        const startTime = dayjs(request.startTime).utc();
         if (!startTime.isValid())
             return new InvalidDataError(`invalid startTime`);
 

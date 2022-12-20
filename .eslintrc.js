@@ -96,7 +96,7 @@ module.exports = {
                 '1tbs',
                 { 'allowSingleLine': true }
             ],
-            'capitalized-comments': ['error'],
+            'capitalized-comments': ['error', { 'ignoreConsecutiveComments': true }],
             'comma-dangle': ['error', 'only-multiline'],
             'comma-spacing': [ 'error', { 'before': false, 'after': true }],
             'comma-style': ['error', 'last'],

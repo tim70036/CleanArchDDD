@@ -14,6 +14,7 @@ import { InitSubscriber } from './infra/subscriber';
 import { maintenanceMaster } from './infra/MaintenanceMaster';
 import { CreateLogger } from './common/Logger';
 import { wsApp } from './infra/webSocket';
+import { InitDayjs } from './common/Dayjs';
 
 
 const logger = CreateLogger('app');
@@ -26,6 +27,7 @@ async function Run (): Promise<void> {
     InitSubscriber();
 
     maintenanceMaster.Init();
+    InitDayjs();
 
     logger.info(`component intialized`);
 

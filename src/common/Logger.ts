@@ -1,5 +1,5 @@
 import winston from 'winston';
-import moment from 'moment';
+import dayjs from 'dayjs'
 
 export function CreateLogger (name: string): winston.Logger {
     const logger = winston.createLogger({
@@ -8,7 +8,7 @@ export function CreateLogger (name: string): winston.Logger {
             new winston.transports.Console({
                 format: winston.format.combine(
                     winston.format.timestamp(),
-                    winston.format.printf((log) => `${moment(log.timestamp).format('YYYY-MM-DD hh:mm:ss.SSS Z')} [${process.pid}]  [${name}] [${log.level}]    ${log.message}`),
+                    winston.format.printf((log) => `${dayjs(log.timestamp).format('YYYY-MM-DD hh:mm:ss.SSS Z')} [${process.pid}]  [${name}] [${log.level}]    ${log.message}`),
                 ),
             }),
         ],
