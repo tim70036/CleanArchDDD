@@ -1,4 +1,4 @@
-import { CreateLogger } from "../common/Logger";
+import { CreateLogger } from '../common/Logger';
 
 abstract class Subscriber {
     protected logger;

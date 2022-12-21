@@ -1,19 +1,19 @@
 import * as express from 'express';
-import { AuthDeviceUseCase } from './AuthDeviceUseCase';
-import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Controller } from '../../../../../core/Controller';
+import { AuthPasswordUseCase } from './AuthPasswordUseCase';
+import { AuthPasswordCTO } from './AuthPasswordDTO';
 
 class AuthDeviceController extends Controller {
-    private readonly useCase: AuthDeviceUseCase;
+    private readonly useCase: AuthPasswordUseCase;
 
-    public constructor (useCase: AuthDeviceUseCase) {
+    public constructor (useCase: AuthPasswordUseCase) {
         super();
         this.useCase = useCase;
     }
 
     public async Run (req: express.Request, res: express.Response): Promise<void> {
-        const cto: AuthDeviceCTO = req.body as AuthDeviceCTO;
+        const cto: AuthPasswordCTO = req.body as AuthPasswordCTO;
 
         try {
             const sessionOrError = await this.useCase.Execute(cto);

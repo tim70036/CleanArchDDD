@@ -22,11 +22,11 @@ class UserRepo extends IUserRepo {
         this.passwordAuthModel = passwordAuthModel;
     }
 
-    public Exists(id: EntityId, trx?: Objection.Transaction | undefined): Promise<boolean> {
+    public Exists (id: EntityId, trx?: Objection.Transaction | undefined): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 
-    public DeviceIdExists(deviceId: string): Promise<boolean> {
+    public DeviceIdExists (deviceId: string): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 
@@ -35,10 +35,6 @@ class UserRepo extends IUserRepo {
         return isExist;
     }
 
-    public async NameExists (name: string): Promise<boolean> {
-        const isExist = await this.userModel.NameExists(name);
-        return isExist;
-    }
 
     public async Get (uid: EntityId): Promise<DomainErrorOr<User>> {
         const userResultOrError = await this.userModel.Get(uid);
@@ -72,7 +68,7 @@ class UserRepo extends IUserRepo {
         return Result.Ok(user);
     }
 
-    public async GetByAccount (account: string, password: string): Promise<DomainErrorOr<User>> {
+    public async GetByPassword (account: string, password: string): Promise<DomainErrorOr<User>> {
         const userResultOrError = await this.passwordAuthModel.GetByPasswordAuth(account, password);
         if (userResultOrError.IsFailure())
             return Result.Fail(userResultOrError.Error);

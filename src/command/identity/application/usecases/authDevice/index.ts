@@ -6,6 +6,7 @@ import { AuthDeviceController } from './AuthDeviceController';
 import { DeviceAuthModel } from '../../../infra/database/DeviceAuthModel';
 
 import { SessionRepo } from '../../../infra/repo/SessionRepo';
+import { RegisterService } from '../../../infra/service/RegisterService';
 
 const userModel = new UserModel();
 const deviceAuthModel = new DeviceAuthModel();
@@ -14,7 +15,9 @@ const userRepo = new UserRepo(userModel, deviceAuthModel, passwordAuthModel);
 
 const sessionRepo = new SessionRepo();
 
-const authDeviceUseCase = new AuthDeviceUseCase(userRepo);
+const registerService = new RegisterService(userRepo);
+
+const authDeviceUseCase = new AuthDeviceUseCase(userRepo, sessionRepo, registerService);
 const authDeviceController = new AuthDeviceController(authDeviceUseCase);
 
 export { authDeviceController };

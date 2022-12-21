@@ -1,17 +1,15 @@
+import { AuthPasswordCTO } from './AuthPasswordDTO';
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
-import { AuthDeviceCTO } from './AuthDeviceDTO';
-import { DeviceAuth } from '../../../domain/model/DeviceAuth';
 import { InternalServerError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';
-import { Transaction } from '../../../../../common/Transaction';
-import { IRegisterService } from '../../../domain/service/IRegisterService';
-import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { Session } from '../../../domain/model/Session';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
+import { IRegisterService } from '../../../domain/service/IRegisterService';
+import { PasswordAuth } from '../../../domain/model/PasswordAuth';
 
-class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
+class AuthPasswordUseCase extends UseCase<AuthPasswordCTO, Session> {
     private readonly userRepo: IUserRepo;
 
     private readonly sessionRepo: ISessionRepo;
@@ -25,24 +23,32 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
         this.registerService = registerService;
     }
 
-    public async Run (request: AuthDeviceCTO): Promise<DomainErrorOr<Session>> {
+    public async Run (request: AuthPasswordCTO): Promise<DomainErrorOr<Session>> {
         let user;
         try {
-            const userOrError = await this.userRepo.GetByDeviceId(request.deviceId);
+            const userOrError = await this.userRepo.GetByPassword(request.account, request.password);
+                            // Check account exist? Check password match?
+                            const exist = this.userRepo.AccountExists(request.account);
             if (userOrError.IsSuccess()) {
                 user = userOrError.Value;
             } else {
+
                 const userOrError = await this.registerService.CreateDefaultUser();
                 if (userOrError.IsFailure())
                     return userOrError;
 
-                const deviceAuthOrError = DeviceAuth.Create({ deviceId: request.deviceId, isValid: true });
-                if (deviceAuthOrError.IsFailure())
-                    return deviceAuthOrError;
+                const passwordAuthOrError = PasswordAuth.Create({
+                    account: request.account,
+                    password: request.password,
+                    isValid: true
+                });
+
+                if (passwordAuthOrError.IsFailure())
+                    return passwordAuthOrError;
 
                 user = userOrError.Value;
-                user.props.deviceAuth = deviceAuthOrError.Value;
-                this.logger.info(`new user created uid[${user.id.Value}] deviceId[${request.deviceId}]`);
+                user.props.passwordAuth = passwordAuthOrError.Value;
+                this.logger.info(`new user created uid[${user.id.Value}] account[${request.account}]`);
             }
         } catch (err: unknown) {
             return new InternalServerError(`${(err as Error).stack}`);
@@ -76,4 +82,4 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
     }
 }
 
-export { AuthDeviceUseCase };
+export { AuthPasswordUseCase };
