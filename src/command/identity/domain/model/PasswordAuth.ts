@@ -1,8 +1,9 @@
 
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { ValueObject } from '../../../../core/ValueObject';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { saferJoi } from '../../../../common/SaferJoi';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface PasswordAuthProps {
     account: string;
@@ -19,7 +20,7 @@ class PasswordAuth extends ValueObject<PasswordAuthProps> {
 
     public static Create (props: PasswordAuthProps): DomainErrorOr<PasswordAuth> {
         const { error } = PasswordAuth.schema.validate(props);
-        if (error) return Result.Fail(`Failed creating class[${PasswordAuth.name}] with message[${error.message}]`);
+        if (error) return new InvalidDataError(`Failed creating class[${PasswordAuth.name}] with message[${error.message}]`);
 
         return Result.Ok<PasswordAuth>(
             new PasswordAuth({ ...props })

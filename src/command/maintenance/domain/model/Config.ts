@@ -1,9 +1,10 @@
 
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { ValueObject } from '../../../../core/ValueObject';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { saferJoi } from '../../../../common/SaferJoi';
 import dayjs from 'dayjs';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface ConfigProps {
     startTime: dayjs.Dayjs;
@@ -20,7 +21,7 @@ class Config extends ValueObject<ConfigProps> {
 
     public static Create (props: ConfigProps): DomainErrorOr<Config> {
         const { error } = Config.schema.validate(props);
-        if (error) return Result.Fail(`Failed creating class[${Config.name}] with message[${error.message}]`);
+        if (error) return new InvalidDataError(`Failed creating class[${Config.name}] with message[${error.message}]`);
 
         return Result.Ok<Config>(
             new Config({ ...props })

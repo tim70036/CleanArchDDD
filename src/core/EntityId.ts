@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DomainErrorOr } from './DomainError';
-import { Result } from './Error';
+import { Result } from './Result';
 import { saferJoi } from '../common/SaferJoi';
+import { InvalidDataError } from '../common/CommonError';
 
 class Id<T> {
     private readonly value: T;
@@ -38,7 +39,7 @@ class EntityId extends Id<string> {
     public static CreateFrom (id: string): DomainErrorOr<EntityId> {
         const schema = saferJoi.string().uuid().required();
         const { error } = schema.validate(id);
-        if (error) return Result.Fail(`entityId create failed: [${error.message}]`);
+        if (error) return new InvalidDataError(`entityId create failed: [${error.message}]`);
 
         return Result.Ok(new EntityId(id));
     }

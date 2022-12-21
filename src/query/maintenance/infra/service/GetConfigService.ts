@@ -1,5 +1,5 @@
 import { DomainErrorOr } from '../../../../core/DomainError';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { redisClient } from '../../../../infra/database/Redis';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
 import { IGetConfigService } from '../../domain/repo/IGetConfigService';

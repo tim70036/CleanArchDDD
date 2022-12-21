@@ -1,5 +1,5 @@
 import { LoginCTO } from './LoginDTO';
-import { Result } from '../../../../../core/Error';
+import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { IUserRepo } from '../../../domain/repo/UserRepo';

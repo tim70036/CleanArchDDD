@@ -2,7 +2,7 @@ import { DoesNotExistError, InternalServerError, InvalidDataError } from '../../
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { QueEventPublisher } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
-import { Result } from '../../../../../core/Error';
+import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
 import { HeartbeatClientWsEvent } from './HeartbeatClientWsEvent';

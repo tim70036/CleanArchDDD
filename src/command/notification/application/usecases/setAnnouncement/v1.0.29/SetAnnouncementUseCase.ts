@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { InternalServerError, InvalidDataError } from '../../../../../../common/CommonError';
 import { DomainErrorOr } from '../../../../../../core/DomainError';
-import { Result } from '../../../../../../core/Error';
+import { Result } from '../../../../../../core/Result';
 import { UseCase } from '../../../../../../core/UseCase';
 import { Announcement } from '../../../../domain/model/Announcement';
 import { Text } from '../../../../domain/model/Text';

@@ -2,7 +2,7 @@ import { EntityId } from '../../../../core/EntityId';
 import { BaseModel } from '../../../../infra/database/BaseModel';
 import { User } from '../../domain/model/User';
 import { DomainErrorOr } from '../../../../core/DomainError';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import Objection from 'objection';
 
 class PasswordAuthModel extends BaseModel {

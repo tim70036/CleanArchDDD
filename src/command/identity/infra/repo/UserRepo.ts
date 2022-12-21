@@ -1,7 +1,7 @@
 import Objection from 'objection';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { User } from '../../domain/model/User';
 import { IUserRepo } from '../../domain/repo/IUserRepo';
 import { UserModel } from '../database/UserModel';

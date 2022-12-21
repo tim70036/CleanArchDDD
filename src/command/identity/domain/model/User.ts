@@ -1,12 +1,13 @@
-import dayjs from "dayjs";
-import { Name } from "./Name";
-import { AggregateRoot } from "../../../../core/AggregateRoot";
-import { saferJoi } from "../../../../common/SaferJoi";
-import { PasswordAuth } from "./PasswordAuth";
-import { DeviceAuth } from "./DeviceAuth";
-import { DomainErrorOr } from "../../../../core/DomainError";
-import { Result } from "../../../../core/Error";
-import { UserCreatedEvent } from "../event/UserCreatedEvent";
+import dayjs from 'dayjs';
+import { Name } from './Name';
+import { AggregateRoot } from '../../../../core/AggregateRoot';
+import { saferJoi } from '../../../../common/SaferJoi';
+import { PasswordAuth } from './PasswordAuth';
+import { DeviceAuth } from './DeviceAuth';
+import { DomainErrorOr } from '../../../../core/DomainError';
+import { Result } from '../../../../core/Result';
+import { UserCreatedEvent } from '../event/UserCreatedEvent';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface UserProps {
     shortUid: number;
@@ -29,13 +30,13 @@ class User extends AggregateRoot<UserProps> {
         isAI: saferJoi.bool(),
         lastLoginTime: saferJoi.object().instance(dayjs.Dayjs),
 
-        passwordAuth:saferJoi.object().instance(PasswordAuth),
+        passwordAuth: saferJoi.object().instance(PasswordAuth),
         deviceAuth: saferJoi.object().instance(DeviceAuth),
     });
 
     public static Create(props: UserProps): DomainErrorOr<User> {
         const { error } = User.schema.validate(props);
-        if (error) return Result.Fail(`Failed creating class[${User.name}] with message[${error.message}]`);
+        if (error) return new InvalidDataError(`Failed creating class[${User.name}] with message[${error.message}]`);
 
         const user = new User(props);
         user.domainEvents.push(new UserCreatedEvent(user.id));

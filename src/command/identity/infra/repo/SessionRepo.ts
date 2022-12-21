@@ -2,7 +2,7 @@ import Objection from 'objection';
 import { redisClient } from '../../../../infra/database/Redis';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { Session } from '../../domain/model/Session';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
 import dayjs from 'dayjs';

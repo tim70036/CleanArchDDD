@@ -1,10 +1,11 @@
 import { AggregateRoot } from '../../../../core/AggregateRoot';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { sign } from 'jsonwebtoken';
 import dayjs from 'dayjs';
 import { saferJoi } from '../../../../common/SaferJoi';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface SessionProps {
     isActive: boolean;
@@ -34,14 +35,14 @@ class Session extends AggregateRoot<SessionProps> {
             createTime: dayjs.utc(),
             startTime: dayjs.utc(),
             endTime: dayjs.utc(),
-        }, id)
+        }, id);
 
         return Result.Ok(session);
     }
 
     public static CreateFrom (props: SessionProps, id: EntityId): DomainErrorOr<Session> {
         const { error } = Session.schema.validate(props);
-        if (error) return Result.Fail(`Failed creating class[${Session.name}] with message[${error.message}]`);
+        if (error) return new InvalidDataError(`Failed creating class[${Session.name}] with message[${error.message}]`);
 
         const session = new Session(props, id);
         return Result.Ok(session);

@@ -1,4 +1,4 @@
-import { Result } from '../../../../../core/Error';
+import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
@@ -10,7 +10,8 @@ import { DeviceAuth } from '../../../domain/model/DeviceAuth';
 import { DuplicatedError, InternalServerError, InvalidDataError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';
 import { Transaction } from '../../../../../common/Transaction';
 import { IRegisterService } from '../../../domain/service/IRegisterService';
-import { DomainEventPublisher } from '../../../../../core/DomainEvent';
+import { DomainEventBus } from '../../../../../core/DomainEvent';
+import dayjs from 'dayjs';
 
 type Response = DomainErrorOr<User>;
 
@@ -29,23 +30,27 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, User> {
     // 2. not exists -> gen valid shortuid -> create new user -> create session -> save
     public async Run (request: AuthDeviceCTO): Promise<Response> {
         let user;
-        let isNewUser: boolean = false;
         try {
             const userOrError = await this.userRepo.GetByDeviceId(request.deviceId);
-            if (userOrError.IsFailure()) {
-                const userOrError = await this.GetUser(request.uniqueId, request.loginIP, eventPublisher);
+            if (userOrError.IsSuccess()) {
+                user = userOrError.Value;
+            } else {
+                const userOrError = this.registerService.CreateDefaultUser();
                 if (userOrError.IsFailure())
                     return userOrError;
-                user = userOrError.Value;
 
-                isNewUser = true;
-            } else {
+                const deviceAuthOrError = DeviceAuth.Create({ deviceId: request.deviceId, isValid: true});
+                if (deviceAuthOrError.IsFailure())
+                    return deviceAuthOrError;
+
                 user = userOrError.Value;
+                user.props.deviceAuth = deviceAuthOrError.Value;
+                this.logger.info(`new user created uid[${user.id.Value}] deviceId[${request.deviceId}]`);
             }
         } catch (err: unknown) {
             return new InternalServerError(`${(err as Error).stack}`);
         }
-        
+
         if (user.props.isBanned)
             return new UnavailableError(`uid[${user.id.Value}] is banned`);
         if (user.props.isDeleted)
@@ -56,15 +61,8 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, User> {
             await this.userRepo.Save(user, trx.Raw);
             await trx.Commit();
 
-            if (isNewUser) {
-                eventPublisher.FireQueEvent();
-                this.logger.info(`uid[${user.Id.Value}] deviceAuth register`);
-            } else {
-                this.logger.info(`uid[${user.Id.Value}] deviceAuth successfully`);
-            }
-
-            DomainEventPublisher.PublishForAggregate(user);
-
+            this.logger.info(`uid[${user.id.Value}] auth success`);
+            DomainEventBus.PublishForAggregate(user);
             return Result.Ok(user);
         } catch (err: unknown) {
             await trx.Rollback();
@@ -98,42 +96,6 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, User> {
         }
 
         return result;
-    }
-
-    private CreateUser (userId: string, loginIp: string, eventPublisher: QueEventPublisher): DomainErrorOr<User> {
-        const passwordAuthOrError = PasswordAuth.CreateDefault();
-        const nameOrError = Name.Create('default');
-        const lineAuthOrError = LineAuth.CreateDefault();
-        const appleAuthOrError = AppleAuth.CreateDefault();
-        const deviceAuthOrError = DeviceAuth.Create({ deviceId: userId, isValid: true });
-        const googleAuthOrError = GoogleAuth.CreateDefault();
-        const facebookAuthOrError = FacebookAuth.CreateDefault();
-        const emailCertificationOrError = EmailCertification.CreateDefault();
-        const phoneCertificationOrError = PhoneCertification.CreateDefault();
-        const realNameCertificationOrError = RealNameCertification.CreateDefault();
-
-        const dtoResult = Result.Combine([nameOrError, lineAuthOrError, passwordAuthOrError, appleAuthOrError, deviceAuthOrError, googleAuthOrError, facebookAuthOrError, emailCertificationOrError, phoneCertificationOrError, realNameCertificationOrError]);
-        if (dtoResult.IsFailure())
-            return new InvalidDataError(`${dtoResult.Error}`);
-
-        const name = nameOrError.Value as Name;
-        const lineAuth = lineAuthOrError.Value as LineAuth;
-        const passwordAuth = passwordAuthOrError.Value as PasswordAuth;
-        const appleAuth = appleAuthOrError.Value as AppleAuth;
-        const deviceAuth = deviceAuthOrError.Value as DeviceAuth;
-        const googleAuth = googleAuthOrError.Value as GoogleAuth;
-        const facebookAuth = facebookAuthOrError.Value as FacebookAuth;
-        const emailCertification = emailCertificationOrError.Value as EmailCertification;
-        const phoneCertification = phoneCertificationOrError.Value as PhoneCertification;
-        const realNameCertification = realNameCertificationOrError.Value as RealNameCertification;
-
-        const userOrError = User.Create({
-            name: name, isName: false, lastLoginIP: loginIp, passwordAuth: passwordAuth, lineAuth: lineAuth, appleAuth: appleAuth, deviceAuth: deviceAuth,
-            googleAuth, facebookAuth, emailCertification, phoneCertification, realNameCertification
-        }, eventPublisher);
-        if (userOrError.IsFailure())
-            return new InvalidDataError(`${userOrError.Error}`);
-        return userOrError;
     }
 }
 

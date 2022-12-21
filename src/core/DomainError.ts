@@ -1,4 +1,4 @@
-import { Failure, Success } from './Error';
+import { Failure, Success } from './Result';
 
 interface ErrorDTO {
     message: string;
@@ -18,7 +18,7 @@ abstract class DomainError extends Failure<ErrorDTO, any> implements Error {
         super(error);
         this.message = error.message;
         this.name = this.constructor.name;
-        this.stack = (new Error).stack;
+        this.stack = (new Error()).stack;
     }
 }
 

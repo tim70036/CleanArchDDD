@@ -1,6 +1,6 @@
 import { InternalServerError } from '../../../../../common/CommonError';
 import { DomainErrorOr } from '../../../../../core/DomainError';
-import { Result } from '../../../../../core/Error';
+import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { AnnouncementDTO } from '../../../domain/repo/AnnouncementDTO';
 import { IAnnouncementReadOnlyRepo } from '../../../domain/repo/AnnouncementReadOnlyRepo';

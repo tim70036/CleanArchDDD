@@ -1,8 +1,9 @@
 
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { ValueObject } from '../../../../core/ValueObject';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { saferJoi } from '../../../../common/SaferJoi';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface TitleProps {
     value: string;
@@ -13,7 +14,7 @@ class Title extends ValueObject<TitleProps> {
 
     public static Create (title: string): DomainErrorOr<Title> {
         const { error } = Title.schema.validate(title);
-        if (error) return Result.Fail(`Failed creating class[${Title.name}] with message[${error.message}]`);
+        if (error) return new InvalidDataError(`Failed creating class[${Title.name}] with message[${error.message}]`);
 
         return Result.Ok<Title>(
             new Title({ value: title })

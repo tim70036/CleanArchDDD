@@ -1,10 +1,11 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import { saferJoi } from '../../../../common/SaferJoi';
 import { AggregateRoot } from '../../../../core/AggregateRoot';
 import { DomainErrorOr } from '../../../../core/DomainError';
-import { Result } from '../../../../core/Error';
+import { Result } from '../../../../core/Result';
 import { Text } from './Text';
 import { Title } from './Title';
+import { InvalidDataError } from '../../../../common/CommonError';
 
 interface AnnouncementProps {
     title: Title;
@@ -22,22 +23,14 @@ class Announcement extends AggregateRoot<AnnouncementProps> {
     });
 
     public static Create (props: AnnouncementProps): DomainErrorOr<Announcement> {
-        const validateOrError = this.IsValidAnnouncement(props);
-        if (validateOrError.IsFailure())
-            return Result.Fail(validateOrError.Error);
+        const { error } = Announcement.schema.validate(props);
+        if (error) return new InvalidDataError(`Failed creating class[${Announcement.name}] with message[${error.message}]`);
 
         const announcement = new Announcement({
             ...props
         });
 
         return Result.Ok(announcement);
-    }
-
-    private static IsValidAnnouncement (props: AnnouncementProps): DomainErrorOr<void> {
-        const { error } = Announcement.schema.validate(props);
-        if (error) return Result.Fail(`Failed creating class[${Announcement.name}] with message[${error.message}]`);
-
-        return Result.Ok();
     }
 }
 
