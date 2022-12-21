@@ -1,19 +1,19 @@
 import * as express from 'express';
+import { AuthLineUseCase } from './AuthLineUseCase';
+import { AuthLineCTO } from './AuthLineDTO';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Controller } from '../../../../../core/Controller';
-import { AuthPasswordUseCase } from './AuthPasswordUseCase';
-import { AuthPasswordCTO } from './AuthPasswordDTO';
 
-class AuthDeviceController extends Controller {
-    private readonly useCase: AuthPasswordUseCase;
+class AuthLineController extends Controller {
+    private readonly useCase: AuthLineUseCase;
 
-    public constructor (useCase: AuthPasswordUseCase) {
+    public constructor (useCase: AuthLineUseCase) {
         super();
         this.useCase = useCase;
     }
 
     public async Run (req: express.Request, res: express.Response): Promise<void> {
-        const cto: AuthPasswordCTO = req.body as AuthPasswordCTO;
+        const cto: AuthLineCTO = req.body as AuthLineCTO;
 
         try {
             const sessionOrError = await this.useCase.Execute(cto);
@@ -32,4 +32,4 @@ class AuthDeviceController extends Controller {
     }
 }
 
-export { AuthDeviceController };
+export { AuthLineController };

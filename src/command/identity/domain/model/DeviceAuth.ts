@@ -14,7 +14,7 @@ class DeviceAuth extends ValueObject<DeviceAuthProps> {
     private static readonly schema = saferJoi.object({
         deviceId: saferJoi.string().min(6).max(100).allow(''),
         isValid: saferJoi.bool()
-    })
+    });
 
     public static Create (props: DeviceAuthProps): DomainErrorOr<DeviceAuth> {
         const { error } = DeviceAuth.schema.validate(props);

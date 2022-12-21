@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { IgnoreError, DoesNotExistError, DuplicatedError, InvalidDataError, InvalidOperationError, NotAuthenticatedError, NotAuthorizedError, ExpireError, GoneError, UnavailableError } from '../common/CommonError';
+import { IgnoreError, NotExistError, DuplicatedError, InvalidDataError, InvalidOperationError, NotAuthenticatedError, NotAuthorizedError, ExpireError, GoneError, UnavailableError } from '../common/CommonError';
 import { CreateLogger } from '../common/Logger';
 import { DomainError } from './DomainError';
 import { ResponseCode } from './ResponseCode';
@@ -56,7 +56,7 @@ abstract class Controller {
             return ResponseCode.Forbidden;
         if (error instanceof InvalidOperationError)
             return ResponseCode.Forbidden;
-        if (error instanceof DoesNotExistError)
+        if (error instanceof NotExistError)
             return ResponseCode.NotFound;
         if (error instanceof DuplicatedError)
             return ResponseCode.Conflict;

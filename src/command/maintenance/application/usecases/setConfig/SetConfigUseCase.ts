@@ -29,7 +29,7 @@ class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
         });
 
         if (configOrError.IsFailure())
-            return new InvalidDataError(`invalid config data value error[${configOrError.Error}]`);
+            return configOrError;
 
         const config = configOrError.Value;
 

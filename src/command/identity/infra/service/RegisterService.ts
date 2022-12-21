@@ -4,11 +4,11 @@ import { DomainErrorOr } from '../../../../core/DomainError';
 import { Result } from '../../../../core/Result';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
 import { Name } from '../../domain/model/Name';
-import { PasswordAuth } from '../../domain/model/PasswordAuth';
 import { User } from '../../domain/model/User';
 import { IRegisterService } from '../../domain/service/IRegisterService';
 import { IUserRepo } from '../../domain/repo/IUserRepo';
 import { DuplicatedError, InternalServerError } from '../../../../common/CommonError';
+import { LineAuth } from '../../domain/model/LineAuth';
 
 class RegisterService extends IRegisterService {
     private readonly userRepo: IUserRepo;
@@ -25,16 +25,16 @@ class RegisterService extends IRegisterService {
 
         const shortUid = shortUidOrError.Value;
         const nameOrError = Name.Create('default');
-        const passwordAuthOrError = PasswordAuth.CreateDefault();
         const deviceAuthOrError = DeviceAuth.CreateDefault();
+        const lineAuthOrError = LineAuth.CreateDefault();
 
-        const dtoResult = Result.Combine([nameOrError, passwordAuthOrError, deviceAuthOrError]);
+        const dtoResult = Result.Combine([nameOrError, deviceAuthOrError, lineAuthOrError]);
         if (dtoResult.IsFailure())
             return dtoResult;
 
         const name = nameOrError.Value as Name;
-        const passwordAuth = passwordAuthOrError.Value as PasswordAuth;
         const deviceAuth = deviceAuthOrError.Value as DeviceAuth;
+        const lineAuth = lineAuthOrError.Value as LineAuth;
 
         const userOrError = User.Create({
             shortUid: shortUid,
@@ -43,7 +43,7 @@ class RegisterService extends IRegisterService {
             isDeleted: false,
             isAI: false,
             lastLoginTime: dayjs.utc(),
-            passwordAuth: passwordAuth,
+            lineAuth: lineAuth,
             deviceAuth: deviceAuth,
         });
 
@@ -58,7 +58,7 @@ class RegisterService extends IRegisterService {
                 if (!didExist) return Result.Ok(shortUid);
 
                 this.logger.warn(`generated duplicated shortUid[shortUid]`);
-            } catch (error: unknown) {
+            } catch (err: unknown) {
                 return new InternalServerError(`${(err as Error).stack}`);
             }
         }

@@ -1,14 +1,14 @@
 import { BaseModel } from '../../../../infra/database/BaseModel';
 
-class DeviceAuthModel extends BaseModel {
+class LineAuthModel extends BaseModel {
     public uid!: string;
 
-    public deviceId!: string;
+    public lineId!: string;
 
     public isValid!: number;
 
     public static get tableName (): string {
-        return 'DeviceAuth';
+        return 'LineAuth';
     }
 
     public static get idColumn (): string {
@@ -16,4 +16,4 @@ class DeviceAuthModel extends BaseModel {
     }
 }
 
-export { DeviceAuthModel };
+export { LineAuthModel };

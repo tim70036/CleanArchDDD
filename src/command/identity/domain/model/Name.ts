@@ -12,10 +12,6 @@ interface NameProps {
 class Name extends ValueObject<NameProps> {
     private static readonly schema = saferJoi.string().min(1).max(8);
 
-    public get Value (): string {
-        return this.props.value;
-    }
-
     public static Create (name: string): DomainErrorOr<Name> {
         const { error } = Name.schema.validate(name);
         if (error) return new InvalidDataError(`Failed creating class[${Name.name}] with message[${error.message}]`);

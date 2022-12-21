@@ -1,4 +1,4 @@
-import { DoesNotExistError, InternalServerError, InvalidDataError } from '../../../../../common/CommonError';
+import { NotExistError, InternalServerError, InvalidDataError } from '../../../../../common/CommonError';
 import { DomainErrorOr } from '../../../../../core/DomainError';
 import { QueEventPublisher } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
@@ -31,7 +31,7 @@ class HeartbeatUseCase extends UseCase<HeartbeatClientWsEvent, void> {
             const sessionOrError = await this.sessionRepo.Get(uid);
 
             if (sessionOrError.IsFailure())
-                return new DoesNotExistError(event.uid);
+                return new NotExistError(event.uid);
 
             const session = sessionOrError.Value;
             session.SetEventPublisher(eventPublisher);

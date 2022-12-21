@@ -24,7 +24,7 @@ class InvalidOperationError extends DomainError {
     }
 }
 
-class DoesNotExistError extends DomainError {
+class NotExistError extends DomainError {
     public constructor (message: string) {
         super({ message: `not exist: ${message}` });
     }
@@ -71,7 +71,7 @@ export {
     NotAuthorizedError,
     NotAuthenticatedError,
     InvalidOperationError,
-    DoesNotExistError,
+    NotExistError,
     DuplicatedError,
     InternalServerError,
     IgnoreError,
