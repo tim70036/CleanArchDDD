@@ -1,10 +1,10 @@
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import duration from 'dayjs/plugin/duration'
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import duration from 'dayjs/plugin/duration';
 
-function InitDayjs() {
+function InitDayjs (): void {
     dayjs.extend(utc);
-    dayjs.extend(duration)
+    dayjs.extend(duration);
 }
 
 export { InitDayjs };

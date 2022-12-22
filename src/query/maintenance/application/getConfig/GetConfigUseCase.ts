@@ -15,7 +15,7 @@ class GetConfigUseCase extends UseCase<void, GetConfigSTO> {
         this.getConfigService = getConfigService;
     }
 
-    public async Run (): Promise<Response> {
+    protected async Run (): Promise<Response> {
         try {
             const configOrError = await this.getConfigService.Get();
             if (configOrError.IsFailure()) return configOrError;

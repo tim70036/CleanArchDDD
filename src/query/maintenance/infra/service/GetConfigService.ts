@@ -13,10 +13,10 @@ class GetConfigService extends IGetConfigService {
         const ipWhitelist = await redisClient.hGet(this.maintenanceKey, 'ipWhitelist');
         const status = await redisClient.hGet(this.maintenanceKey, 'status');
 
-        if (typeof startTime !== 'string') return Result.Fail('maintenance data in redis do not contain start time');
-        if (typeof announcement !== 'string') return Result.Fail('maintenance data in redis do not contain announcement');
-        if (typeof ipWhitelist !== 'string') return Result.Fail('maintenance data in redis do not contain ipWhitelist');
-        if (typeof status !== 'string') return Result.Fail('maintenance data in redis do not contain status');
+        if (typeof startTime === 'undefined') return Result.Fail('maintenance data in redis do not contain start time');
+        if (typeof announcement === 'undefined') return Result.Fail('maintenance data in redis do not contain announcement');
+        if (typeof ipWhitelist === 'undefined') return Result.Fail('maintenance data in redis do not contain ipWhitelist');
+        if (typeof status === 'undefined') return Result.Fail('maintenance data in redis do not contain status');
 
         return Result.Ok({
             startTime,

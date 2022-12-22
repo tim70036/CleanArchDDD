@@ -6,6 +6,4 @@ abstract class IGetConfigService extends Service {
     public abstract Get (): Promise<DomainErrorOr<GetConfigSTO>>;
 }
 
-export {
-    IGetConfigService
-};
+export { IGetConfigService };

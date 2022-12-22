@@ -2,9 +2,11 @@ import { CreateLogger } from '../../common/Logger';
 import { WsController } from '../../core/WsController';
 import { WsMessage } from '../../core/WsMessage';
 
-import { heartbeatController } from '../../command/identity/application/usecases/heartbeat';
-import { HeartbeatClientWsEvent } from '../../command/identity/application/usecases/heartbeat/HeartbeatClientWsEvent';
 import { WsEventCode } from '../../core/WsEvent';
+import { StartSessionClientWsEvent } from '../../command/identity/application/usecases/startSession/StartSessionWsEvent';
+import { EndSessionClientWsEvent } from '../../command/identity/application/usecases/endSession/EndSessionClientWsEvent';
+import { startSessionController } from '../../command/identity/application/usecases/startSession';
+import { endSessionController } from '../../command/identity/application/usecases/endSession';
 
 class WsRouter {
     protected readonly routeMap: Map<WsEventCode, WsController>;
@@ -35,7 +37,8 @@ class WsRouter {
     }
 
     protected Register (): void {
-        this.routeMap.set(HeartbeatClientWsEvent.code, heartbeatController);
+        this.routeMap.set(StartSessionClientWsEvent.code, startSessionController);
+        this.routeMap.set(EndSessionClientWsEvent.code, endSessionController);
     }
 }
 

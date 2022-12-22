@@ -6,6 +6,4 @@ abstract class IRegisterService extends Service {
     public abstract CreateDefaultUser(): Promise<DomainErrorOr<User>>;
 }
 
-export {
-    IRegisterService
-};
+export { IRegisterService };

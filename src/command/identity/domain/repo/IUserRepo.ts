@@ -10,6 +10,4 @@ abstract class IUserRepo extends Repo<User> {
     public abstract ShortUidExists (shortUid: number): Promise<boolean>;
 }
 
-export {
-    IUserRepo
-};
+export { IUserRepo };

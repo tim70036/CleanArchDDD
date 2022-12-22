@@ -1,5 +1,5 @@
 import winston from 'winston';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 export function CreateLogger (name: string): winston.Logger {
     const logger = winston.createLogger({

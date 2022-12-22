@@ -8,6 +8,4 @@ abstract class IConfigService extends Service {
     public abstract Save (config: Config): Promise<void>;
 }
 
-export {
-    IConfigService
-};
+export { IConfigService };

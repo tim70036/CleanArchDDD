@@ -6,6 +6,8 @@ import { sign } from 'jsonwebtoken';
 import dayjs from 'dayjs';
 import { saferJoi } from '../../../../common/SaferJoi';
 import { InvalidDataError } from '../../../../common/CommonError';
+import { SessionStartedEvent } from '../event/SessionStartedEvent';
+import { SessionEndEvent } from '../event/SessionEndEvent';
 
 interface SessionProps {
     isActive: boolean;
@@ -52,12 +54,16 @@ class Session extends AggregateRoot<SessionProps> {
         this.props.isActive = true;
         this.props.ip = ip;
         this.props.startTime = dayjs.utc();
+
+        this.domainEvents.push(new SessionStartedEvent(this.id));
         return Result.Ok();
     }
 
     public End (): DomainErrorOr<void> {
         this.props.isActive = false;
         this.props.endTime = dayjs.utc();
+
+        this.domainEvents.push(new SessionEndEvent(this.id));
         return Result.Ok();
     }
 }

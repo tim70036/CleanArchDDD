@@ -9,6 +9,7 @@ import { UserCreatedEvent } from '../event/UserCreatedEvent';
 import { InvalidDataError } from '../../../../common/CommonError';
 import { LineAuth } from './LineAuth';
 import { EntityId } from '../../../../core/EntityId';
+import { UserLoginedEvent } from '../event/UserLoginedEvent';
 
 interface UserProps {
     shortUid: number;
@@ -53,6 +54,11 @@ class User extends AggregateRoot<UserProps> {
         user.domainEvents.push(new UserCreatedEvent(user.id));
 
         return Result.Ok(user);
+    }
+
+    // TODO
+    public Login (): void {
+        this.domainEvents.push(new UserLoginedEvent(this.id));
     }
 }
 

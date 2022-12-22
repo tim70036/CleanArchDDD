@@ -67,6 +67,4 @@ class RegisterService extends IRegisterService {
     }
 }
 
-export {
-    RegisterService
-};
+export { RegisterService };

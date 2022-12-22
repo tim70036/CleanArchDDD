@@ -1,56 +1,55 @@
 import dayjs from 'dayjs';
 import http from 'http';
 import net from 'net';
-import * as jwt from 'jsonwebtoken';
 import WebSocket, { WebSocketServer } from 'ws';
-import { redisClient, redisSubClient } from '../database/Redis';
+import { redisSubClient } from '../database/Redis';
 import { CreateLogger } from '../../common/Logger';
 import { ResponseCode } from '../../core/ResponseCode';
-import { SessionData } from '../../command/identity/domain/model/Session';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { WsController } from '../../core/WsController';
 import { WsRouter } from './WsRouter';
-import { HeartbeatClientWsEvent } from '../../command/identity/application/usecases/heartbeat/HeartbeatClientWsEvent';
 import { maintenanceMaster } from '../MaintenanceMaster';
 import { MaintenanceStatus } from '../../command/maintenance/domain/model/MaintenanceStatus';
 import { NewsServerWsEvent } from './NewsServerWsEvent';
 import { WsMessage } from '../../core/WsMessage';
+import { StartSessionClientWsEvent } from '../../command/identity/application/usecases/startSession/StartSessionWsEvent';
+import { EndSessionClientWsEvent } from '../../command/identity/application/usecases/endSession/EndSessionClientWsEvent';
+import { ISessionService } from '../../command/identity/domain/service/ISessionService';
+import { DuplicatedError } from '../../common/CommonError';
 
 interface SmartSocket extends WebSocket {
     isAlive: boolean;
-    pongCnt: number;
     ip: string;
 }
 
-const sessionPrefix = `session:uid`;
-
 class WsApp {
-    protected static readonly pingInterval = 30000; // Miliseconds
+    private static readonly pingInterval = 30000; // Miliseconds
 
-    protected static readonly pongPerHeartbeat = 2;
+    private static readonly checkMaintenanceInterval = 30000; // Miliseconds
 
-    protected static readonly checkMaintenanceInterval = 30000; // Miliseconds
-
-    protected static readonly msgLimiterByUid = new RateLimiterMemory({
+    private static readonly msgLimiterByUid = new RateLimiterMemory({
         points: 10,
         duration: 10, // Number of seconds before consumed points are reset.
     });
 
-    protected readonly wss: WebSocketServer;
+    private readonly wss: WebSocketServer;
 
     // Each user corespond to a websocket instance. This map stores
     // the mapping of uid <-> ws instance.
-    protected readonly wsMap: Map<string, SmartSocket>;
+    private readonly wsMap: Map<string, SmartSocket>;
 
-    protected readonly router: WsRouter;
+    private readonly router: WsRouter;
 
-    protected readonly logger;
+    private readonly logger;
 
-    public constructor () {
+    private readonly sessionService: ISessionService;
+
+    public constructor (sessionService: ISessionService) {
         this.wss = new WebSocketServer({ noServer: true, clientTracking: false });
         this.wsMap = new Map<string, SmartSocket>();
         this.router = new WsRouter();
         this.logger = CreateLogger(this.constructor.name);
+        this.sessionService = sessionService;
     }
 
     public async Init (): Promise<void> {
@@ -67,46 +66,37 @@ class WsApp {
     }
 
     public readonly HandleUpgrade = async (req: http.IncomingMessage, socket: net.Socket, head: Buffer): Promise<void> => {
-        const token = req.headers.jwt as string;
         try {
-            // Auth user session.
-            const decoded = jwt.verify(token, process.env.JWT_KEY as string) as {
-                uid: string;
-            };
+            const token = req.headers.jwt as string;
+            const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress ?? '';
+            const sessionOrError = await this.sessionService.Auth(token);
 
-            const uid = decoded.uid;
-            const sessionData = await redisClient.hGet(sessionPrefix, uid);
-            if (typeof sessionData !== 'string') {
-                this.logger.error(`cannot find session in redis for uid[${uid}] with jwt[${token}]`);
+            if (sessionOrError.IsFailure()) {
+                this.logger.info(`auth failed due to error[${sessionOrError}] from ip[${ip}]`);
+                if (sessionOrError instanceof DuplicatedError) {
+                    socket.write(`HTTP/1.1 ${ResponseCode.PreconditionFailed} ${ResponseCode[ResponseCode.PreconditionFailed]}\r\n\r\n`);
+                    socket.destroy();
+                    return;
+                }
+
                 socket.write(`HTTP/1.1 ${ResponseCode.Unauthorized} ${ResponseCode[ResponseCode.Unauthorized]}\r\n\r\n`);
                 socket.destroy();
                 return;
             }
 
-            const session = JSON.parse(sessionData) as SessionData;
-
-            if (token !== session.jwt) {
-                this.logger.info(`session invalidated by newer session uid[${uid}]`);
-                socket.write(`HTTP/1.1 ${ResponseCode.PreconditionFailed} ${ResponseCode[ResponseCode.PreconditionFailed]}\r\n\r\n`);
-                socket.destroy();
-                return;
-            }
-
-            // TODO: remove this dangerous log.
-            this.logger.debug(`authorized uid[${uid}] jwt[${token}]`);
-
             // Passed auth, upgrade protocol to WebSocket.
+            const session = sessionOrError.Value;
+            const uid = session.id.Value;
             this.wss.handleUpgrade(req, socket, head, (ws: WebSocket) => {
                 this.logger.debug(`handle upgrade done uid[${uid}]`);
-
-                const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress ?? '';
                 (ws as SmartSocket).ip = ip as string;
 
                 this.wss.emit('connection', ws, uid); // Will trigger this.HandleNewConnection()
             });
-        } catch (error: unknown) {
-            this.logger.info(`not authorized with jwt[${token}] reason[${error}]`);
-            socket.write(`HTTP/1.1 ${ResponseCode.Unauthorized} ${ResponseCode[ResponseCode.Unauthorized]}\r\n\r\n`);
+            return;
+        } catch (err: unknown) {
+            this.logger.error(`${err}`);
+            socket.write(`HTTP/1.1 ${ResponseCode.InternalServerError} ${ResponseCode[ResponseCode.InternalServerError]}\r\n\r\n`);
             socket.destroy();
             return;
         }
@@ -153,9 +143,8 @@ class WsApp {
 
         // Setup heartbeat.
         ws.isAlive = true;
-        ws.pongCnt = 0;
         ws.on('pong', () => { this.HandlePong(ws, uid); });
-        this.Heartbeat(ws, uid); // Send heartbeat here so application can know client is connected as soon as possible.
+        this.StartSession(ws, uid);
 
         // Setup disconnect handle.
         ws.on('close', async (code, reason) => {
@@ -164,6 +153,7 @@ class WsApp {
             if (!this.wsMap.has(uid)) {
                 await redisSubClient.unsubscribe(`${WsController.userChannelPrefix}${uid}`);
                 WsApp.msgLimiterByUid.delete(uid); // TODO: is this a good idea? hacker can bypass rate limter by makeing lots of new connection.
+                this.EndSession(uid);
             }
         });
         ws.on('error', (error) => this.logger.error(`on error uid[${uid}] error[${error}]`));
@@ -197,26 +187,31 @@ class WsApp {
     };
 
     protected readonly HandlePong = (ws: SmartSocket, uid: string): void => {
-        this.logger.debug(`on pong uid[${uid}] pongCnt[${ws.pongCnt}]`);
+        this.logger.debug(`on pong uid[${uid}]`);
         ws.isAlive = true;
-        ws.pongCnt += 1;
-
-        if (ws.pongCnt >= WsApp.pongPerHeartbeat) {
-            ws.pongCnt = 0;
-            this.Heartbeat(ws, uid);
-        }
     };
 
-    protected readonly Heartbeat = (ws: SmartSocket, uid: string): void => {
-        const rawHeartbeatMessage = {
-            eventCode: HeartbeatClientWsEvent.code,
+    protected readonly StartSession = (ws: SmartSocket, uid: string): void => {
+        const rawWsMessage = {
+            eventCode: StartSessionClientWsEvent.code,
             eventData: {
                 uid: uid,
                 ip: ws.ip,
             }
         };
 
-        this.router.HandleMessage(JSON.stringify(rawHeartbeatMessage), uid);
+        this.router.HandleMessage(JSON.stringify(rawWsMessage), uid);
+    };
+
+    protected readonly EndSession = (uid: string): void => {
+        const rawWsMessage = {
+            eventCode: EndSessionClientWsEvent.code,
+            eventData: {
+                uid: uid,
+            }
+        };
+
+        this.router.HandleMessage(JSON.stringify(rawWsMessage), uid);
     };
 
     protected readonly HandleMaintenance = (): void => {

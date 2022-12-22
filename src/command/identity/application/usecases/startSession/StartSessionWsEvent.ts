@@ -1,7 +1,7 @@
 import { ClientWsEvent } from '../../../../../core/WsEvent';
 import { saferJoi } from '../../../../../common/SaferJoi';
 
-class HeartbeatClientWsEvent extends ClientWsEvent {
+class StartSessionClientWsEvent extends ClientWsEvent {
     public static readonly code = 0;
 
     private static readonly schema = saferJoi.object({
@@ -19,13 +19,13 @@ class HeartbeatClientWsEvent extends ClientWsEvent {
         this.ip = ip;
     }
 
-    public static CreateFromRaw (rawEvent: string): HeartbeatClientWsEvent {
-        const event = JSON.parse(rawEvent) as HeartbeatClientWsEvent;
-        const { error } = HeartbeatClientWsEvent.schema.validate(event);
-        if (error) throw new Error(`Failed creating class[${HeartbeatClientWsEvent.name}] with message[${error.message}]`);
+    public static CreateFromRaw (rawEvent: string): StartSessionClientWsEvent {
+        const event = JSON.parse(rawEvent) as StartSessionClientWsEvent;
+        const { error } = StartSessionClientWsEvent.schema.validate(event);
+        if (error) throw new Error(`Failed creating class[${StartSessionClientWsEvent.name}] with message[${error.message}]`);
 
-        return new HeartbeatClientWsEvent(event.uid, event.ip);
+        return new StartSessionClientWsEvent(event.uid, event.ip);
     }
 }
 
-export { HeartbeatClientWsEvent };
+export { StartSessionClientWsEvent };
