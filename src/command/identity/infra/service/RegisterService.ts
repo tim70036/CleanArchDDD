@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'uuid';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { Result } from '../../../../core/Result';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
@@ -53,7 +53,7 @@ class RegisterService extends IRegisterService {
     private async GenUniqueShortUid (): Promise<DomainErrorOr<number>> {
         for (let tryCount = 0 ; tryCount < 10 ; tryCount += 1) {
             try {
-                const shortUid = parseInt(uuidv4(), 16) % 100000000;
+                const shortUid = parseInt(uuid.v1(), 16) % 100000000;
                 const didExist = await this.userRepo.ShortUidExists(shortUid);
                 if (!didExist) return Result.Ok(shortUid);
 

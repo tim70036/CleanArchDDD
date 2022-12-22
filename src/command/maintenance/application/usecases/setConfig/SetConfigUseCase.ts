@@ -17,7 +17,7 @@ class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
         this.configService = configService;
     }
 
-    public async Run (request: SetConfigCTO): Promise<Response> {
+    protected async Run (request: SetConfigCTO): Promise<Response> {
         const startTime = dayjs(request.startTime).utc();
         if (!startTime.isValid())
             return new InvalidDataError(`invalid startTime`);

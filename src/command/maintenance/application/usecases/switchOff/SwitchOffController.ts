@@ -10,7 +10,7 @@ class SwitchOffController extends Controller {
         this.useCase = useCase;
     }
 
-    public async Run (req: express.Request, res: express.Response): Promise<void> {
+    protected async Run (req: express.Request, res: express.Response): Promise<void> {
         try {
             const result = await this.useCase.Execute();
 

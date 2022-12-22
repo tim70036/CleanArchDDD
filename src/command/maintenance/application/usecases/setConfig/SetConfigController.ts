@@ -12,7 +12,7 @@ class SetConfigController extends Controller {
         this.useCase = useCase;
     }
 
-    public async Run (req: express.Request, res: express.Response): Promise<void> {
+    protected async Run (req: express.Request, res: express.Response): Promise<void> {
         const cto: SetConfigCTO = req.body as SetConfigCTO;
 
         try {

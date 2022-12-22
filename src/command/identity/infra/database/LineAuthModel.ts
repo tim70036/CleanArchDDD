@@ -1,7 +1,7 @@
 import { BaseModel } from '../../../../infra/database/BaseModel';
 
 class LineAuthModel extends BaseModel {
-    public uid!: string;
+    public uid!: Buffer;
 
     public lineId!: string;
 

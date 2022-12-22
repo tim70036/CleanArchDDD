@@ -5,7 +5,7 @@ class HeartbeatClientWsEvent extends ClientWsEvent {
     public static readonly code = 0;
 
     private static readonly schema = saferJoi.object({
-        uid: saferJoi.string().uuid(),
+        uid: saferJoi.string().uuid({ version: 'uuidv1' }),
         ip: saferJoi.string().ip(),
     });
 

@@ -1,4 +1,5 @@
 import Objection from 'objection';
+import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { EntityId } from '../../../../core/EntityId';
 import { Result } from '../../../../core/Result';
@@ -51,7 +52,7 @@ class UserRepo extends IUserRepo {
         if (result.length <= 0)
             return new NotExistError(`cannot find deviceId[${deviceId}] in table[${DeviceAuthModel.tableName}]`);
 
-        const uidOrError = EntityId.CreateFrom(result[0].uid);
+        const uidOrError = EntityId.CreateFrom(fromBinaryUUID(result[0].uid));
         if (uidOrError.IsFailure())
             return uidOrError;
         const uid = uidOrError.Value;
@@ -69,7 +70,7 @@ class UserRepo extends IUserRepo {
         if (result.length <= 0)
             return new NotExistError(`cannot find lineId[${lineId}] in table[${LineAuthModel.tableName}]`);
 
-        const uidOrError = EntityId.CreateFrom(result[0].uid);
+        const uidOrError = EntityId.CreateFrom(fromBinaryUUID(result[0].uid));
         if (uidOrError.IsFailure())
             return uidOrError;
         const uid = uidOrError.Value;
@@ -84,7 +85,7 @@ class UserRepo extends IUserRepo {
 
     public async Save (user: User, trx: Objection.Transaction): Promise<void> {
         await UserModel.query(trx).insert({
-            uid: user.id.Value,
+            uid: toBinaryUUID(user.id.Value),
             shortUid: user.props.shortUid,
             name: user.props.name.props.value,
             isBanned: user.props.isBanned ? 1 : 0,
@@ -95,14 +96,14 @@ class UserRepo extends IUserRepo {
 
         const deviceAuth = user.props.deviceAuth;
         await DeviceAuthModel.query(trx).insert({
-            uid: user.id.Value,
+            uid: toBinaryUUID(user.id.Value),
             deviceId: deviceAuth.props.deviceId,
             isValid: deviceAuth.props.isValid ? 1 : 0,
         }).onConflict().merge();
 
         const lineAuth = user.props.lineAuth;
         await LineAuthModel.query(trx).insert({
-            uid: user.id.Value,
+            uid: toBinaryUUID(user.id.Value),
             lineId: lineAuth.props.lineId,
             isValid: lineAuth.props.isValid ? 1 : 0,
         }).onConflict().merge();

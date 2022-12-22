@@ -1,4 +1,5 @@
 import { ModelObject } from 'objection';
+import { fromBinaryUUID } from 'binary-uuid';
 import { DomainErrorOr } from '../../../../core/DomainError';
 import { DeviceAuthModel } from '../database/DeviceAuthModel';
 import { UserModel } from '../database/UserModel';
@@ -17,7 +18,7 @@ class UserMapper {
         deviceAuthDTO: ModelObject<DeviceAuthModel>;
         lineAuthDTO: ModelObject<LineAuthModel>;
     }): DomainErrorOr<User> {
-        const uidOrError = EntityId.CreateFrom(dto.userDTO.uid);
+        const uidOrError = EntityId.CreateFrom(fromBinaryUUID(dto.userDTO.uid));
         const nameOrError = Name.Create(dto.userDTO.name);
 
         const deviceAuthOrError = DeviceAuth.Create({ deviceId: dto.deviceAuthDTO.deviceId, isValid: dto.deviceAuthDTO.isValid === 1 });

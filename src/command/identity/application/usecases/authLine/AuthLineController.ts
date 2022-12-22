@@ -12,7 +12,7 @@ class AuthLineController extends Controller {
         this.useCase = useCase;
     }
 
-    public async Run (req: express.Request, res: express.Response): Promise<void> {
+    protected async Run (req: express.Request, res: express.Response): Promise<void> {
         const cto: AuthLineCTO = req.body as AuthLineCTO;
 
         try {

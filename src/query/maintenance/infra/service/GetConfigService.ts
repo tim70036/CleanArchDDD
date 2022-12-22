@@ -4,7 +4,7 @@ import { redisClient } from '../../../../infra/database/Redis';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
 import { IGetConfigService } from '../../domain/repo/IGetConfigService';
 
-class GetConfigService implements IGetConfigService {
+class GetConfigService extends IGetConfigService {
     private readonly maintenanceKey = 'maintenance';
 
     public async Get (): Promise<DomainErrorOr<GetConfigSTO>> {

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'uuid';
 import { DomainErrorOr } from './DomainError';
 import { Result } from './Result';
 import { saferJoi } from '../common/SaferJoi';
@@ -26,9 +26,14 @@ class Id<T> {
     }
 }
 
-// Entity will have unique id. If no id is provided, then we'll generate a new unique id.
+// Entity will have unique id. If no id is provided, then we'll
+// generate a new unique id.
 class EntityId extends Id<string> {
-    private constructor (id: string = uuidv4()) {
+    private constructor (id: string = uuid.v1()) {
+        // It's important to use uuid v1 here, this
+        // can help database operates much more optimal. See:
+        // https://www.npmjs.com/package/binary-uuid
+        // https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/
         super(id);
     }
 
@@ -37,7 +42,7 @@ class EntityId extends Id<string> {
     }
 
     public static CreateFrom (id: string): DomainErrorOr<EntityId> {
-        const schema = saferJoi.string().uuid().required();
+        const schema = saferJoi.string().uuid({ version: 'uuidv1' }).required();
         const { error } = schema.validate(id);
         if (error) return new InvalidDataError(`entityId create failed: [${error.message}]`);
 

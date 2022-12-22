@@ -3,7 +3,7 @@ import { Config } from '../../domain/model/Config';
 import { MaintenanceStatus } from '../../domain/model/MaintenanceStatus';
 import { IConfigService } from '../../domain/service/IConfigService';
 
-class ConfigService implements IConfigService {
+class ConfigService extends IConfigService {
     private readonly maintenanceKey = 'maintenance';
 
     public async SetStatus (status: MaintenanceStatus): Promise<void> {
@@ -11,9 +11,9 @@ class ConfigService implements IConfigService {
     }
 
     public async Save (config: Config): Promise<void> {
-        await redisClient.hSet(this.maintenanceKey, 'startTime', config.StartTime.format());
-        await redisClient.hSet(this.maintenanceKey, 'announcement', config.Announcement);
-        await redisClient.hSet(this.maintenanceKey, 'ipWhitelist', JSON.stringify(config.IpWhitelist));
+        await redisClient.hSet(this.maintenanceKey, 'startTime', config.props.startTime.format());
+        await redisClient.hSet(this.maintenanceKey, 'announcement', config.props.announcement);
+        await redisClient.hSet(this.maintenanceKey, 'ipWhitelist', JSON.stringify(config.props.ipWhitelist));
     }
 }
 

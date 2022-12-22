@@ -1,7 +1,7 @@
 import { BaseModel } from '../../../../infra/database/BaseModel';
 
 class UserModel extends BaseModel {
-    public uid!: string;
+    public uid!: Buffer;
 
     public shortUid!: number;
 

@@ -1,8 +1,8 @@
 import express from 'express';
-import { getConfigController } from '../../query/maintenance/application/getConfig';
-import { switchOffController } from '../../command/maintenance/application/usecases/switchOff';
-import { setConfigController } from '../../command/maintenance/application/usecases/setConfig';
-import { AdminServerAuth } from './middleware/AdminServerAuth';
+import { getConfigController } from '../../../query/maintenance/application/getConfig';
+import { switchOffController } from '../../../command/maintenance/application/usecases/switchOff';
+import { setConfigController } from '../../../command/maintenance/application/usecases/setConfig';
+import { AdminServerAuth } from '../middleware/AdminServerAuth';
 
 
 const adminRouter = express.Router();

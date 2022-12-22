@@ -12,7 +12,7 @@ class AuthDeviceController extends Controller {
         this.useCase = useCase;
     }
 
-    public async Run (req: express.Request, res: express.Response): Promise<void> {
+    protected async Run (req: express.Request, res: express.Response): Promise<void> {
         const cto: AuthDeviceCTO = req.body as AuthDeviceCTO;
 
         try {

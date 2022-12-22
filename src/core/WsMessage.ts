@@ -5,7 +5,7 @@ class WsMessage {
     private static readonly schema = saferJoi.object({
         eventCode: saferJoi.number().min(0).max(255).integer(),
         eventData: saferJoi.object(),
-        srcUid: saferJoi.alternatives().try(saferJoi.string().uuid(), saferJoi.string().valid('server')),
+        srcUid: saferJoi.alternatives().try(saferJoi.string().uuid({ version: 'uuidv1' }), saferJoi.string().valid('server')),
     });
 
     public readonly eventCode: number;

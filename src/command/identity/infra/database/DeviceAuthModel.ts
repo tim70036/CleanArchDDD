@@ -1,7 +1,7 @@
 import { BaseModel } from '../../../../infra/database/BaseModel';
 
 class DeviceAuthModel extends BaseModel {
-    public uid!: string;
+    public uid!: Buffer;
 
     public deviceId!: string;
 

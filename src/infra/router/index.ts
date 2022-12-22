@@ -1,9 +1,8 @@
 import { Application } from 'express';
 import { MaintenanceBlocker } from './middleware/MaintenanceBlocker';
-import { testRouter } from './TestRouter';
-import { apiRouter } from './ApiRouter';
-import { adminRouter } from './AdminRouter';
-
+import { testRouter } from './test';
+import { apiRouter } from './api';
+import { adminRouter } from './admin';
 
 function InitRouter (app: Application): void {
     app.use(MaintenanceBlocker);

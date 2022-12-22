@@ -25,7 +25,7 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
         this.registerService = registerService;
     }
 
-    public async Run (request: AuthDeviceCTO): Promise<DomainErrorOr<Session>> {
+    protected async Run (request: AuthDeviceCTO): Promise<DomainErrorOr<Session>> {
         let user;
         try {
             const userOrError = await this.userRepo.GetByDeviceId(request.deviceId);

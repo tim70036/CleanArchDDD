@@ -25,7 +25,7 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
         this.registerService = registerService;
     }
 
-    public async Run (request: AuthLineCTO): Promise<DomainErrorOr<Session>> {
+    protected async Run (request: AuthLineCTO): Promise<DomainErrorOr<Session>> {
         const lineIdOrError = await this.GetLineId(request.accessToken);
         if (lineIdOrError.IsFailure())
             return lineIdOrError;

@@ -15,7 +15,7 @@ class SwitchOffUseCase extends UseCase<void, void> {
         this.configService = configService;
     }
 
-    public async Run (): Promise<Response> {
+    protected async Run (): Promise<Response> {
         try {
             await this.configService.SetStatus(MaintenanceStatus.Off);
             this.logger.info(`switch off maintenance`);
