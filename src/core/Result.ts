@@ -2,11 +2,14 @@
 // Modified some to reduce the complexity.
 
 // Primitive class that represent a failure.
-class Failure<TF, TS> {
-    private readonly error: TF;
+class Failure<TF, TS> extends Error { // Extending Error class since I want stack info for debugging.
+    private readonly value: TF;
 
-    public constructor (error: TF) {
-        this.error = error;
+    public constructor (value: TF) {
+        super();
+        this.name = this.constructor.name;
+        this.message = JSON.stringify(value);
+        this.value = value;
     }
 
     public get Value (): TS {
@@ -14,7 +17,7 @@ class Failure<TF, TS> {
     }
 
     public get Error (): TF {
-        return this.error;
+        return this.value;
     }
 
     public IsFailure (): this is Failure<TF, TS> {
@@ -23,6 +26,12 @@ class Failure<TF, TS> {
 
     public IsSuccess (): this is Success<TF, TS> {
         return false;
+    }
+
+    // Override default toString so we can debug much more easier.
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public toString (): string {
+        return this.stack ?? '';
     }
 }
 

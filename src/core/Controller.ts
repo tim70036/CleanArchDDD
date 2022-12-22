@@ -30,7 +30,7 @@ abstract class Controller {
         this.logger.info(`<- ${responseCode}`);
 
         if (!(error instanceof IgnoreError))
-            this.logger.error(`error: [${error.Error.message}]`);
+            this.logger.error(error);
 
         res.sendStatus(responseCode);
     }
@@ -40,10 +40,10 @@ abstract class Controller {
         this.logger.info(`<- ${responseCode}`);
 
         if (!(error instanceof IgnoreError))
-            this.logger.error(`error: [${error.Error.message}]`);
+            this.logger.error(error);
 
         res.status(responseCode).json({
-            data: error.Error.message
+            data: error.toString()
         });
     }
 

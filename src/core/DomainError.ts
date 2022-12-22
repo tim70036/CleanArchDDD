@@ -1,24 +1,10 @@
 import { Failure, Success } from './Result';
 
-interface ErrorDTO {
-    message: string;
-}
-
 // Alias for domain failure. Narrow down the failure type should contain ErrorDTO instead of abritrary type.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-abstract class DomainError extends Failure<ErrorDTO, any> implements Error {
-    public readonly name: string;
-
-    public readonly message: string;
-
-    // Stack trace is very helpful, thus we're implementing js Error interface.
-    public readonly stack?: string;
-
-    public constructor (error: ErrorDTO) {
-        super(error);
-        this.message = error.message;
-        this.name = this.constructor.name;
-        this.stack = (new Error()).stack;
+abstract class DomainError extends Failure<string, any> {
+    public constructor (message: string) {
+        super(message);
     }
 }
 

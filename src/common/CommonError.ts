@@ -1,70 +1,26 @@
 import { DomainError } from '../core/DomainError';
 
-class InvalidDataError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `invalid data: ${message}` });
-    }
-}
+class InvalidDataError extends DomainError {}
 
-class NotAuthorizedError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `not authorized: ${message}` });
-    }
-}
+class NotAuthorizedError extends DomainError {}
 
-class NotAuthenticatedError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `not authenticated: ${message}` });
-    }
-}
+class NotAuthenticatedError extends DomainError {}
 
-class InvalidOperationError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `invalid operation: ${message}` });
-    }
-}
+class InvalidOperationError extends DomainError {}
 
-class NotExistError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `not exist: ${message}` });
-    }
-}
+class NotExistError extends DomainError {}
 
-class DuplicatedError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `duplicated: ${message}` });
-    }
-}
+class DuplicatedError extends DomainError {}
 
-class InternalServerError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `server error: ${message}` });
-    }
-}
+class InternalServerError extends DomainError {}
 
-class IgnoreError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `server error: ${message}` });
-    }
-}
+class IgnoreError extends DomainError {}
 
-class ExpireError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `server error: ${message}` });
-    }
-}
+class ExpireError extends DomainError {}
 
-class GoneError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `server error: ${message}` });
-    }
-}
+class GoneError extends DomainError {}
 
-class UnavailableError extends DomainError {
-    public constructor (message: string) {
-        super({ message: `server error: ${message}` });
-    }
-}
+class UnavailableError extends DomainError {}
 
 export {
     InvalidDataError,
