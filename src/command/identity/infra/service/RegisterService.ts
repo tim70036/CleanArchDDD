@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import uuid from 'uuid';
-import { ErrorOr } from '../../../../core/Error';
+import { ErrOr } from '../../../../core/Err';
 import { Result } from '../../../../core/Result';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
 import { Name } from '../../domain/model/Name';
@@ -18,7 +18,7 @@ class RegisterService extends IRegisterService {
         this.userRepo = userRepo;
     }
 
-    public async CreateDefaultUser (): Promise<ErrorOr<User>> {
+    public async CreateDefaultUser (): Promise<ErrOr<User>> {
         const shortUidOrError = await this.GenUniqueShortUid();
         if (shortUidOrError.IsFailure())
             return shortUidOrError;
@@ -50,7 +50,7 @@ class RegisterService extends IRegisterService {
         return userOrError;
     }
 
-    private async GenUniqueShortUid (): Promise<ErrorOr<number>> {
+    private async GenUniqueShortUid (): Promise<ErrOr<number>> {
         for (let tryCount = 0 ; tryCount < 10 ; tryCount += 1) {
             try {
                 const shortUid = parseInt(uuid.v1(), 16) % 100000000;

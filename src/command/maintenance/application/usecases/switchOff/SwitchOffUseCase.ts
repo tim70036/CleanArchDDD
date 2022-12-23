@@ -1,11 +1,11 @@
 import { InternalServerError } from '../../../../../common/CommonError';
-import { ErrorOr } from '../../../../../core/Error';
+import { ErrOr } from '../../../../../core/Err';
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { MaintenanceStatus } from '../../../domain/model/MaintenanceStatus';
 import { IConfigService } from '../../../domain/service/IConfigService';
 
-type Response = ErrorOr<void>;
+type Response = ErrOr<void>;
 
 class SwitchOffUseCase extends UseCase<void, void> {
     private readonly configService: IConfigService;

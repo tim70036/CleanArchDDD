@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { CreateLogger } from '../../../common/Logger';
-import { ResponseCode } from '../../../common/ResponseCode';
+import { StatusCode } from '../../../common/StatusCode';
 import { SessionService } from '../../../command/identity/infra/service/SessionService';
 import { SessionRepo } from '../../../command/identity/infra/repo/SessionRepo';
 import { DuplicatedError } from '../../../common/CommonError';
@@ -17,11 +17,11 @@ async function SessionAuth (req: express.Request, res: express.Response, next: e
         if (sessionOrError.IsFailure()) {
             logger.info(`auth failed due to error[${sessionOrError}] request[${req.method} ${req.originalUrl}] from ip[${req.ips}]`);
             if (sessionOrError instanceof DuplicatedError) {
-                res.sendStatus(ResponseCode.PreconditionFailed);
+                res.sendStatus(StatusCode.PreconditionFailed);
                 return;
             }
 
-            res.sendStatus(ResponseCode.Unauthorized);
+            res.sendStatus(StatusCode.Unauthorized);
             return;
         }
 
@@ -32,7 +32,7 @@ async function SessionAuth (req: express.Request, res: express.Response, next: e
         return;
     } catch (err: unknown) {
         logger.error(`${err}`);
-        res.sendStatus(ResponseCode.InternalServerError);
+        res.sendStatus(StatusCode.InternalServerError);
     }
 }
 

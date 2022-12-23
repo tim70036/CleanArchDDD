@@ -1,4 +1,4 @@
-enum ResponseCode{
+enum StatusCode {
     OK = 200,
     BadRequest = 400,
     Unauthorized = 401,
@@ -15,4 +15,4 @@ enum ResponseCode{
     PreconditionFailed = 412,
 }
 
-export { ResponseCode };
+export { StatusCode };

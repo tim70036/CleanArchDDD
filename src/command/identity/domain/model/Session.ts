@@ -1,5 +1,5 @@
 import { AggregateRoot } from '../../../../core/AggregateRoot';
-import { ErrorOr } from '../../../../core/Error';
+import { ErrOr } from '../../../../core/Err';
 import { EntityId } from '../../../../core/EntityId';
 import { Result } from '../../../../core/Result';
 import { sign } from 'jsonwebtoken';
@@ -28,7 +28,7 @@ class Session extends AggregateRoot<SessionProps> {
         endTime: saferJoi.object().instance(dayjs.Dayjs),
     });
 
-    public static CreateNew (id: EntityId): ErrorOr<Session> {
+    public static CreateNew (id: EntityId): ErrOr<Session> {
         const jwt = sign({ uid: id.Value }, process.env.JWT_KEY as string);
         const session = new Session({
             isActive: false,
@@ -42,7 +42,7 @@ class Session extends AggregateRoot<SessionProps> {
         return Result.Ok(session);
     }
 
-    public static CreateFrom (props: SessionProps, id: EntityId): ErrorOr<Session> {
+    public static CreateFrom (props: SessionProps, id: EntityId): ErrOr<Session> {
         const { error } = Session.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${Session.name}] with message[${error.message}]`);
 
@@ -50,7 +50,7 @@ class Session extends AggregateRoot<SessionProps> {
         return Result.Ok(session);
     }
 
-    public Start (ip: string): ErrorOr<void> {
+    public Start (ip: string): ErrOr<void> {
         this.props.isActive = true;
         this.props.ip = ip;
         this.props.startTime = dayjs.utc();
@@ -59,7 +59,7 @@ class Session extends AggregateRoot<SessionProps> {
         return Result.Ok();
     }
 
-    public End (): ErrorOr<void> {
+    public End (): ErrOr<void> {
         this.props.isActive = false;
         this.props.endTime = dayjs.utc();
 

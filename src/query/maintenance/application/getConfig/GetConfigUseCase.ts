@@ -1,11 +1,11 @@
 import { InternalServerError } from '../../../../common/CommonError';
-import { ErrorOr } from '../../../../core/Error';
+import { ErrOr } from '../../../../core/Err';
 import { Result } from '../../../../core/Result';
 import { UseCase } from '../../../../core/UseCase';
 import { IGetConfigService } from '../../domain/repo/IGetConfigService';
 import { GetConfigSTO } from './GetConfigDTO';
 
-type Response = ErrorOr<GetConfigSTO>
+type Response = ErrOr<GetConfigSTO>
 
 class GetConfigUseCase extends UseCase<void, GetConfigSTO> {
     private readonly getConfigService: IGetConfigService;

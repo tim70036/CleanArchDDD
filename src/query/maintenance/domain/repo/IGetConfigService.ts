@@ -1,9 +1,9 @@
-import { ErrorOr } from '../../../../core/Error';
+import { ErrOr } from '../../../../core/Err';
 import { Service } from '../../../../core/Service';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
 
 abstract class IGetConfigService extends Service {
-    public abstract Get (): Promise<ErrorOr<GetConfigSTO>>;
+    public abstract Get (): Promise<ErrOr<GetConfigSTO>>;
 }
 
 export { IGetConfigService };

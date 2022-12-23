@@ -1,4 +1,4 @@
-import { ErrorOr } from './Error';
+import { ErrOr } from './Err';
 import { CreateLogger } from '../common/Logger';
 
 // UseCase acts as huge a mediator that controls the dance of each component.
@@ -12,13 +12,13 @@ abstract class UseCase<TRequest, TResponse> {
 
     // Exposed method for Controllers to call.
     // It's separate from actual implementation of UseCase, since we want have some hook and control in this parent class.
-    public async Execute (request?: TRequest): Promise<ErrorOr<TResponse>> {
+    public async Execute (request?: TRequest): Promise<ErrOr<TResponse>> {
         const response = await this.Run(request);
         return response;
     }
 
     // The actual implementation goes into this method.
-    protected abstract Run(request?: TRequest): Promise<ErrorOr<TResponse>> | ErrorOr<TResponse>;
+    protected abstract Run(request?: TRequest): Promise<ErrOr<TResponse>> | ErrOr<TResponse>;
 }
 
 export {

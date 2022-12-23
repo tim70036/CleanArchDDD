@@ -4,7 +4,7 @@ import net from 'net';
 import WebSocket, { WebSocketServer } from 'ws';
 import { redisSubClient } from '../database/Redis';
 import { CreateLogger } from '../../common/Logger';
-import { ResponseCode } from '../../common/ResponseCode';
+import { StatusCode } from '../../common/StatusCode';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { WsController } from '../../core/WsController';
 import { WsRouter } from './WsRouter';
@@ -74,12 +74,12 @@ class WsApp {
             if (sessionOrError.IsFailure()) {
                 this.logger.info(`auth failed due to error[${sessionOrError}] from ip[${ip}]`);
                 if (sessionOrError instanceof DuplicatedError) {
-                    socket.write(`HTTP/1.1 ${ResponseCode.PreconditionFailed} ${ResponseCode[ResponseCode.PreconditionFailed]}\r\n\r\n`);
+                    socket.write(`HTTP/1.1 ${StatusCode.PreconditionFailed} ${StatusCode[StatusCode.PreconditionFailed]}\r\n\r\n`);
                     socket.destroy();
                     return;
                 }
 
-                socket.write(`HTTP/1.1 ${ResponseCode.Unauthorized} ${ResponseCode[ResponseCode.Unauthorized]}\r\n\r\n`);
+                socket.write(`HTTP/1.1 ${StatusCode.Unauthorized} ${StatusCode[StatusCode.Unauthorized]}\r\n\r\n`);
                 socket.destroy();
                 return;
             }
@@ -96,7 +96,7 @@ class WsApp {
             return;
         } catch (err: unknown) {
             this.logger.error(`${err}`);
-            socket.write(`HTTP/1.1 ${ResponseCode.InternalServerError} ${ResponseCode[ResponseCode.InternalServerError]}\r\n\r\n`);
+            socket.write(`HTTP/1.1 ${StatusCode.InternalServerError} ${StatusCode[StatusCode.InternalServerError]}\r\n\r\n`);
             socket.destroy();
             return;
         }

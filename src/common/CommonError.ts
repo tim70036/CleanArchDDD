@@ -1,26 +1,71 @@
-import { DomainError } from '../core/Error';
+import { Err } from '../core/Err';
+import { StatusCode } from './StatusCode';
 
-class InvalidDataError extends DomainError {}
+class InvalidDataError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.BadRequest;
+    }
+}
 
-class NotAuthorizedError extends DomainError {}
+class NotAuthenticatedError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.Unauthorized;
+    }
+}
 
-class NotAuthenticatedError extends DomainError {}
+class NotAuthorizedError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.Forbidden;
+    }
+}
 
-class InvalidOperationError extends DomainError {}
+class InvalidOperationError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.Forbidden;
+    }
+}
 
-class NotExistError extends DomainError {}
+class NotExistError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.NotFound;
+    }
+}
 
-class DuplicatedError extends DomainError {}
+class DuplicatedError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.Conflict;
+    }
+}
 
-class InternalServerError extends DomainError {}
+class InternalServerError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.InternalServerError;
+    }
+}
 
-class IgnoreError extends DomainError {}
+class IgnoreError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.NotAcceptable;
+    }
+}
 
-class ExpireError extends DomainError {}
+class ExpireError extends Err {
+    public ToStatusCode(): StatusCode {
+        return StatusCode.Expired;
+    }
+}
 
-class GoneError extends DomainError {}
+class GoneError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.Gone;
+    }
+}
 
-class UnavailableError extends DomainError {}
+class UnavailableError extends Err {
+    public ToStatusCode (): StatusCode {
+        return StatusCode.ServiceUnavailable;
+    }
+}
 
 export {
     InvalidDataError,

@@ -2,7 +2,7 @@
 import Objection from 'objection';
 import { CreateLogger } from '../common/Logger';
 import { AggregateRoot } from './AggregateRoot';
-import { ErrorOr } from './Error';
+import { ErrOr } from './Err';
 import { EntityId } from './EntityId';
 
 abstract class Repo<T extends AggregateRoot<any>> {
@@ -14,7 +14,7 @@ abstract class Repo<T extends AggregateRoot<any>> {
 
     public abstract Exists(id: EntityId, trx?: Objection.Transaction): Promise<boolean>;
 
-    public abstract Get(id: EntityId, trx?: Objection.Transaction): Promise<ErrorOr<T>>;
+    public abstract Get(id: EntityId, trx?: Objection.Transaction): Promise<ErrOr<T>>;
 
     public abstract Save(t: T, trx: Objection.Transaction): Promise<void>;
 }

@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { MaintenanceStatus } from '../../../command/maintenance/domain/model/MaintenanceStatus';
 import { CreateLogger } from '../../../common/Logger';
-import { ResponseCode } from '../../../common/ResponseCode';
+import { StatusCode } from '../../../common/StatusCode';
 import { maintenanceMaster } from '../../MaintenanceMaster';
 
 const allowDomainsWhenBlockAll = ['admin', 'test'];
@@ -24,7 +24,7 @@ function MaintenanceBlocker (req: express.Request, res: express.Response, next: 
     }
 
     logger.debug(`request blocked due to maintenance, ip: [${req.ip}] `);
-    res.status(ResponseCode.ServiceUnavailable).send(maintenanceMaster.Announcement);
+    res.status(StatusCode.ServiceUnavailable).send(maintenanceMaster.Announcement);
 }
 
 function GetApiDomain (req: express.Request): string {

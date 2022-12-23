@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
-import { ErrorOr } from '../../../../core/Error';
+import { ErrOr } from '../../../../core/Err';
 import { Session } from '../../domain/model/Session';
 import { EntityId } from '../../../../core/EntityId';
 
 class SessionMapper {
-    public static ToDomain (dto: string): ErrorOr<Session> {
+    public static ToDomain (dto: string): ErrOr<Session> {
         const rawSession = JSON.parse(dto) as {
             uid: string;
             isActive: boolean;
