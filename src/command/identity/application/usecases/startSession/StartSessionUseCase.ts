@@ -1,6 +1,6 @@
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Transaction } from '../../../../../common/Transaction';
-import { DomainErrorOr } from '../../../../../core/DomainError';
+import { ErrorOr } from '../../../../../core/Error';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
 import { Result } from '../../../../../core/Result';
@@ -16,7 +16,7 @@ class StartSessionUseCase extends UseCase<StartSessionClientWsEvent, void> {
         this.sessionRepo = sessionRepo;
     }
 
-    protected async Run (event: StartSessionClientWsEvent): Promise<DomainErrorOr<void>> {
+    protected async Run (event: StartSessionClientWsEvent): Promise<ErrorOr<void>> {
         const uidOrError = EntityId.CreateFrom(event.uid);
         if (uidOrError.IsFailure())
             return uidOrError;

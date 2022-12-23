@@ -1,6 +1,6 @@
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
-import { DomainErrorOr } from '../../../../../core/DomainError';
+import { ErrorOr } from '../../../../../core/Error';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { DeviceAuth } from '../../../domain/model/DeviceAuth';
@@ -25,7 +25,7 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
         this.registerService = registerService;
     }
 
-    protected async Run (request: AuthDeviceCTO): Promise<DomainErrorOr<Session>> {
+    protected async Run (request: AuthDeviceCTO): Promise<ErrorOr<Session>> {
         let user;
         try {
             const userOrError = await this.userRepo.GetByDeviceId(request.deviceId);

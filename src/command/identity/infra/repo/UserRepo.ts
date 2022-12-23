@@ -1,6 +1,6 @@
 import Objection from 'objection';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { EntityId } from '../../../../core/EntityId';
 import { Result } from '../../../../core/Result';
 import { User } from '../../domain/model/User';
@@ -25,7 +25,7 @@ class UserRepo extends IUserRepo {
         return userDTO.length > 0;
     }
 
-    public async Get (id: EntityId): Promise<DomainErrorOr<User>> {
+    public async Get (id: EntityId): Promise<ErrorOr<User>> {
         const userDTO = await UserModel.query().where('uid', id.Value);
         if (userDTO.length <= 0)
             return new NotExistError(`cannot find uid[${id.Value}] in table[${UserModel.tableName}]`);
@@ -47,7 +47,7 @@ class UserRepo extends IUserRepo {
         return userOrError;
     }
 
-    public async GetByDeviceId (deviceId: string): Promise<DomainErrorOr<User>> {
+    public async GetByDeviceId (deviceId: string): Promise<ErrorOr<User>> {
         const result = await DeviceAuthModel.query().where('deviceId', deviceId);
         if (result.length <= 0)
             return new NotExistError(`cannot find deviceId[${deviceId}] in table[${DeviceAuthModel.tableName}]`);
@@ -65,7 +65,7 @@ class UserRepo extends IUserRepo {
         return Result.Ok(user);
     }
 
-    public async GetByLineId (lineId: string): Promise<DomainErrorOr<User>> {
+    public async GetByLineId (lineId: string): Promise<ErrorOr<User>> {
         const result = await LineAuthModel.query().where('lineId', lineId);
         if (result.length <= 0)
             return new NotExistError(`cannot find lineId[${lineId}] in table[${LineAuthModel.tableName}]`);

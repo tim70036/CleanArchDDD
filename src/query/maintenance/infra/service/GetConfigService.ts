@@ -1,4 +1,4 @@
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { Result } from '../../../../core/Result';
 import { redisClient } from '../../../../infra/database/Redis';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
@@ -7,7 +7,7 @@ import { IGetConfigService } from '../../domain/repo/IGetConfigService';
 class GetConfigService extends IGetConfigService {
     private readonly maintenanceKey = 'maintenance';
 
-    public async Get (): Promise<DomainErrorOr<GetConfigSTO>> {
+    public async Get (): Promise<ErrorOr<GetConfigSTO>> {
         const startTime = await redisClient.hGet(this.maintenanceKey, 'startTime');
         const announcement = await redisClient.hGet(this.maintenanceKey, 'announcement');
         const ipWhitelist = await redisClient.hGet(this.maintenanceKey, 'ipWhitelist');

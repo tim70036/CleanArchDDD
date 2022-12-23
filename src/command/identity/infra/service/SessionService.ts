@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { ISessionService } from '../../domain/service/ISessionService';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { Session } from '../../domain/model/Session';
 import { DuplicatedError, ExpireError, InternalServerError, InvalidDataError } from '../../../../common/CommonError';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
@@ -15,7 +15,7 @@ class SessionService extends ISessionService {
         this.sessionRepo = sessionRepo;
     }
 
-    public async Auth (token: string): Promise<DomainErrorOr<Session>> {
+    public async Auth (token: string): Promise<ErrorOr<Session>> {
         let rawUid;
         try {
             const decoded = jwt.verify(token, process.env.JWT_KEY as string) as { uid: string; };

@@ -1,7 +1,7 @@
 
 import { Result } from '../../../../core/Result';
 import { ValueObject } from '../../../../core/ValueObject';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { saferJoi } from '../../../../common/SaferJoi';
 import { InvalidDataError } from '../../../../common/CommonError';
 
@@ -16,7 +16,7 @@ class DeviceAuth extends ValueObject<DeviceAuthProps> {
         isValid: saferJoi.bool()
     });
 
-    public static Create (props: DeviceAuthProps): DomainErrorOr<DeviceAuth> {
+    public static Create (props: DeviceAuthProps): ErrorOr<DeviceAuth> {
         const { error } = DeviceAuth.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${DeviceAuth.name}] with message[${error.message}]`);
 
@@ -25,7 +25,7 @@ class DeviceAuth extends ValueObject<DeviceAuthProps> {
         );
     }
 
-    public static CreateDefault (): DomainErrorOr<DeviceAuth> {
+    public static CreateDefault (): ErrorOr<DeviceAuth> {
         const props = {
             deviceId: '',
             isValid: false

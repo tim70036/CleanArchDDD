@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { CreateLogger } from '../../../common/Logger';
-import { ResponseCode } from '../../../core/ResponseCode';
+import { ResponseCode } from '../../../common/ResponseCode';
 import { SessionService } from '../../../command/identity/infra/service/SessionService';
 import { SessionRepo } from '../../../command/identity/infra/repo/SessionRepo';
 import { DuplicatedError } from '../../../common/CommonError';

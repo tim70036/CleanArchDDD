@@ -1,4 +1,4 @@
-import { DomainError } from '../core/DomainError';
+import { DomainError } from '../core/Error';
 
 class InvalidDataError extends DomainError {}
 

@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { IgnoreError, NotExistError, DuplicatedError, InvalidDataError, InvalidOperationError, NotAuthenticatedError, NotAuthorizedError, ExpireError, GoneError, UnavailableError } from '../common/CommonError';
 import { CreateLogger } from '../common/Logger';
-import { DomainError } from './DomainError';
-import { ResponseCode } from './ResponseCode';
+import { DomainError } from './Error';
+import { ResponseCode } from '../common/ResponseCode';
 
 abstract class Controller {
     protected logger;
@@ -25,7 +25,7 @@ abstract class Controller {
         });
     }
 
-    protected Fail (res: express.Response, error: DomainError): void {
+    protected Fail<T> (res: express.Response, error: DomainError, payload?: T): void {
         const responseCode = this.GetResponseCode(error);
         this.logger.info(`<- ${responseCode}`);
 

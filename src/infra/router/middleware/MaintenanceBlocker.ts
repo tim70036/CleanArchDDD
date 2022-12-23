@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { MaintenanceStatus } from '../../../command/maintenance/domain/model/MaintenanceStatus';
 import { CreateLogger } from '../../../common/Logger';
-import { ResponseCode } from '../../../core/ResponseCode';
+import { ResponseCode } from '../../../common/ResponseCode';
 import { maintenanceMaster } from '../../MaintenanceMaster';
 
 const allowDomainsWhenBlockAll = ['admin', 'test'];

@@ -1,6 +1,6 @@
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
-import { DomainErrorOr } from '../../../../../core/DomainError';
+import { ErrorOr } from '../../../../../core/Error';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthLineCTO } from './AuthLineDTO';
 import { InternalServerError, NotAuthenticatedError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';
@@ -25,7 +25,7 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
         this.registerService = registerService;
     }
 
-    protected async Run (request: AuthLineCTO): Promise<DomainErrorOr<Session>> {
+    protected async Run (request: AuthLineCTO): Promise<ErrorOr<Session>> {
         const lineIdOrError = await this.GetLineId(request.accessToken);
         if (lineIdOrError.IsFailure())
             return lineIdOrError;
@@ -80,7 +80,7 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
         }
     }
 
-    private async GetLineId (accessToken: string): Promise<DomainErrorOr<string>> {
+    private async GetLineId (accessToken: string): Promise<ErrorOr<string>> {
         try {
             // Request Line to verify accessToken
             const verifyUrl = new URL(`${process.env.LINE_HOST}/oauth2/v2.1/verify`);

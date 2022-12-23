@@ -3,7 +3,7 @@ import { Name } from './Name';
 import { AggregateRoot } from '../../../../core/AggregateRoot';
 import { saferJoi } from '../../../../common/SaferJoi';
 import { DeviceAuth } from './DeviceAuth';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { Result } from '../../../../core/Result';
 import { UserCreatedEvent } from '../event/UserCreatedEvent';
 import { InvalidDataError } from '../../../../common/CommonError';
@@ -36,7 +36,7 @@ class User extends AggregateRoot<UserProps> {
         lineAuth: saferJoi.object().instance(LineAuth),
     });
 
-    public static Create (props: UserProps): DomainErrorOr<User> {
+    public static Create (props: UserProps): ErrorOr<User> {
         const { error } = User.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${User.name}] with message[${error.message}]`);
 
@@ -46,7 +46,7 @@ class User extends AggregateRoot<UserProps> {
         return Result.Ok(user);
     }
 
-    public static CreateFrom (props: UserProps, id: EntityId): DomainErrorOr<User> {
+    public static CreateFrom (props: UserProps, id: EntityId): ErrorOr<User> {
         const { error } = User.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${User.name}] with message[${error.message}]`);
 

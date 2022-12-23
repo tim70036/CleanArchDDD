@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
 import { InternalServerError, InvalidDataError } from '../../../../../common/CommonError';
-import { DomainErrorOr } from '../../../../../core/DomainError';
+import { ErrorOr } from '../../../../../core/Error';
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { Config } from '../../../domain/model/Config';
 import { IConfigService } from '../../../domain/service/IConfigService';
 import { SetConfigCTO } from './SetConfigDTO';
 
-type Response = DomainErrorOr<void>;
+type Response = ErrorOr<void>;
 
 class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
     private readonly configService: IConfigService;

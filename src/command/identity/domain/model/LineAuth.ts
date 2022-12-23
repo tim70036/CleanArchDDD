@@ -1,6 +1,6 @@
 
 import { ValueObject } from '../../../../core/ValueObject';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { saferJoi } from '../../../../common/SaferJoi';
 import { Result } from '../../../../core/Result';
 import { InvalidDataError } from '../../../../common/CommonError';
@@ -16,7 +16,7 @@ class LineAuth extends ValueObject<LineAuthProps> {
         isValid: saferJoi.bool()
     });
 
-    public static Create (props: LineAuthProps): DomainErrorOr<LineAuth> {
+    public static Create (props: LineAuthProps): ErrorOr<LineAuth> {
         const { error } = LineAuth.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${LineAuth.name}] with message[${error.message}]`);
 
@@ -25,7 +25,7 @@ class LineAuth extends ValueObject<LineAuthProps> {
         );
     }
 
-    public static CreateDefault (): DomainErrorOr<LineAuth> {
+    public static CreateDefault (): ErrorOr<LineAuth> {
         const props = {
             lineId: '',
             isValid: false

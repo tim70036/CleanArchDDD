@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import { DomainErrorOr } from './DomainError';
+import { ErrorOr } from './Error';
 import { Result } from './Result';
 import { saferJoi } from '../common/SaferJoi';
 import { InvalidDataError } from '../common/CommonError';
@@ -41,7 +41,7 @@ class EntityId extends Id<string> {
         return new EntityId();
     }
 
-    public static CreateFrom (id: string): DomainErrorOr<EntityId> {
+    public static CreateFrom (id: string): ErrorOr<EntityId> {
         const schema = saferJoi.string().uuid({ version: 'uuidv1' }).required();
         const { error } = schema.validate(id);
         if (error) return new InvalidDataError(`entityId create failed: [${error.message}]`);

@@ -1,6 +1,6 @@
 import Objection from 'objection';
 import { redisClient } from '../../../../infra/database/Redis';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { EntityId } from '../../../../core/EntityId';
 import { Session } from '../../domain/model/Session';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
@@ -10,7 +10,7 @@ import { SessionMapper } from '../mapper/SessionMapper';
 const sessionPrefix = `session:uid`;
 
 class SessionRepo extends ISessionRepo {
-    public async Get (uid: EntityId): Promise <DomainErrorOr<Session>> {
+    public async Get (uid: EntityId): Promise <ErrorOr<Session>> {
         const sessionDTO = await redisClient.hGet(sessionPrefix, uid.Value);
         if (sessionDTO === undefined)
             return new NotExistError(`cannot find session uid[${uid.Value}] in key[${sessionPrefix}]`);

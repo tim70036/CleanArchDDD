@@ -1,7 +1,7 @@
 
 import { Result } from '../../../../core/Result';
 import { ValueObject } from '../../../../core/ValueObject';
-import { DomainErrorOr } from '../../../../core/DomainError';
+import { ErrorOr } from '../../../../core/Error';
 import { saferJoi } from '../../../../common/SaferJoi';
 import dayjs from 'dayjs';
 import { InvalidDataError } from '../../../../common/CommonError';
@@ -19,7 +19,7 @@ class Config extends ValueObject<ConfigProps> {
         ipWhitelist: saferJoi.array().items(saferJoi.string().ip()).min(0).max(100),
     });
 
-    public static Create (props: ConfigProps): DomainErrorOr<Config> {
+    public static Create (props: ConfigProps): ErrorOr<Config> {
         const { error } = Config.schema.validate(props);
         if (error) return new InvalidDataError(`Failed creating class[${Config.name}] with message[${error.message}]`);
 

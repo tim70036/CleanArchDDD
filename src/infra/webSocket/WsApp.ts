@@ -4,7 +4,7 @@ import net from 'net';
 import WebSocket, { WebSocketServer } from 'ws';
 import { redisSubClient } from '../database/Redis';
 import { CreateLogger } from '../../common/Logger';
-import { ResponseCode } from '../../core/ResponseCode';
+import { ResponseCode } from '../../common/ResponseCode';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { WsController } from '../../core/WsController';
 import { WsRouter } from './WsRouter';
