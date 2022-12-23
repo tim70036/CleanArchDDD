@@ -1,6 +1,5 @@
 import { ModelObject } from 'objection';
 import { fromBinaryUUID } from 'binary-uuid';
-import { ErrOr } from '../../../../core/Err';
 import { DeviceAuthModel } from '../database/DeviceAuthModel';
 import { UserModel } from '../database/UserModel';
 import { LineAuthModel } from '../database/LineAuthModel';
@@ -9,7 +8,7 @@ import { Name } from '../../domain/model/Name';
 import dayjs from 'dayjs';
 import { LineAuth } from '../../domain/model/LineAuth';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 import { User } from '../../domain/model/User';
 
 class UserMapper {

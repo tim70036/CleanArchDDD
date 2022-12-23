@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { ErrOr } from '../../../../core/Err';
+import { ErrOr } from '../../../../core/Result';
 import { Session } from '../../domain/model/Session';
 import { EntityId } from '../../../../core/EntityId';
 

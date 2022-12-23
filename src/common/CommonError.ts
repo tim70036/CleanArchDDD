@@ -1,4 +1,4 @@
-import { Err } from '../core/Err';
+import { Err } from '../core/Result';
 import { StatusCode } from './StatusCode';
 
 class InvalidDataError extends Err {

@@ -1,6 +1,6 @@
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Transaction } from '../../../../../common/Transaction';
-import { ErrOr } from '../../../../../core/Err';
+import { ErrOr } from '../../../../../core/Result';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
 import { Result } from '../../../../../core/Result';

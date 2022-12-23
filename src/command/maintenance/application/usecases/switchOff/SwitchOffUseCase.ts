@@ -1,6 +1,5 @@
 import { InternalServerError } from '../../../../../common/CommonError';
-import { ErrOr } from '../../../../../core/Err';
-import { Result } from '../../../../../core/Result';
+import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { MaintenanceStatus } from '../../../domain/model/MaintenanceStatus';
 import { IConfigService } from '../../../domain/service/IConfigService';

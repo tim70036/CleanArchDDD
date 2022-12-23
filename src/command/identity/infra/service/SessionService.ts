@@ -1,11 +1,10 @@
 import * as jwt from 'jsonwebtoken';
 import { ISessionService } from '../../domain/service/ISessionService';
-import { ErrOr } from '../../../../core/Err';
 import { Session } from '../../domain/model/Session';
 import { DuplicatedError, ExpireError, InternalServerError, InvalidDataError } from '../../../../common/CommonError';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 
 class SessionService extends ISessionService {
     private readonly sessionRepo: ISessionRepo;

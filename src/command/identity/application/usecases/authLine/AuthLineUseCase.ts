@@ -1,6 +1,5 @@
-import { Result } from '../../../../../core/Result';
+import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
-import { ErrOr } from '../../../../../core/Err';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthLineCTO } from './AuthLineDTO';
 import { InternalServerError, NotAuthenticatedError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';

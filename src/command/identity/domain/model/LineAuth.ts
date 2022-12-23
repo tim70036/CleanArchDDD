@@ -1,8 +1,7 @@
 
 import { ValueObject } from '../../../../core/ValueObject';
-import { ErrOr } from '../../../../core/Err';
 import { saferJoi } from '../../../../common/SaferJoi';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 import { InvalidDataError } from '../../../../common/CommonError';
 
 interface LineAuthProps {

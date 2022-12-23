@@ -1,7 +1,6 @@
 import { AggregateRoot } from '../../../../core/AggregateRoot';
-import { ErrOr } from '../../../../core/Err';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 import { sign } from 'jsonwebtoken';
 import dayjs from 'dayjs';
 import { saferJoi } from '../../../../common/SaferJoi';

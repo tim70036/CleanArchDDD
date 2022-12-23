@@ -1,6 +1,5 @@
 import uuid from 'uuid';
-import { ErrOr } from './Err';
-import { Result } from './Result';
+import { Result, ErrOr } from './Result';
 import { saferJoi } from '../common/SaferJoi';
 import { InvalidDataError } from '../common/CommonError';
 

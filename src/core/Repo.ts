@@ -2,7 +2,7 @@
 import Objection from 'objection';
 import { CreateLogger } from '../common/Logger';
 import { AggregateRoot } from './AggregateRoot';
-import { ErrOr } from './Err';
+import { ErrOr } from './Result';
 import { EntityId } from './EntityId';
 
 abstract class Repo<T extends AggregateRoot<any>> {

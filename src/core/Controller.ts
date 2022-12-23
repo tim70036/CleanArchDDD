@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { CreateLogger } from '../common/Logger';
-import { Err } from './Err';
+import { Err } from './Result';
 import { IgnoreError } from '../common/CommonError';
 
 abstract class Controller {

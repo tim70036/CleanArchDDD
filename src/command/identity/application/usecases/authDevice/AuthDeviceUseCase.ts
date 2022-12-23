@@ -1,6 +1,6 @@
 import { Result } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
-import { ErrOr } from '../../../../../core/Err';
+import { ErrOr } from '../../../../../core/Result';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { DeviceAuth } from '../../../domain/model/DeviceAuth';

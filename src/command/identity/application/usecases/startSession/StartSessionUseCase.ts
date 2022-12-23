@@ -1,9 +1,8 @@
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Transaction } from '../../../../../common/Transaction';
-import { ErrOr } from '../../../../../core/Err';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
-import { Result } from '../../../../../core/Result';
+import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
 import { StartSessionClientWsEvent } from './StartSessionWsEvent';

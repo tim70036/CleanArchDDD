@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { InternalServerError, InvalidDataError } from '../../../../../common/CommonError';
-import { ErrOr } from '../../../../../core/Err';
-import { Result } from '../../../../../core/Result';
+import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { Config } from '../../../domain/model/Config';
 import { IConfigService } from '../../../domain/service/IConfigService';

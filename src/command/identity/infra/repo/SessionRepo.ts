@@ -1,6 +1,6 @@
 import Objection from 'objection';
 import { redisClient } from '../../../../infra/database/Redis';
-import { ErrOr } from '../../../../core/Err';
+import { ErrOr } from '../../../../core/Result';
 import { EntityId } from '../../../../core/EntityId';
 import { Session } from '../../domain/model/Session';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';

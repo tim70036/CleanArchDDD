@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import uuid from 'uuid';
-import { ErrOr } from '../../../../core/Err';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
 import { Name } from '../../domain/model/Name';
 import { User } from '../../domain/model/User';

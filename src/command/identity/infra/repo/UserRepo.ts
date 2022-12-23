@@ -1,8 +1,7 @@
 import Objection from 'objection';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
-import { ErrOr } from '../../../../core/Err';
 import { EntityId } from '../../../../core/EntityId';
-import { Result } from '../../../../core/Result';
+import { Result, ErrOr } from '../../../../core/Result';
 import { User } from '../../domain/model/User';
 import { IUserRepo } from '../../domain/repo/IUserRepo';
 import { UserModel } from '../database/UserModel';

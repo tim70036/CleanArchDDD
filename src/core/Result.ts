@@ -1,15 +1,17 @@
 // Error handling inspired by this article https://khalilstemmler.com/articles/enterprise-typescript-nodejs/functional-error-handling/
 // Modified some to reduce the complexity.
 
-// Primitive class that represent a failure.
-class Failure<TF, TS> extends Error { // Extending Error class since I want stack info for debugging.
-    private readonly value: TF;
+import { StatusCode } from '../common/StatusCode';
 
-    public constructor (value: TF) {
+// Primitive class that represent a failure.
+abstract class Failure<TF, TS> extends Error { // Extending Error class since I want stack info for debugging.
+    private readonly errValue: TF;
+
+    public constructor (errValue: TF) {
         super();
         this.name = this.constructor.name;
-        this.message = JSON.stringify(value);
-        this.value = value;
+        this.message = JSON.stringify(errValue);
+        this.errValue = errValue;
     }
 
     public get Value (): TS {
@@ -17,7 +19,7 @@ class Failure<TF, TS> extends Error { // Extending Error class since I want stac
     }
 
     public get Error (): TF {
-        return this.value;
+        return this.errValue;
     }
 
     public IsFailure (): this is Failure<TF, TS> {
@@ -60,30 +62,40 @@ class Success<TF, TS> {
 // For example: let result: Either = execute(); where execute() returns either Success or Failure type.
 type Either<TF, TS> = Failure<TF, TS> | Success<TF, TS>;
 
+// Alias for domain failure. Narrow down the failure type should contain string instead of abritrary type.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+abstract class Err extends Failure<string, any> {
+    public constructor (message: string) {
+        super(message);
+    }
+
+    // Used for mapping error to http response status code. All
+    // subclass should implement this.
+    public abstract ToStatusCode (): StatusCode;
+}
+
+// Alias for domain failure Either. Narrow down the result should be either DomainError or abritrary Success.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ErrOr<TS> = Err | Success<any, TS>;
+
 // Helper functions that create success or failure result. Also, notice it returns union type of success and failure.
-// For example: let result: Either = execute(); We can use Result to create return value inside execute().
+// For example: let result: ErrOr = execute(); We can use Result to create return value inside execute().
 // We can also use Combine to check multiple results together.
 class Result {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static Fail<TF> (failure: TF): Either<TF, any> {
-        return new Failure(failure);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static Ok<TS> (success?: TS): Either<any, TS> {
+    public static Ok<TS> (success?: TS): ErrOr<TS> {
         return new Success(success);
     }
 
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static Combine (results: Either<any, any>[]): Either<any, any> {
+    public static Combine (results: ErrOr<any>[]): ErrOr<any> {
         for (const result of results)
             if (result.IsFailure()) return result;
         return Result.Ok();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static ExistError (results: Either<any, any>[]): boolean {
+    public static ExistError (results: ErrOr<any>[]): boolean {
         for (const result of results)
             if (result.IsFailure()) return true;
         return false;
@@ -91,8 +103,7 @@ class Result {
 }
 
 export {
-    Failure,
-    Success,
-    Either,
+    Err,
+    ErrOr,
     Result,
 };

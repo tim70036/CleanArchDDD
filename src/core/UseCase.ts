@@ -1,4 +1,4 @@
-import { ErrOr } from './Err';
+import { ErrOr } from './Result';
 import { CreateLogger } from '../common/Logger';
 
 // UseCase acts as huge a mediator that controls the dance of each component.

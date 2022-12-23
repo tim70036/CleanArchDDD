@@ -1,4 +1,4 @@
-import { ErrOr } from '../../../../core/Err';
+import { ErrOr } from '../../../../core/Result';
 import { Service } from '../../../../core/Service';
 import { GetConfigSTO } from '../../application/getConfig/GetConfigDTO';
 

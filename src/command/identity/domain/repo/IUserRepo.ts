@@ -1,4 +1,4 @@
-import { ErrOr } from '../../../../core/Err';
+import { ErrOr } from '../../../../core/Result';
 import { Repo } from '../../../../core/Repo';
 import { User } from '../model/User';
 
