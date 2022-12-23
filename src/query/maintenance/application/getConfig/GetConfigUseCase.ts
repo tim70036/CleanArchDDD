@@ -20,8 +20,8 @@ class GetConfigUseCase extends UseCase<void, GetConfigSTO> {
             if (configOrError.IsFailure()) return configOrError;
 
             return Result.Ok(configOrError.Value);
-        } catch (err: unknown) {
-            return new InternalServerError(`${(err as Error).stack}`);
+        } catch (error) {
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 }

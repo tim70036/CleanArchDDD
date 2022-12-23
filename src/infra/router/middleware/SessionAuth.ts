@@ -30,8 +30,8 @@ async function SessionAuth (req: express.Request, res: express.Response, next: e
         req.session = session;
         next();
         return;
-    } catch (err: unknown) {
-        logger.error(`${err}`);
+    } catch (error) {
+        logger.error(`${(error as Error).stack}`);
         res.sendStatus(StatusCode.InternalServerError);
     }
 }

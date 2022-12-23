@@ -44,8 +44,8 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
                 user.props.deviceAuth = deviceAuthOrError.Value;
                 this.logger.info(`new user created uid[${user.id.Value}] deviceId[${request.deviceId}]`);
             }
-        } catch (err: unknown) {
-            return new InternalServerError(`${(err as Error).stack}`);
+        } catch (error) {
+            return new InternalServerError(`${(error as Error).stack}`);
         }
 
         if (user.props.isBanned)
@@ -69,9 +69,9 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
 
             this.logger.info(`uid[${user.id.Value}] auth success`);
             return Result.Ok(session);
-        } catch (err: unknown) {
+        } catch (error) {
             await trx.Rollback();
-            return new InternalServerError(`${(err as Error).stack}`);
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 }

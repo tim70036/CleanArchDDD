@@ -31,8 +31,8 @@ class WsRouter {
             }
 
             this.routeMap.get(message.eventCode)?.Execute(message);
-        } catch (err: unknown) {
-            this.logger.error(`${(err as Error).stack}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
         }
     }
 

@@ -94,8 +94,8 @@ class WsApp {
                 this.wss.emit('connection', ws, uid); // Will trigger this.HandleNewConnection()
             });
             return;
-        } catch (err: unknown) {
-            this.logger.error(`${err}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
             socket.write(`HTTP/1.1 ${StatusCode.InternalServerError} ${StatusCode[StatusCode.InternalServerError]}\r\n\r\n`);
             socket.destroy();
             return;
@@ -128,8 +128,8 @@ class WsApp {
             // Rate limiter check.
             try {
                 await WsApp.msgLimiterByUid.consume(uid, 1);
-            } catch (error: unknown) {
-                this.logger.error(`rate limit failed uid[${uid}] error[${error}]`);
+            } catch (error) {
+                this.logger.error(`rate limit failed uid[${uid}] error[${(error as Error).stack}]`);
                 return;
             }
 

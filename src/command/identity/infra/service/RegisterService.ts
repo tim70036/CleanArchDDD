@@ -57,8 +57,8 @@ class RegisterService extends IRegisterService {
                 if (!didExist) return Result.Ok(shortUid);
 
                 this.logger.warn(`generated duplicated shortUid[shortUid]`);
-            } catch (err: unknown) {
-                return new InternalServerError(`${(err as Error).stack}`);
+            } catch (error) {
+                return new InternalServerError(`${(error as Error).stack}`);
             }
         }
 

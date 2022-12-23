@@ -176,7 +176,6 @@ module.exports = {
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-extra-non-null-assertion': 'error',
             '@typescript-eslint/no-for-in-array': 'error',
-            '@typescript-eslint/no-implicit-any-catch': 'error',
             '@typescript-eslint/no-invalid-void-type': 'error',
             '@typescript-eslint/no-misused-new': 'error',
             '@typescript-eslint/no-namespace': 'error',

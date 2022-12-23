@@ -19,8 +19,8 @@ class SwitchOffUseCase extends UseCase<void, void> {
             await this.configService.SetStatus(MaintenanceStatus.Off);
             this.logger.info(`switch off maintenance`);
             return Result.Ok();
-        } catch (err: unknown) {
-            return new InternalServerError(`${(err as Error).stack}`);
+        } catch (error) {
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 }

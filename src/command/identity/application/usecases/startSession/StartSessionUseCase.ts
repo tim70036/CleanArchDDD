@@ -39,9 +39,9 @@ class StartSessionUseCase extends UseCase<StartSessionClientWsEvent, void> {
 
             DomainEventBus.PublishForAggregate(session);
             return Result.Ok();
-        } catch (err: unknown) {
+        } catch (error) {
             await trx.Rollback();
-            return new InternalServerError(`${(err as Error).stack}`);
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 }

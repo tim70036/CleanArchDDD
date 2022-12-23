@@ -25,8 +25,8 @@ class AuthDeviceController extends Controller {
             const session = sessionOrError.Value;
             this.Success(res, { uid: session.id.Value, jwt: session.props.jwt });
             return;
-        } catch (err: unknown) {
-            this.Fail(res, new InternalServerError(`${(err as Error).stack}`));
+        } catch (error) {
+            this.Fail(res, new InternalServerError(`${(error as Error).stack}`));
             return;
         }
     }

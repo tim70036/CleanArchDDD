@@ -19,12 +19,12 @@ class SessionService extends ISessionService {
         try {
             const decoded = jwt.verify(token, process.env.JWT_KEY as string) as { uid: string; };
             rawUid = decoded.uid;
-        } catch (err: unknown) {
-            if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.NotBeforeError)
-                return new InvalidDataError(`invalid token[${token}] error[${err.message}]`);
-            else if (err instanceof jwt.TokenExpiredError)
-                return new ExpireError(`expired token[${token}] error[${err.message}]`)
-            return new InternalServerError(`${err}`);
+        } catch (error) {
+            if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.NotBeforeError)
+                return new InvalidDataError(`invalid token[${token}] error[${error.name} ${error.message}]`);
+            else if (error instanceof jwt.TokenExpiredError)
+                return new ExpireError(`expired token[${token}] error[${error.name} ${error.message}]`);
+            return new InternalServerError(`${error}`);
         }
 
         const uidOrError = EntityId.CreateFrom(rawUid);
@@ -41,8 +41,8 @@ class SessionService extends ISessionService {
                 return new DuplicatedError(`session invalidated by newer session uid[${rawUid}]`);
 
             return Result.Ok(session);
-        } catch (err: unknown) {
-            return new InternalServerError(`${err}`);
+        } catch (error) {
+            return new InternalServerError(`${error}`);
         }
     }
 }

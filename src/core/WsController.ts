@@ -18,8 +18,8 @@ abstract class WsController {
 
         try {
             await this.Run(wsMessage);
-        } catch (err: unknown) {
-            this.logger.error(`${(err as Error).stack}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
         }
     }
 

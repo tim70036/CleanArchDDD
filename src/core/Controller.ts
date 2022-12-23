@@ -13,8 +13,8 @@ abstract class Controller {
     public async Execute (req: express.Request, res: express.Response): Promise<void> {
         try {
             await this.Run(req, res);
-        } catch (err: unknown) {
-            this.logger.error(`${(err as Error).stack}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
         }
     }
 

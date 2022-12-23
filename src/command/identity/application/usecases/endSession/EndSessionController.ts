@@ -16,8 +16,8 @@ class EndSessionController extends WsController {
             const clientWsEvent = EndSessionClientWsEvent.CreateFromRaw(JSON.stringify(wsMessage.eventData));
             await this.useCase.Execute(clientWsEvent);
             return;
-        } catch (err: unknown) {
-            this.logger.error(`${(err as Error).stack}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
             return;
         }
     }

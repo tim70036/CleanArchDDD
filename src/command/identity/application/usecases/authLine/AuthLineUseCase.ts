@@ -48,8 +48,8 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
                 user.props.lineAuth = lineAuthOrError.Value;
                 this.logger.info(`new user created uid[${user.id.Value}] lineId[${lineId}]`);
             }
-        } catch (err: unknown) {
-            return new InternalServerError(`${(err as Error).stack}`);
+        } catch (error) {
+            return new InternalServerError(`${(error as Error).stack}`);
         }
 
         if (user.props.isBanned)
@@ -73,9 +73,9 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
 
             this.logger.info(`uid[${user.id.Value}] auth success`);
             return Result.Ok(session);
-        } catch (err: unknown) {
+        } catch (error) {
             await trx.Rollback();
-            return new InternalServerError(`${(err as Error).stack}`);
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 
@@ -105,8 +105,8 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
                 return new NotAuthenticatedError(`line profile api failed accessToken[${accessToken}] statusCode[${profileResponse.status}]`);
 
             return Result.Ok(profileResponseBody.userId);
-        } catch (err: unknown) {
-            return new InternalServerError(`${(err as Error).stack}`);
+        } catch (error) {
+            return new InternalServerError(`${(error as Error).stack}`);
         }
     }
 }

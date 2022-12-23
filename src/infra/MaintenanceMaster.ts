@@ -67,8 +67,8 @@ class MaintenanceMaster {
                 this.status = MaintenanceStatus.AllowWhitelist;
                 this.logger.info(`maintenance starts with time[${this.startTime.format()}] status[${MaintenanceStatus.AllowWhitelist}]`);
             }
-        } catch (err: unknown) {
-            this.logger.error(`${(err as Error).stack}`);
+        } catch (error) {
+            this.logger.error(`${(error as Error).stack}`);
         }
     };
 

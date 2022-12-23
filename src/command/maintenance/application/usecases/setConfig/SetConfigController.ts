@@ -25,8 +25,8 @@ class SetConfigController extends Controller {
 
             this.Success(res, null);
             return;
-        } catch (err: unknown) {
-            this.Fail(res, new InternalServerError(`${(err as Error).stack}`));
+        } catch (error) {
+            this.Fail(res, new InternalServerError(`${(error as Error).stack}`));
             return;
         }
     }
