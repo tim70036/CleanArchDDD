@@ -1,4 +1,3 @@
-import Objection from 'objection';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 import { EntityId } from '../../../../core/EntityId';
 import { Result, ErrOr } from '../../../../core/Result';
@@ -9,13 +8,14 @@ import { DeviceAuthModel } from '../database/DeviceAuthModel';
 import { LineAuthModel } from '../database/LineAuthModel';
 import { NotExistError } from '../../../../common/CommonError';
 import { UserMapper } from '../mapper/UserMapper';
+import { Transaction } from '../../../../core/Transaction';
 
 class UserRepo extends IUserRepo {
     public constructor () {
         super();
     }
 
-    public Exists (id: EntityId, trx?: Objection.Transaction | undefined): Promise<boolean> {
+    public Exists (id: EntityId, trx?: Transaction | undefined): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 
@@ -82,8 +82,8 @@ class UserRepo extends IUserRepo {
         return Result.Ok(user);
     }
 
-    public async Save (user: User, trx: Objection.Transaction): Promise<void> {
-        await UserModel.query(trx).insert({
+    public async Save (user: User, trx: Transaction): Promise<void> {
+        await UserModel.query(trx.Raw).insert({
             uid: toBinaryUUID(user.id.Value),
             shortUid: user.props.shortUid,
             name: user.props.name.props.value,
@@ -94,14 +94,14 @@ class UserRepo extends IUserRepo {
         }).onConflict().merge();
 
         const deviceAuth = user.props.deviceAuth;
-        await DeviceAuthModel.query(trx).insert({
+        await DeviceAuthModel.query(trx.Raw).insert({
             uid: toBinaryUUID(user.id.Value),
             deviceId: deviceAuth.props.deviceId,
             isValid: deviceAuth.props.isValid ? 1 : 0,
         }).onConflict().merge();
 
         const lineAuth = user.props.lineAuth;
-        await LineAuthModel.query(trx).insert({
+        await LineAuthModel.query(trx.Raw).insert({
             uid: toBinaryUUID(user.id.Value),
             lineId: lineAuth.props.lineId,
             isValid: lineAuth.props.isValid ? 1 : 0,

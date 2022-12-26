@@ -1,5 +1,5 @@
 import { InternalServerError } from '../../../../../common/CommonError';
-import { Transaction } from '../../../../../common/Transaction';
+import { Transaction } from '../../../../../core/Transaction';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
 import { Result, ErrOr } from '../../../../../core/Result';
@@ -34,7 +34,7 @@ class StartSessionUseCase extends UseCase<StartSessionClientWsEvent, void> {
             // Can we do better?
             this.logger.info(`${event.uid} heartbeat, ip: ${event.ip}`);
 
-            await this.sessionRepo.Save(session, trx.Raw);
+            await this.sessionRepo.Save(session, trx);
             await trx.Commit();
 
             DomainEventBus.PublishForAggregate(session);

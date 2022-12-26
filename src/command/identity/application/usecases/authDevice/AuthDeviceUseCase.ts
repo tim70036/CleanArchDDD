@@ -5,7 +5,7 @@ import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { DeviceAuth } from '../../../domain/model/DeviceAuth';
 import { InternalServerError, NotAuthorizedError, UnavailableError } from '../../../../../common/CommonError';
-import { Transaction } from '../../../../../common/Transaction';
+import { Transaction } from '../../../../../core/Transaction';
 import { IRegisterService } from '../../../domain/service/IRegisterService';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { Session } from '../../../domain/model/Session';
@@ -60,8 +60,8 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
 
         const trx = await Transaction.Acquire(this.constructor.name);
         try {
-            await this.userRepo.Save(user, trx.Raw);
-            await this.sessionRepo.Save(session, trx.Raw);
+            await this.userRepo.Save(user, trx);
+            await this.sessionRepo.Save(session, trx);
             await trx.Commit();
 
             DomainEventBus.PublishForAggregate(user);

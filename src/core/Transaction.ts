@@ -1,5 +1,5 @@
 import Objection, { Model } from 'objection';
-import { CreateLogger } from './Logger';
+import { CreateLogger } from '../common/Logger';
 
 
 class Transaction {
@@ -52,6 +52,9 @@ class Transaction {
         return this.rawTrx.isCompleted();
     }
 
+    // Very important for production safety. In the past, there were
+    // some programmers forgot to commit trx that causes server
+    // outrage. This can help pin point the problem.
     private readonly CheckStatus = (): void => {
         if (this.IsCompleted()) {
             clearInterval(this.timer);

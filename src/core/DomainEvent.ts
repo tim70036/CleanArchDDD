@@ -18,39 +18,38 @@ interface DomainEventHandler <T extends DomainEvent> {
 }
 
 class DomainEventBus {
-    private static logger = CreateLogger(DomainEventBus.name);
+    private static readonly logger = CreateLogger(DomainEventBus.name);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static handlers: Record<DomainEventName, DomainEventHandler<any>[]> = {};
+    private static readonly handlerMap: Map<DomainEventName, DomainEventHandler<any>[]> = new Map();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static Subscribe (eventName: DomainEventName, handler: DomainEventHandler<any>): void {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!DomainEventBus.handlers.hasOwnProperty(eventName)) DomainEventBus.handlers[eventName] = [];
+    public static Subscribe <T extends DomainEvent> (eventName: DomainEventName, handler: DomainEventHandler<T>): void {
+        let handlers = DomainEventBus.handlerMap.get(eventName);
+        if (typeof handlers === 'undefined') handlers = [];
 
-        DomainEventBus.handlers[eventName].push(handler);
+        handlers.push(handler);
+        DomainEventBus.handlerMap.set(eventName, handlers);
     }
 
-    public static PublishForAggregate (aggr: AggregateRoot<any>): void {
-        for (const event of aggr.domainEvents) {
+    public static PublishForAggregate (aggr: AggregateRoot<unknown>): void {
+        for (const event of aggr.domainEvents)
             DomainEventBus.Publish(event);
-        }
+
         aggr.domainEvents.splice(0, aggr.domainEvents.length); // Empty the array.
     }
 
     public static Publish (event: DomainEvent): void {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!DomainEventBus.handlers.hasOwnProperty(event.Name)) {
+        const handlers = DomainEventBus.handlerMap.get(event.Name);
+        if (typeof handlers === 'undefined') {
             DomainEventBus.logger.warn(`no handler exist for eventName[${event.Name}]`);
             return;
         }
 
-        for (const handler of DomainEventBus.handlers[event.Name]) {
+        for (const handler of handlers) {
             try {
                 handler(event);
             } catch (error) {
-                // TODO
-                DomainEventBus.logger.error(`publish error eventName[${event.Name}] error[${error}]`);
+                DomainEventBus.logger.error(`publish error eventName[${event.Name}] error[${(error as Error).stack}]`);
             }
         }
     }
@@ -58,7 +57,7 @@ class DomainEventBus {
     // TODO: Should we provide unsubscribe function? Most subscriber will not be shut down.
 
     public static Clear (): void {
-        DomainEventBus.handlers = {};
+        DomainEventBus.handlerMap.clear();
     }
 }
 

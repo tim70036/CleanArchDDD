@@ -1,4 +1,3 @@
-import Objection from 'objection';
 import { redisClient } from '../../../../infra/database/Redis';
 import { ErrOr } from '../../../../core/Result';
 import { EntityId } from '../../../../core/EntityId';
@@ -6,6 +5,7 @@ import { Session } from '../../domain/model/Session';
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
 import { NotExistError } from '../../../../common/CommonError';
 import { SessionMapper } from '../mapper/SessionMapper';
+import { Transaction } from '../../../../core/Transaction';
 
 const sessionPrefix = `session:uid`;
 
@@ -19,7 +19,7 @@ class SessionRepo extends ISessionRepo {
         return sessionOrError;
     }
 
-    public async Save (session: Session, trx: Objection.Transaction): Promise<void> {
+    public async Save (session: Session, trx: Transaction): Promise<void> {
         const rawSession = JSON.stringify({
             uid: session.id.Value,
             isActive: session.props.isActive,

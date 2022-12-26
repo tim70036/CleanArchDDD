@@ -1,5 +1,5 @@
 import { InternalServerError } from '../../../../../common/CommonError';
-import { Transaction } from '../../../../../common/Transaction';
+import { Transaction } from '../../../../../core/Transaction';
 import { ErrOr } from '../../../../../core/Result';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { EntityId } from '../../../../../core/EntityId';
@@ -35,7 +35,7 @@ class EndSessionUseCase extends UseCase<EndSessionClientWsEvent, void> {
             // Can we do better?
             this.logger.info(`${event.uid} heartbeat`);
 
-            await this.sessionRepo.Save(session, trx.Raw);
+            await this.sessionRepo.Save(session, trx);
             await trx.Commit();
 
             DomainEventBus.PublishForAggregate(session);
