@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // Load in any environment variables from .env file before doing anything.
 import dotenv from 'dotenv';
 dotenv.config();
@@ -7,6 +8,7 @@ import http from 'http';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import responseTime from 'response-time';
 
 import { InitRouter } from './infra/router';
 import { InitDatabase } from './infra/database';
@@ -47,6 +49,10 @@ function RunHttpApp (): void {
     app.use(express.json({ limit: '50mb' }));
     app.use(express.urlencoded({ extended: true, limit: '50mb' }));
     app.use(compression()); // Compress all responses
+
+    app.use(responseTime(function (req, res, time) {
+        logger.info(`${req.method} ${req.url} responseTime[${time}ms]`);
+    }));
 
     // Routes
     InitRouter(app);
