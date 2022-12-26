@@ -31,10 +31,6 @@ class EndSessionUseCase extends UseCase<EndSessionClientWsEvent, void> {
             const session = sessionOrError.Value;
             session.End();
 
-            // TODO: this is currently served for operation purpose. Let gm can verified user's ip during a time window through log.
-            // Can we do better?
-            this.logger.info(`${event.uid} heartbeat`);
-
             await this.sessionRepo.Save(session, trx);
             await trx.Commit();
 

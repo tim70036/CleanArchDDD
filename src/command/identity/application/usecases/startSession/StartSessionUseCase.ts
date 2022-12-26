@@ -30,10 +30,6 @@ class StartSessionUseCase extends UseCase<StartSessionClientWsEvent, void> {
             const session = sessionOrError.Value;
             session.Start(event.ip);
 
-            // TODO: this is currently served for operation purpose. Let gm can verified user's ip during a time window through log.
-            // Can we do better?
-            this.logger.info(`${event.uid} heartbeat, ip: ${event.ip}`);
-
             await this.sessionRepo.Save(session, trx);
             await trx.Commit();
 
