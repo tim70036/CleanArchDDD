@@ -31,6 +31,7 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
             const userOrError = await this.userRepo.GetByDeviceId(request.deviceId);
             if (userOrError.IsSuccess()) {
                 user = userOrError.Value;
+                user.Login();
             } else {
                 const userOrError = await this.registerService.CreateDefaultUser();
                 if (userOrError.IsFailure())

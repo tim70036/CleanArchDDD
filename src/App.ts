@@ -3,6 +3,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import 'reflect-metadata';
+
 import express from 'express';
 import http from 'http';
 import helmet from 'helmet';
@@ -10,26 +12,28 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import responseTime from 'response-time';
 
+// Init library before all other components.
+import { InitDayjs } from './common/Dayjs';
+InitDayjs();
+
 import { InitRouter } from './infra/router';
 import { InitDatabase } from './infra/database';
 import { InitSubscriber } from './infra/subscriber';
 import { maintenanceMaster } from './infra/MaintenanceMaster';
 import { CreateLogger } from './common/Logger';
 import { wsApp } from './infra/webSocket';
-import { InitDayjs } from './common/Dayjs';
 
 
 const logger = CreateLogger('app');
 
 async function Run (): Promise<void> {
     // Databases
-    await InitDatabase();
+    // await InitDatabase();
 
     // Domain event subsribers
     InitSubscriber();
 
-    maintenanceMaster.Init();
-    InitDayjs();
+    // maintenanceMaster.Init();
 
     logger.info(`component intialized`);
 
@@ -50,8 +54,10 @@ function RunHttpApp (): void {
     app.use(express.urlencoded({ extended: true, limit: '50mb' }));
     app.use(compression()); // Compress all responses
 
+    // Log out slow api.
     app.use(responseTime(function (req, res, time) {
-        logger.info(`${req.method} ${req.url} responseTime[${time}ms]`);
+        if (time > 5000)
+            logger.warn(`${req.method} ${req.url} responseTime[${time}ms]`);
     }));
 
     // Routes

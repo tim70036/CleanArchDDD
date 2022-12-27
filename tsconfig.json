@@ -16,6 +16,10 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
 
+        // For tsyringe.
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
         // Improve for importing module.
         // To provide backwards compatibility, Node.js allows you to import CommonJS packages with a default import. This flag tells TypeScript that it's okay to use import on CommonJS modules.
         "esModuleInterop": true,

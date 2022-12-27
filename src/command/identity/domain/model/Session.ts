@@ -22,9 +22,9 @@ class Session extends AggregateRoot<SessionProps> {
         isActive: saferJoi.bool(),
         jwt: saferJoi.string().min(1),
         ip: saferJoi.string().ip().allow(''),
-        createTime: saferJoi.object().instance(dayjs.Dayjs),
-        startTime: saferJoi.object().instance(dayjs.Dayjs),
-        endTime: saferJoi.object().instance(dayjs.Dayjs),
+        createTime: saferJoi.object().instance(dayjs),
+        startTime: saferJoi.object().instance(dayjs),
+        endTime: saferJoi.object().instance(dayjs),
     });
 
     public static CreateNew (id: EntityId): ErrOr<Session> {

@@ -24,7 +24,6 @@ class GetConfigController extends Controller {
             const time = result.Value;
 
             this.Success(res, time);
-
             return;
         } catch (error) {
             this.Fail(res, new InternalServerError(`${(error as Error).stack}`));

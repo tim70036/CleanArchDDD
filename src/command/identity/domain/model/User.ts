@@ -29,7 +29,7 @@ class User extends AggregateRoot<UserProps> {
         isBanned: saferJoi.bool(),
         isDeleted: saferJoi.bool(),
         isAI: saferJoi.bool(),
-        lastLoginTime: saferJoi.object().instance(dayjs.Dayjs),
+        lastLoginTime: saferJoi.object().instance(dayjs),
 
         deviceAuth: saferJoi.object().instance(DeviceAuth),
         lineAuth: saferJoi.object().instance(LineAuth),
@@ -55,7 +55,6 @@ class User extends AggregateRoot<UserProps> {
         return Result.Ok(user);
     }
 
-    // TODO
     public Login (): void {
         this.domainEvents.push(new UserLoginedEvent(this.id));
     }

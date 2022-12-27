@@ -35,6 +35,7 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
             const userOrError = await this.userRepo.GetByLineId(lineId);
             if (userOrError.IsSuccess()) {
                 user = userOrError.Value;
+                user.Login();
             } else {
                 const userOrError = await this.registerService.CreateDefaultUser();
                 if (userOrError.IsFailure())

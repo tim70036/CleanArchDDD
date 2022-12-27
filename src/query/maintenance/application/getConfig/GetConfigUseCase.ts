@@ -1,10 +1,8 @@
 import { InternalServerError } from '../../../../common/CommonError';
-import { Result, ErrOr } from '../../../../core/Result';
+import { ErrOr } from '../../../../core/Result';
 import { UseCase } from '../../../../core/UseCase';
 import { IGetConfigService } from '../../domain/repo/IGetConfigService';
 import { GetConfigSTO } from './GetConfigDTO';
-
-type Response = ErrOr<GetConfigSTO>
 
 class GetConfigUseCase extends UseCase<void, GetConfigSTO> {
     private readonly getConfigService: IGetConfigService;
@@ -14,12 +12,9 @@ class GetConfigUseCase extends UseCase<void, GetConfigSTO> {
         this.getConfigService = getConfigService;
     }
 
-    protected async Run (): Promise<Response> {
+    protected async Run (): Promise<ErrOr<GetConfigSTO>> {
         try {
-            const configOrError = await this.getConfigService.Get();
-            if (configOrError.IsFailure()) return configOrError;
-
-            return Result.Ok(configOrError.Value);
+            return await this.getConfigService.Get();
         } catch (error) {
             return new InternalServerError(`${(error as Error).stack}`);
         }

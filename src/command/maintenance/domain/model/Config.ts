@@ -13,7 +13,7 @@ interface ConfigProps {
 
 class Config extends ValueObject<ConfigProps> {
     private static readonly schema = saferJoi.object({
-        startTime: saferJoi.object().instance(dayjs.Dayjs),
+        startTime: saferJoi.object().instance(dayjs),
         announcement: saferJoi.string().min(0).max(1000),
         ipWhitelist: saferJoi.array().items(saferJoi.string().ip()).min(0).max(100),
     });
