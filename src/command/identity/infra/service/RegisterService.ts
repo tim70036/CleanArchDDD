@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import uuid from 'uuid';
+import { v1 as uuidv1 } from 'uuid';
 import { Result, ErrOr } from '../../../../core/Result';
 import { DeviceAuth } from '../../domain/model/DeviceAuth';
 import { Name } from '../../domain/model/Name';
@@ -8,14 +8,10 @@ import { IRegisterService } from '../../domain/service/IRegisterService';
 import { IUserRepo } from '../../domain/repo/IUserRepo';
 import { DuplicatedError, InternalServerError } from '../../../../common/CommonError';
 import { LineAuth } from '../../domain/model/LineAuth';
+import { identityContainer } from '../../container';
 
 class RegisterService extends IRegisterService {
-    private readonly userRepo: IUserRepo;
-
-    public constructor (userRepo: IUserRepo) {
-        super();
-        this.userRepo = userRepo;
-    }
+    private readonly userRepo = identityContainer.resolve<IUserRepo>('IUserRepo');
 
     public async CreateDefaultUser (): Promise<ErrOr<User>> {
         const shortUidOrError = await this.GenUniqueShortUid();
@@ -52,7 +48,7 @@ class RegisterService extends IRegisterService {
     private async GenUniqueShortUid (): Promise<ErrOr<number>> {
         for (let tryCount = 0 ; tryCount < 10 ; tryCount += 1) {
             try {
-                const shortUid = parseInt(uuid.v1(), 16) % 100000000;
+                const shortUid = parseInt(uuidv1(), 16) % 100000000;
                 const didExist = await this.userRepo.ShortUidExists(shortUid);
                 if (!didExist) return Result.Ok(shortUid);
 

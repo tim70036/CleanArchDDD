@@ -2,8 +2,11 @@
 import { SetConfigCTO } from './SetConfigDTO';
 import { Controller } from '../../../../../core/Controller';
 import * as express from 'express';
+import { injectable } from 'tsyringe';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { SetConfigUseCase } from './SetConfigUseCase';
+
+@injectable()
 class SetConfigController extends Controller {
     private readonly useCase: SetConfigUseCase;
 

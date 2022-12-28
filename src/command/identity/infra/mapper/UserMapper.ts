@@ -12,7 +12,7 @@ import { Result, ErrOr } from '../../../../core/Result';
 import { User } from '../../domain/model/User';
 
 class UserMapper {
-    public static ToDomain (dto: {
+    public ToDomain (dto: {
         userDTO: ModelObject<UserModel>;
         deviceAuthDTO: ModelObject<DeviceAuthModel>;
         lineAuthDTO: ModelObject<LineAuthModel>;

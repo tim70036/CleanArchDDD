@@ -23,17 +23,16 @@ import { maintenanceMaster } from './infra/MaintenanceMaster';
 import { CreateLogger } from './common/Logger';
 import { wsApp } from './infra/webSocket';
 
-
 const logger = CreateLogger('app');
 
 async function Run (): Promise<void> {
     // Databases
-    // await InitDatabase();
+    await InitDatabase();
 
     // Domain event subsribers
     InitSubscriber();
 
-    // maintenanceMaster.Init();
+    maintenanceMaster.Init();
 
     logger.info(`component intialized`);
 

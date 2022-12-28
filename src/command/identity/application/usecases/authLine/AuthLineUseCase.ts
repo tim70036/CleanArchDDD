@@ -9,20 +9,14 @@ import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { Session } from '../../../domain/model/Session';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
 import { LineAuth } from '../../../domain/model/LineAuth';
+import { identityContainer } from '../../../container';
 
 class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
-    private readonly userRepo: IUserRepo;
+    private readonly userRepo = identityContainer.resolve<IUserRepo>('IUserRepo');
 
-    private readonly sessionRepo: ISessionRepo;
+    private readonly sessionRepo = identityContainer.resolve<ISessionRepo>('ISessionRepo');
 
-    private readonly registerService: IRegisterService;
-
-    public constructor (userRepo: IUserRepo, sessionRepo: ISessionRepo, registerService: IRegisterService) {
-        super();
-        this.userRepo = userRepo;
-        this.sessionRepo = sessionRepo;
-        this.registerService = registerService;
-    }
+    private readonly registerService = identityContainer.resolve<IRegisterService>('IRegisterService');
 
     protected async Run (request: AuthLineCTO): Promise<ErrOr<Session>> {
         const lineIdOrError = await this.GetLineId(request.accessToken);

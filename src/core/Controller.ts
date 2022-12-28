@@ -11,6 +11,7 @@ abstract class Controller {
     }
 
     public async Execute (req: express.Request, res: express.Response): Promise<void> {
+        this.logger.debug(`-> ${req.method} ${req.originalUrl} session[${JSON.stringify(req.session)}]`);
         try {
             await this.Run(req, res);
         } catch (error) {
@@ -19,6 +20,7 @@ abstract class Controller {
     }
 
     protected Success<T> (res: express.Response, payload?: T): void {
+        this.logger.debug(`<- ${res.req.method} ${res.req.originalUrl} 200 session[${JSON.stringify(res.req.session)}]`);
         res.json({
             data: payload ?? null
         });
@@ -27,8 +29,8 @@ abstract class Controller {
     protected Fail<T> (res: express.Response, error: Err, payload?: T): void {
         const statusCode = error.ToStatusCode();
 
-        if (error instanceof IgnoreError) this.logger.info(`<- ${statusCode} ${error}`);
-        else this.logger.error(`<- ${statusCode} ${error}`);
+        if (error instanceof IgnoreError) this.logger.info(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
+        else this.logger.error(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
 
         res.status(statusCode).json({
             data: payload ?? null

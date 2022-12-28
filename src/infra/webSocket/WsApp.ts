@@ -16,6 +16,7 @@ import { StartSessionClientWsEvent } from '../../command/identity/application/us
 import { EndSessionClientWsEvent } from '../../command/identity/application/usecases/endSession/EndSessionClientWsEvent';
 import { ISessionService } from '../../command/identity/domain/service/ISessionService';
 import { DuplicatedError } from '../../common/CommonError';
+import { identityContainer } from '../../command/identity/container';
 
 interface SmartSocket extends WebSocket {
     isAlive: boolean;
@@ -42,14 +43,13 @@ class WsApp {
 
     private readonly logger;
 
-    private readonly sessionService: ISessionService;
+    private readonly sessionService = identityContainer.resolve<ISessionService>('ISessionService');
 
-    public constructor (sessionService: ISessionService) {
+    public constructor () {
         this.wss = new WebSocketServer({ noServer: true, clientTracking: false });
         this.wsMap = new Map<string, SmartSocket>();
         this.router = new WsRouter();
         this.logger = CreateLogger(this.constructor.name);
-        this.sessionService = sessionService;
     }
 
     public async Init (): Promise<void> {

@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v1 as uuidv1 } from 'uuid';
 import { Result, ErrOr } from './Result';
 import { saferJoi } from '../common/SaferJoi';
 import { InvalidDataError } from '../common/CommonError';
@@ -28,7 +28,7 @@ class Id<T> {
 // Entity will have unique id. If no id is provided, then we'll
 // generate a new unique id.
 class EntityId extends Id<string> {
-    private constructor (id: string = uuid.v1()) {
+    private constructor (id: string = uuidv1()) {
         // It's important to use uuid v1 here, this
         // can help database operates much more optimal. See:
         // https://www.npmjs.com/package/binary-uuid

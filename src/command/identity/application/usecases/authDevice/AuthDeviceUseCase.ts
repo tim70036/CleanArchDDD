@@ -1,6 +1,5 @@
-import { Result } from '../../../../../core/Result';
+import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
-import { ErrOr } from '../../../../../core/Result';
 import { IUserRepo } from '../../../domain/repo/IUserRepo';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { DeviceAuth } from '../../../domain/model/DeviceAuth';
@@ -10,20 +9,14 @@ import { IRegisterService } from '../../../domain/service/IRegisterService';
 import { DomainEventBus } from '../../../../../core/DomainEvent';
 import { Session } from '../../../domain/model/Session';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
+import { identityContainer } from '../../../container';
 
 class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
-    private readonly userRepo: IUserRepo;
+    private readonly userRepo = identityContainer.resolve<IUserRepo>('IUserRepo');
 
-    private readonly sessionRepo: ISessionRepo;
+    private readonly sessionRepo = identityContainer.resolve<ISessionRepo>('ISessionRepo');
 
-    private readonly registerService: IRegisterService;
-
-    public constructor (userRepo: IUserRepo, sessionRepo: ISessionRepo, registerService: IRegisterService) {
-        super();
-        this.userRepo = userRepo;
-        this.sessionRepo = sessionRepo;
-        this.registerService = registerService;
-    }
+    private readonly registerService = identityContainer.resolve<IRegisterService>('IRegisterService');
 
     protected async Run (request: AuthDeviceCTO): Promise<ErrOr<Session>> {
         let user;

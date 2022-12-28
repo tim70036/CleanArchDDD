@@ -3,14 +3,10 @@ import { AuthDeviceUseCase } from './AuthDeviceUseCase';
 import { AuthDeviceCTO } from './AuthDeviceDTO';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Controller } from '../../../../../core/Controller';
+import { identityContainer } from '../../../container';
 
 class AuthDeviceController extends Controller {
-    private readonly useCase: AuthDeviceUseCase;
-
-    public constructor (useCase: AuthDeviceUseCase) {
-        super();
-        this.useCase = useCase;
-    }
+    private readonly useCase = identityContainer.resolve(AuthDeviceUseCase) ;
 
     protected async Run (req: express.Request, res: express.Response): Promise<void> {
         const cto: AuthDeviceCTO = req.body as AuthDeviceCTO;

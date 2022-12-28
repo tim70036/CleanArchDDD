@@ -6,14 +6,10 @@ import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
 import { ISessionRepo } from '../../../domain/repo/ISessionRepo';
 import { StartSessionClientWsEvent } from './StartSessionWsEvent';
+import { identityContainer } from '../../../container';
 
 class StartSessionUseCase extends UseCase<StartSessionClientWsEvent, void> {
-    private readonly sessionRepo: ISessionRepo;
-
-    public constructor (sessionRepo: ISessionRepo) {
-        super();
-        this.sessionRepo = sessionRepo;
-    }
+    private readonly sessionRepo = identityContainer.resolve<ISessionRepo>('ISessionRepo');
 
     protected async Run (event: StartSessionClientWsEvent): Promise<ErrOr<void>> {
         const uidOrError = EntityId.CreateFrom(event.uid);

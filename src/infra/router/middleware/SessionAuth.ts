@@ -1,14 +1,12 @@
 import * as express from 'express';
 import { CreateLogger } from '../../../common/Logger';
 import { StatusCode } from '../../../common/StatusCode';
-import { SessionService } from '../../../command/identity/infra/service/SessionService';
-import { SessionRepo } from '../../../command/identity/infra/repo/SessionRepo';
 import { DuplicatedError } from '../../../common/CommonError';
+import { identityContainer } from '../../../command/identity/container';
+import { ISessionService } from '../../../command/identity/domain/service/ISessionService';
 
 const logger = CreateLogger('SessionAuth');
-const sessionRepo = new SessionRepo();
-const sessionService = new SessionService(sessionRepo);
-
+const sessionService = identityContainer.resolve<ISessionService>('ISessionService');
 async function SessionAuth (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     try {
         const token = req.headers.jwt as string;

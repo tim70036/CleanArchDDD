@@ -14,7 +14,7 @@ abstract class WsController {
     }
 
     public async Execute (wsMessage: WsMessage): Promise<void> {
-        this.logger.info(`-> ws eventCode[${wsMessage.eventCode}] srcUid[${wsMessage.srcUid}]`);
+        this.logger.debug(`-> ws eventCode[${wsMessage.eventCode}] srcUid[${wsMessage.srcUid}]`);
 
         try {
             await this.Run(wsMessage);

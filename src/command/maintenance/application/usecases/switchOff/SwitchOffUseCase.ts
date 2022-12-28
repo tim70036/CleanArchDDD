@@ -4,7 +4,6 @@ import { UseCase } from '../../../../../core/UseCase';
 import { MaintenanceStatus } from '../../../domain/model/MaintenanceStatus';
 import { IConfigService } from '../../../domain/service/IConfigService';
 
-type Response = ErrOr<void>;
 
 class SwitchOffUseCase extends UseCase<void, void> {
     private readonly configService: IConfigService;
@@ -14,7 +13,7 @@ class SwitchOffUseCase extends UseCase<void, void> {
         this.configService = configService;
     }
 
-    protected async Run (): Promise<Response> {
+    protected async Run (): Promise<ErrOr<void>> {
         try {
             await this.configService.SetStatus(MaintenanceStatus.Off);
             this.logger.info(`switch off maintenance`);

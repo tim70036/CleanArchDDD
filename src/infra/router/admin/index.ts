@@ -1,15 +1,16 @@
 import express from 'express';
 import { getConfigController } from '../../../query/maintenance/application/getConfig';
 import { switchOffController } from '../../../command/maintenance/application/usecases/switchOff';
-import { setConfigController } from '../../../command/maintenance/application/usecases/setConfig';
 import { AdminServerAuth } from '../middleware/AdminServerAuth';
+import { container } from 'tsyringe';
+import { SetConfigController } from '../../../command/maintenance/application/usecases/setConfig/SetConfigController';
 
 
 const adminRouter = express.Router();
 adminRouter.use(AdminServerAuth);
 
 adminRouter.put('/maintenance/config',
-    (req, res) => { setConfigController.Execute(req, res); }
+    (req, res) => { container.resolve(SetConfigController).Execute(req, res); }
 );
 
 adminRouter.get('/maintenance/config',

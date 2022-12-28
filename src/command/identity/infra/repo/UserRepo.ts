@@ -9,11 +9,10 @@ import { LineAuthModel } from '../database/LineAuthModel';
 import { NotExistError } from '../../../../common/CommonError';
 import { UserMapper } from '../mapper/UserMapper';
 import { Transaction } from '../../../../core/Transaction';
+import { identityContainer } from '../../container';
 
 class UserRepo extends IUserRepo {
-    public constructor () {
-        super();
-    }
+    private readonly userMapper = identityContainer.resolve(UserMapper);
 
     public Exists (id: EntityId, trx?: Transaction | undefined): Promise<boolean> {
         throw new Error('Method not implemented.');
@@ -37,7 +36,7 @@ class UserRepo extends IUserRepo {
         if (lineAuthDTO.length <= 0)
             return new NotExistError(`cannot find uid[${id.Value}] in table[${LineAuthModel.tableName}]`);
 
-        const userOrError = UserMapper.ToDomain({
+        const userOrError = this.userMapper.ToDomain({
             userDTO: userDTO[0],
             deviceAuthDTO: deviceAuthDTO[0],
             lineAuthDTO: lineAuthDTO[0],

@@ -5,8 +5,9 @@ import { WsMessage } from '../../core/WsMessage';
 import { WsEventCode } from '../../core/WsEvent';
 import { StartSessionClientWsEvent } from '../../command/identity/application/usecases/startSession/StartSessionWsEvent';
 import { EndSessionClientWsEvent } from '../../command/identity/application/usecases/endSession/EndSessionClientWsEvent';
-import { startSessionController } from '../../command/identity/application/usecases/startSession';
-import { endSessionController } from '../../command/identity/application/usecases/endSession';
+import { identityContainer } from '../../command/identity/container';
+import { StartSessionController } from '../../command/identity/application/usecases/startSession/StartSessionController';
+import { EndSessionController } from '../../command/identity/application/usecases/endSession/EndSessionController';
 
 class WsRouter {
     protected readonly routeMap: Map<WsEventCode, WsController>;
@@ -37,8 +38,8 @@ class WsRouter {
     }
 
     protected Register (): void {
-        this.routeMap.set(StartSessionClientWsEvent.code, startSessionController);
-        this.routeMap.set(EndSessionClientWsEvent.code, endSessionController);
+        this.routeMap.set(StartSessionClientWsEvent.code, identityContainer.resolve(StartSessionController));
+        this.routeMap.set(EndSessionClientWsEvent.code, identityContainer.resolve(EndSessionController));
     }
 }
 

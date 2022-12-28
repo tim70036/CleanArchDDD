@@ -6,8 +6,6 @@ import { Config } from '../../../domain/model/Config';
 import { IConfigService } from '../../../domain/service/IConfigService';
 import { SetConfigCTO } from './SetConfigDTO';
 
-type Response = ErrOr<void>;
-
 class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
     private readonly configService: IConfigService;
 
@@ -16,7 +14,7 @@ class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
         this.configService = configService;
     }
 
-    protected async Run (request: SetConfigCTO): Promise<Response> {
+    protected async Run (request: SetConfigCTO): Promise<ErrOr<void>> {
         const startTime = dayjs(request.startTime).utc();
         if (!startTime.isValid())
             return new InvalidDataError(`invalid startTime`);

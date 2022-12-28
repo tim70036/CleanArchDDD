@@ -5,14 +5,10 @@ import { DuplicatedError, ExpireError, InternalServerError, InvalidDataError } f
 import { ISessionRepo } from '../../domain/repo/ISessionRepo';
 import { EntityId } from '../../../../core/EntityId';
 import { Result, ErrOr } from '../../../../core/Result';
+import { identityContainer } from '../../container';
 
 class SessionService extends ISessionService {
-    private readonly sessionRepo: ISessionRepo;
-
-    public constructor (sessionRepo: ISessionRepo) {
-        super();
-        this.sessionRepo = sessionRepo;
-    }
+    private readonly sessionRepo = identityContainer.resolve<ISessionRepo>('ISessionRepo');
 
     public async Auth (token: string): Promise<ErrOr<Session>> {
         let rawUid;

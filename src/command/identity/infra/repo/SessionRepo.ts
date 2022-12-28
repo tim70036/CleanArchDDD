@@ -6,16 +6,19 @@ import { ISessionRepo } from '../../domain/repo/ISessionRepo';
 import { NotExistError } from '../../../../common/CommonError';
 import { SessionMapper } from '../mapper/SessionMapper';
 import { Transaction } from '../../../../core/Transaction';
+import { identityContainer } from '../../container';
 
 const sessionPrefix = `session:uid`;
 
 class SessionRepo extends ISessionRepo {
+    private readonly sessionMapper = identityContainer.resolve(SessionMapper);
+
     public async Get (uid: EntityId): Promise <ErrOr<Session>> {
         const sessionDTO = await redisClient.hGet(sessionPrefix, uid.Value);
         if (sessionDTO === undefined)
             return new NotExistError(`cannot find session uid[${uid.Value}] in key[${sessionPrefix}]`);
 
-        const sessionOrError = SessionMapper.ToDomain(sessionDTO);
+        const sessionOrError = this.sessionMapper.ToDomain(sessionDTO);
         return sessionOrError;
     }
 
