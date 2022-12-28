@@ -50,7 +50,7 @@ class IgnoreError extends Err {
 }
 
 class ExpireError extends Err {
-    public ToStatusCode(): StatusCode {
+    public ToStatusCode (): StatusCode {
         return StatusCode.Expired;
     }
 }

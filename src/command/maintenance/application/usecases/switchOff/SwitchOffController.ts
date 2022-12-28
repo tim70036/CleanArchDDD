@@ -2,13 +2,9 @@ import { Controller } from '../../../../../core/Controller';
 import * as express from 'express';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { SwitchOffUseCase } from './SwitchOffUseCase';
+import { maintenanceContainer } from '../../../container';
 class SwitchOffController extends Controller {
-    private readonly useCase: SwitchOffUseCase;
-
-    public constructor (useCase: SwitchOffUseCase) {
-        super();
-        this.useCase = useCase;
-    }
+    private readonly useCase = maintenanceContainer.resolve(SwitchOffUseCase);
 
     protected async Run (req: express.Request, res: express.Response): Promise<void> {
         try {

@@ -2,12 +2,13 @@ import { CreateLogger } from '../common/Logger';
 import { EntityId } from './EntityId';
 
 abstract class Entity<T> {
-    protected logger;
-
-    // Entity will have unique id.
     public readonly id: EntityId;
 
     public readonly props: T;
+
+    protected logger;
+
+    // Entity will have unique id.
 
     protected constructor (props: T, id?: EntityId) {
         // If no id provide, create a new id. If there's an id, it's probably reconstitute from persistent storage.

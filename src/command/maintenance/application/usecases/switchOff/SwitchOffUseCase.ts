@@ -1,17 +1,13 @@
 import { InternalServerError } from '../../../../../common/CommonError';
 import { Result, ErrOr } from '../../../../../core/Result';
 import { UseCase } from '../../../../../core/UseCase';
+import { maintenanceContainer } from '../../../container';
 import { MaintenanceStatus } from '../../../domain/model/MaintenanceStatus';
 import { IConfigService } from '../../../domain/service/IConfigService';
 
 
 class SwitchOffUseCase extends UseCase<void, void> {
-    private readonly configService: IConfigService;
-
-    public constructor (configService: IConfigService) {
-        super();
-        this.configService = configService;
-    }
+    private readonly configService = maintenanceContainer.resolve<IConfigService>('IConfigService');
 
     protected async Run (): Promise<ErrOr<void>> {
         try {

@@ -3,14 +3,10 @@ import { GetConfigUseCase } from './GetConfigUseCase';
 import { Controller } from '../../../../core/Controller';
 import * as express from 'express';
 import { InternalServerError } from '../../../../common/CommonError';
+import { maintenanceContainer } from '../../container';
 
 class GetConfigController extends Controller {
-    private readonly useCase: GetConfigUseCase;
-
-    public constructor (useCase: GetConfigUseCase) {
-        super();
-        this.useCase = useCase;
-    }
+    private readonly useCase = maintenanceContainer.resolve(GetConfigUseCase);
 
     protected async Run (req: express.Request, res: express.Response): Promise<void> {
         try {

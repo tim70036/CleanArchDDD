@@ -60,7 +60,7 @@ class Success<TF, TS> {
 
 // Union type, useful for caller to receive result from a function that returns either Success or Failure.
 // For example: let result: Either = execute(); where execute() returns either Success or Failure type.
-type Either<TF, TS> = Failure<TF, TS> | Success<TF, TS>;
+// type Either<TF, TS> = Failure<TF, TS> | Success<TF, TS>;
 
 // Alias for domain failure. Narrow down the failure type should contain string instead of abritrary type.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

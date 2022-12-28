@@ -2,18 +2,12 @@
 import { SetConfigCTO } from './SetConfigDTO';
 import { Controller } from '../../../../../core/Controller';
 import * as express from 'express';
-import { injectable } from 'tsyringe';
 import { InternalServerError } from '../../../../../common/CommonError';
 import { SetConfigUseCase } from './SetConfigUseCase';
+import { maintenanceContainer } from '../../../container';
 
-@injectable()
 class SetConfigController extends Controller {
-    private readonly useCase: SetConfigUseCase;
-
-    public constructor (useCase: SetConfigUseCase) {
-        super();
-        this.useCase = useCase;
-    }
+    private readonly useCase = maintenanceContainer.resolve(SetConfigUseCase);
 
     protected async Run (req: express.Request, res: express.Response): Promise<void> {
         const cto: SetConfigCTO = req.body as SetConfigCTO;

@@ -5,14 +5,10 @@ import { UseCase } from '../../../../../core/UseCase';
 import { Config } from '../../../domain/model/Config';
 import { IConfigService } from '../../../domain/service/IConfigService';
 import { SetConfigCTO } from './SetConfigDTO';
+import { maintenanceContainer } from '../../../container';
 
 class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
-    private readonly configService: IConfigService;
-
-    public constructor (configService: IConfigService) {
-        super();
-        this.configService = configService;
-    }
+    private readonly configService = maintenanceContainer.resolve<IConfigService>('IConfigService');
 
     protected async Run (request: SetConfigCTO): Promise<ErrOr<void>> {
         const startTime = dayjs(request.startTime).utc();
