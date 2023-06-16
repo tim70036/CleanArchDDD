@@ -51,7 +51,7 @@ class MaintenanceMaster {
         try {
             const configOrError = await this.getConfigService.Get();
             if (configOrError.IsFailure()) {
-                this.logger.error(`get config service error[${configOrError.Error}]`);
+                this.logger.error(`get config service error[${configOrError}]`);
                 return;
             }
 

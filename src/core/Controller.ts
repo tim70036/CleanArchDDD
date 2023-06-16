@@ -26,9 +26,11 @@ abstract class Controller {
         });
     }
 
+    // TODO: remove payload and use error.serialize() instead
     protected Fail<T> (res: express.Response, error: Err, payload?: T): void {
         const statusCode = error.ToStatusCode();
 
+        // For some errors, we don't want to log them.
         if (error instanceof IgnoreError) this.logger.info(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
         else this.logger.error(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
 

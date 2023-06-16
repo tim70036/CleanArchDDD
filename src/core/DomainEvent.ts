@@ -54,8 +54,6 @@ class DomainEventBus {
         }
     }
 
-    // TODO: Should we provide unsubscribe function? Most subscriber will not be shut down.
-
     public static Clear (): void {
         DomainEventBus.handlerMap.clear();
     }
