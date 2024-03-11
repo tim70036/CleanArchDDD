@@ -18,7 +18,7 @@ function MaintenanceBlocker (req: express.Request, res: express.Response, next: 
     const status = maintenanceMaster.Status;
     if ((status === MaintenanceStatus.BlockAll && allowDomainsWhenBlockAll.includes(apiDomain)) ||
         (status === MaintenanceStatus.AllowWhitelist && allowDomainsWhenWhitelist.includes(apiDomain)) ||
-        (status === MaintenanceStatus.AllowWhitelist && maintenanceMaster.IpWhitelist.includes(req.ip))) {
+        (status === MaintenanceStatus.AllowWhitelist && maintenanceMaster.IpWhitelist.includes(req.ip ?? ''))) {
         next();
         return;
     }

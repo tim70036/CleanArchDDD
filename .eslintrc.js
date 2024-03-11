@@ -3,7 +3,7 @@ module.exports = {
     root: true,
 
     // We're using objection.js here, it has its own naming convention
-    // and practices that we can't change. Thus, we exlcude it from
+    // and practices that we can't change. Thus, we exclude it from
     // our lint check.
     ignorePatterns: ['**/database/*.ts'],
 
@@ -16,7 +16,7 @@ module.exports = {
             'jquery': true,
         },
 
-        // Custom typescript parser. The original eslitn parser cannot parse typescript. See https://github.com/typescript-eslint/typescript-eslint
+        // Custom typescript parser. The original eslint parser cannot parse typescript. See https://github.com/typescript-eslint/typescript-eslint
         parser: '@typescript-eslint/parser',
 
         // Note when using a custom parser, the parserOptions configuration property is still required for ESLint to work properly with features not in ECMAScript 5 by default. Parsers are all passed parserOptions and may or may not use them to determine which features to enable.
@@ -44,7 +44,7 @@ module.exports = {
             'accessor-pairs': 'error',
             'no-console' : 0,
             'curly': [
-                'error', 
+                'error',
                 'multi-or-nest',
                 'consistent'
             ],
@@ -186,7 +186,6 @@ module.exports = {
             '@typescript-eslint/no-namespace': 'error',
             '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
             '@typescript-eslint/no-non-null-assertion': 'error',
-            '@typescript-eslint/no-parameter-properties': 'error',
             '@typescript-eslint/no-require-imports': 'error',
             '@typescript-eslint/no-this-alias': 'error',
             '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',

@@ -5,11 +5,11 @@ Illustrate Clean Architecture and Domain Driven Design through TypeScript implem
 
 First, ensure that you are using a machine meeting the following requirements:
 
-* Have Node.js `14` up. If not, use nvm to install Node.js.
+* Have Node.js `20` up. If not, use nvm to install Node.js.
 * Have a keyboard for you to type command.
 * Chill enough.
 
-Next, run `npm install` to install all packages including TypeScript.
+Next, run `npm ci` to install all packages including TypeScript.
 
 ## Running the build
 All the different build steps are orchestrated via [npm scripts](https://docs.npmjs.com/misc/scripts).
