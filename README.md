@@ -11,6 +11,12 @@ First, ensure that you are using a machine meeting the following requirements:
 
 Next, run `npm ci` to install all packages including TypeScript.
 
+## Configure Environment Variables
+The project uses the [dotenv](https://www.npmjs.com/package/dotenv) package to manage environment variables.
+This package looks for a file named `.env` in the root of the project and loads the environment variables from it.
+This file is not committed to the repository and is used to store sensitive information such as API keys and secrets.
+You can find a sample of the `.env` file in the `.env.example` file.
+
 ## Running the build
 All the different build steps are orchestrated via [npm scripts](https://docs.npmjs.com/misc/scripts).
 Npm scripts basically allow us to call (and chain) terminal commands via npm.

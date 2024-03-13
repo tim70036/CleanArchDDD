@@ -37,7 +37,7 @@ async function Run (): Promise<void> {
     logger.info(`component intialized`);
 
     RunHttpApp();
-    RunWsApp();
+    await RunWsApp();
 }
 
 function RunHttpApp (): void {

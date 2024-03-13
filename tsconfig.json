@@ -6,11 +6,11 @@
         // Tells TypeScript to save information about the project graph from the last compilation. The next time TypeScript is invoked with incremental, it will use that information to detect the least costly way to type-check and emit changes to your project.
         "incremental": true,
 
-        // Node 14
+        // Node 20
         // See https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
-        "lib": ["ES2019", "DOM"],
-        "module": "commonjs",
-        "target": "ES2019",
+        "lib": ["ES2023", "DOM"],
+        "module": "node16",
+        "target": "ES2022",
 
         // Rule.
         "strict": true,
