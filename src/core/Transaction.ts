@@ -23,7 +23,9 @@ class Transaction {
         this.lifeTime = 0;
         this.timer = setInterval(this.CheckStatus, Transaction.statusCheckIntervalMs);
 
-        Transaction.logger.debug(`source[${this.source}] start`);
+        Transaction.logger.debug(`start`, {
+            source: source
+        });
     }
 
     public get Raw (): Objection.Transaction {
@@ -32,18 +34,21 @@ class Transaction {
 
     public static async Acquire (source: string): Promise<Transaction> {
         const rawTrx = await Model.startTransaction();
-        const trx = new Transaction(rawTrx, source);
-        return trx;
+        return new Transaction(rawTrx, source);
     }
 
     public async Commit (): Promise<void> {
-        Transaction.logger.debug(`source[${this.source}] commit`);
+        Transaction.logger.debug(`commit`, {
+            source: this.source
+        });
         await this.rawTrx.commit();
         clearInterval(this.timer);
     }
 
     public async Rollback (): Promise<void> {
-        Transaction.logger.debug(`source[${this.source}] rollback`);
+        Transaction.logger.debug(`rollback`, {
+            source: this.source
+        });
         await this.rawTrx.rollback();
         clearInterval(this.timer);
     }
@@ -54,7 +59,7 @@ class Transaction {
 
     // Very important for production safety. In the past, there were
     // some programmers forgot to commit trx that causes server
-    // outrage. This can help pin point the problem.
+    // outrage. This can help pinpoint the problem.
     private readonly CheckStatus = (): void => {
         if (this.IsCompleted()) {
             clearInterval(this.timer);
@@ -65,7 +70,10 @@ class Transaction {
         if (this.lifeTime >= Transaction.lifeTimeThresholdMs)
             clearInterval(this.timer);
 
-        Transaction.logger.warn(`source[${this.source}] running too long, lifeTime[${this.lifeTime}] ms`);
+        Transaction.logger.warn(`running too long`, {
+            source: this.source,
+            lifeTimeMs: this.lifeTime
+        });
     };
 }
 

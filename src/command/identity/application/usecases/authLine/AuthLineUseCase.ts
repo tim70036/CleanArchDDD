@@ -41,7 +41,10 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
 
                 user = userOrError.Value;
                 user.props.lineAuth = lineAuthOrError.Value;
-                this.logger.info(`new user created uid[${user.id.Value}] lineId[${lineId}]`);
+                this.logger.info(`new user created`, {
+                    uid: user.id.Value,
+                    lineId: lineId,
+                });
             }
         } catch (error) {
             return new InternalServerError(`${(error as Error).stack}`);
@@ -66,7 +69,9 @@ class AuthLineUseCase extends UseCase<AuthLineCTO, Session> {
             DomainEventBus.PublishForAggregate(user);
             DomainEventBus.PublishForAggregate(session);
 
-            this.logger.info(`uid[${user.id.Value}] auth success`);
+            this.logger.info(`auth success`, {
+                uid: user.id.Value,
+            });
             return Result.Ok(session);
         } catch (error) {
             await trx.Rollback();

@@ -22,18 +22,23 @@ class WsRouter {
     }
 
     public HandleMessage (rawMessage: string, uid: string): void {
-        this.logger.debug(`handle message uid[${uid}] rawMessage[${rawMessage}]`);
+        this.logger.debug(`handle message`, {
+            uid,
+            rawMessage,
+        });
         try {
             const message = WsMessage.CreateFromRaw(rawMessage, uid);
 
             if (!this.routeMap.has(message.eventCode)) {
-                this.logger.error(`invalid eventCode[${message.eventCode}]`);
+                this.logger.error(`invalid eventCode`, {
+                    eventCode: message.eventCode,
+                });
                 return;
             }
 
             this.routeMap.get(message.eventCode)?.Execute(message);
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
         }
     }
 

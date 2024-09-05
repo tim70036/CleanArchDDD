@@ -23,13 +23,21 @@ instances.forEach((instance) => {
     const logger = CreateLogger(instance.name);
     // The client is initiating a connection to the server.
     instance.client.on('connect', () => {
-        logger.info(`start connecting to ${process.env.REDIS_HOST} on port[${process.env.REDIS_PORT}] DB[${process.env.REDIS_DB}]`);
+        logger.info(`start connecting`, {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+            db: process.env.REDIS_DB
+        });
     });
 
     // The client successfully initiated the connection to the server.
     // Client will emit ready once a connection is established. Commands issued before the ready event are queued, then replayed just before this event is emitted.
     instance.client.on('ready', () => {
-        logger.info(`connected to ${process.env.REDIS_HOST} on port[${process.env.REDIS_PORT}] DB[${process.env.REDIS_DB}]`);
+        logger.info(`connected`, {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+            db: process.env.REDIS_DB
+        });
     });
 
     // The client disconnected the connection to the server via .quit() or .disconnect().

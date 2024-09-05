@@ -14,22 +14,30 @@ abstract class WsController {
     }
 
     public async Execute (wsMessage: WsMessage): Promise<void> {
-        this.logger.debug(`-> ws eventCode[${wsMessage.eventCode}] srcUid[${wsMessage.srcUid}]`);
+        this.logger.debug(`-> ws`, {
+            eventCode: wsMessage.eventCode,
+            srcUid: wsMessage.srcUid,
+        });
 
         try {
             await this.Run(wsMessage);
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
         }
     }
 
     public async Unicast (uid: string, wsMessage: WsMessage): Promise<void> {
-        this.logger.debug(`unicast uid[${uid}] message[${wsMessage.Serialize()}]`);
+        this.logger.debug(`unicast`, {
+            targetUid: uid,
+            wsMessage: wsMessage.Serialize()
+        });
         await redisClient.publish(`${WsController.userChannelPrefix}${uid}`, wsMessage.Serialize());
     }
 
     public async Broadcast (wsMessage: WsMessage): Promise<void> {
-        this.logger.debug(`broadcast message[${wsMessage.Serialize()}]`);
+        this.logger.debug(`broadcast`, {
+            wsMessage: wsMessage.Serialize()
+        });
         await redisClient.publish(WsController.globalChannelPrefix, wsMessage.Serialize());
     }
 

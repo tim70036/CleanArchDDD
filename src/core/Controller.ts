@@ -11,16 +11,22 @@ abstract class Controller {
     }
 
     public async Execute (req: express.Request, res: express.Response): Promise<void> {
-        this.logger.debug(`-> ${req.method} ${req.originalUrl} session[${JSON.stringify(req.session)}]`);
+        this.logger.debug(`-> ${req.method} ${req.originalUrl}`, {
+            session: JSON.stringify(req.session),
+        });
+
         try {
             await this.Run(req, res);
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
         }
     }
 
     protected Success<T> (res: express.Response, payload?: T): void {
-        this.logger.debug(`<- ${res.req.method} ${res.req.originalUrl} 200 session[${JSON.stringify(res.req.session)}]`);
+        this.logger.debug(`<- ${res.req.method} ${res.req.originalUrl} status[200]`, {
+            session: JSON.stringify(res.req.session)
+        });
+
         res.json({
             data: payload ?? null
         });
@@ -31,8 +37,15 @@ abstract class Controller {
         const statusCode = error.ToStatusCode();
 
         // For some errors, we don't want to log them.
-        if (error instanceof IgnoreError) this.logger.info(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
-        else this.logger.error(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}] session[${JSON.stringify(res.req.session)}] error[${error}]`);
+        if (error instanceof IgnoreError) {
+            this.logger.info(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}]`, error, {
+                session: JSON.stringify(res.req.session),
+            });
+        } else {
+            this.logger.error(`<- ${res.req.method} ${res.req.originalUrl} status[${statusCode}]`, error, {
+                session: JSON.stringify(res.req.session),
+            });
+        }
 
         res.status(statusCode).json({
             data: payload ?? null

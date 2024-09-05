@@ -25,7 +25,10 @@ class Dispatcher {
 
         const version = this.GetVersion(reqVersion);
 
-        this.logger.debug(`-> ${req.method} ${req.path}, req version: [${reqVersion}], dispatch to version [${version}]`);
+        this.logger.debug(`-> ${req.method} ${req.path}`, {
+            reqVersion: reqVersion,
+            dispatchVersion: version
+        });
 
         const matchedController = this.versionMap.get(version);
         if (typeof matchedController === 'undefined') {
@@ -62,7 +65,7 @@ class Dispatcher {
         const invalidVersion = versions.find((e) => semver.valid(e) === null);
 
         if (typeof invalidVersion !== 'undefined') {
-            this.logger.error(`VerionMap with invalid version [${invalidVersion}]`);
+            this.logger.error(`invalid version map with version [${invalidVersion}]`);
             return false;
         }
         return true;

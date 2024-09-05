@@ -52,7 +52,10 @@ class RegisterService extends IRegisterService {
                 const didExist = await this.userRepo.ShortUidExists(shortUid);
                 if (!didExist) return Result.Ok(shortUid);
 
-                this.logger.warn(`generated duplicated shortUid[shortUid]`);
+                this.logger.warn(`generated duplicated shortUid`, {
+                    shortUid: shortUid,
+                    tryCount: tryCount,
+                });
             } catch (error) {
                 return new InternalServerError(`${(error as Error).stack}`);
             }

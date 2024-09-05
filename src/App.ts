@@ -29,12 +29,12 @@ async function Run (): Promise<void> {
     // Databases
     await InitDatabase();
 
-    // Domain event subsribers
+    // Domain event subscribers
     InitSubscriber();
 
     maintenanceMaster.Init();
 
-    logger.info(`component intialized`);
+    logger.info(`component initialized`);
 
     RunHttpApp();
     await RunWsApp();
@@ -55,8 +55,13 @@ function RunHttpApp (): void {
 
     // Log out slow api.
     app.use(responseTime(function (req, res, time) {
-        if (time > 5000)
-            logger.warn(`${req.method} ${req.url} responseTime[${time}ms]`);
+        if (time > 5000) {
+            logger.warn(`slow response detected ${req.method} ${req.url}`, {
+                method: req.method,
+                url: req.url,
+                responseTimeMs: time
+            });
+        }
     }));
 
     // Routes

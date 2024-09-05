@@ -24,9 +24,9 @@ interface SmartSocket extends WebSocket {
 }
 
 class WsApp {
-    private static readonly pingInterval = 30000; // Miliseconds
+    private static readonly pingInterval = 30000; // Milliseconds
 
-    private static readonly checkMaintenanceInterval = 30000; // Miliseconds
+    private static readonly checkMaintenanceInterval = 30000; // Milliseconds
 
     private static readonly msgLimiterByUid = new RateLimiterMemory({
         points: 10,
@@ -54,10 +54,13 @@ class WsApp {
 
     public async Init (): Promise<void> {
         this.wss.on('connection', this.HandleNewConnection);
-        this.wss.on('error', (error) => this.logger.error(`wss on error: ${error}`));
+        this.wss.on('error', (error) => this.logger.error(`wss on error:`, { error: error }));
 
         await redisSubClient.subscribe(WsController.globalChannelPrefix, (message, channel) => {
-            this.logger.debug(`redis sub listner msg[${message}] channel[${channel}]`);
+            this.logger.debug(`redis sub listener`, {
+                message: message,
+                channel: channel,
+            });
             this.wsMap.forEach((ws) => { ws.send(message); });
         });
 
@@ -72,7 +75,11 @@ class WsApp {
             const sessionOrError = await this.sessionService.Auth(token);
 
             if (sessionOrError.IsFailure()) {
-                this.logger.info(`auth failed due to error[${sessionOrError}] from ip[${ip}]`);
+                this.logger.info(`auth failed`, {
+                    error: sessionOrError,
+                    ip: ip,
+                });
+
                 if (sessionOrError instanceof DuplicatedError) {
                     socket.write(`HTTP/1.1 ${StatusCode.PreconditionFailed} ${StatusCode[StatusCode.PreconditionFailed]}\r\n\r\n`);
                     socket.destroy();
@@ -88,14 +95,16 @@ class WsApp {
             const session = sessionOrError.Value;
             const uid = session.id.Value;
             this.wss.handleUpgrade(req, socket, head, (ws: WebSocket) => {
-                this.logger.debug(`handle upgrade done uid[${uid}]`);
+                this.logger.debug(`handle upgrade done`, {
+                    uid: uid,
+                });
                 (ws as SmartSocket).ip = ip as string;
 
                 this.wss.emit('connection', ws, uid); // Will trigger this.HandleNewConnection()
             });
             return;
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
             socket.write(`HTTP/1.1 ${StatusCode.InternalServerError} ${StatusCode[StatusCode.InternalServerError]}\r\n\r\n`);
             socket.destroy();
             return;
@@ -103,19 +112,28 @@ class WsApp {
     };
 
     protected readonly HandleNewConnection = async (ws: SmartSocket, uid: string): Promise<void> => {
-        this.logger.info(`handle new connection uid[${uid}] ip[${ws.ip}]`);
+        this.logger.info(`handle new connection`, {
+            uid: uid,
+            ip: ws.ip,
+        });
 
         // TODO: move this to a new class? WsMaintenance?
         if (this.IsBlockedByMaintenance(ws.ip)) {
-            this.logger.debug(`new connection blocked under maintenance uid[${uid}] ip[${ws.ip}] maintenanceStatus[${maintenanceMaster.Status}]`);
+            this.logger.debug(`new connection blocked under maintenance`, {
+                uid: uid,
+                ip: ws.ip,
+                maintenanceStatus: maintenanceMaster.Status,
+            });
             ws.close(1001, `socket closed due to server under maintenance`);
             return;
         }
 
-        // Case: a new conneciton replaces a old connection from the same user.
+        // Case: a new connection replaces an old connection from the same user.
         // We have to close old connection and clean up.
         if (this.wsMap.has(uid)) {
-            this.logger.info(`closing old connection for uid[${uid}]`);
+            this.logger.info(`closing old connection`, {
+                uid: uid,
+            });
             const oldWs = this.wsMap.get(uid);
             oldWs?.close(1000, `this connection is replaced by a new connection from the same user.`);
         }
@@ -129,7 +147,10 @@ class WsApp {
             try {
                 await WsApp.msgLimiterByUid.consume(uid, 1);
             } catch (error) {
-                this.logger.error(`rate limit failed uid[${uid}] error[${(error as Error).stack}]`);
+                this.logger.error(`rate limit failed`, {
+                    uid: uid,
+                    error: error,
+                });
                 return;
             }
 
@@ -137,7 +158,10 @@ class WsApp {
         });
 
         await redisSubClient.subscribe(`${WsController.userChannelPrefix}${uid}`, (message, channel) => {
-            this.logger.debug(`redis sub listner channel[${channel}] msg[${message}]`);
+            this.logger.debug(`redis sub listener`, {
+                channel: channel,
+                message: message,
+            });
             this.wsMap.get(uid)?.send(message);
         });
 
@@ -148,7 +172,12 @@ class WsApp {
 
         // Setup disconnect handle.
         ws.on('close', async (code, reason) => {
-            this.logger.info(`on close uid[${uid}] code[${code}] reason[${reason}]`);
+            this.logger.info(`on close`, {
+                uid: uid,
+                code: code,
+                reason: reason,
+            });
+
             if (this.wsMap.get(uid) === ws) this.wsMap.delete(uid); // In case that this is an old connection. There could be a new connection already established for this user.
             if (!this.wsMap.has(uid)) {
                 await redisSubClient.unsubscribe(`${WsController.userChannelPrefix}${uid}`);
@@ -156,14 +185,16 @@ class WsApp {
                 this.EndSession(uid);
             }
         });
-        ws.on('error', (error) => this.logger.error(`on error uid[${uid}] error[${error}]`));
+        ws.on('error', (error) => this.logger.error(`on error`, { uid: uid, error: error }));
 
         // Send maintenance news if needed.
         const minsTillMaintenance = dayjs.duration(maintenanceMaster.StartTime.diff(dayjs.utc())).asMinutes();
         if (minsTillMaintenance > 0 && minsTillMaintenance <= 30) {
             const newsServerEvent = NewsServerWsEvent.Create(`伺服器將在 ${Math.floor(minsTillMaintenance)} 分鐘後進行維修`);
             const message = WsMessage.Create(NewsServerWsEvent.code, newsServerEvent, 'server');
-            this.logger.info(`sending maintenance news to new connected ws uid[${uid}]`);
+            this.logger.info(`sending maintenance news to new connected ws`, {
+                uid: uid,
+            });
 
             ws.send(message.Serialize());
         }
@@ -175,19 +206,26 @@ class WsApp {
     protected readonly PingAll = (): void => {
         this.wsMap.forEach((ws, uid) => {
             if (!ws.isAlive) {
-                this.logger.info(`terminating dead ws uid[${uid}]`);
+                this.logger.info(`terminating dead ws`, {
+                    uid: uid,
+                });
+
                 ws.terminate(); // Will trigger on close.
                 return;
             }
 
-            this.logger.debug(`ping ws uid[${uid}]`);
+            this.logger.debug(`ping ws`, {
+                uid: uid,
+            });
             ws.isAlive = false;
             ws.ping();
         });
     };
 
     protected readonly HandlePong = (ws: SmartSocket, uid: string): void => {
-        this.logger.debug(`on pong uid[${uid}]`);
+        this.logger.debug(`on pong`, {
+            uid: uid,
+        });
         ws.isAlive = true;
     };
 
@@ -217,7 +255,11 @@ class WsApp {
     protected readonly HandleMaintenance = (): void => {
         this.wsMap.forEach((ws, uid) => {
             if (this.IsBlockedByMaintenance(ws.ip)) {
-                this.logger.debug(`connection closed under maintenance uid[${uid}] ip[${ws.ip}] maintenanceStatus[${maintenanceMaster.Status}]`);
+                this.logger.debug(`connection closed under maintenance`, {
+                    uid: uid,
+                    ip: ws.ip,
+                    maintenanceStatus: maintenanceMaster.Status,
+                });
                 ws.close(1001, `socket closed due to server under maintenance`);
             }
         });
@@ -244,7 +286,10 @@ class WsApp {
         for (const minsBeforeMaintenance of [30, 15, 10, 5]) {
             const sendNewsTime = maintenanceMaster.StartTime.subtract(minsBeforeMaintenance, 'minutes');
             const milisecTillSendNews = dayjs.duration(sendNewsTime.diff(now)).asMilliseconds();
-            this.logger.debug(`checking sendNewsTime[${sendNewsTime}] milisecTillSendNews[${milisecTillSendNews}]`);
+            this.logger.debug(`checking`, {
+                sendNewsTime: sendNewsTime,
+                milisecTillSendNews: milisecTillSendNews,
+            });
             if (milisecTillSendNews >= 0 && milisecTillSendNews < WsApp.checkMaintenanceInterval) return true;
         }
 

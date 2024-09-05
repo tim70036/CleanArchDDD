@@ -41,7 +41,9 @@ class DomainEventBus {
     public static Publish (event: DomainEvent): void {
         const handlers = DomainEventBus.handlerMap.get(event.Name);
         if (typeof handlers === 'undefined') {
-            DomainEventBus.logger.warn(`no handler exist for eventName[${event.Name}]`);
+            DomainEventBus.logger.warn(`publish event error: no handler exist for eventName[${event.Name}]`, {
+                eventName: event.Name,
+            });
             return;
         }
 
@@ -49,7 +51,9 @@ class DomainEventBus {
             try {
                 handler(event);
             } catch (error) {
-                DomainEventBus.logger.error(`publish error eventName[${event.Name}] error[${(error as Error).stack}]`);
+                DomainEventBus.logger.error(`publish event error`, error, {
+                    eventName: event.Name,
+                });
             }
         }
     }

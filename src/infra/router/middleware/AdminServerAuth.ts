@@ -6,7 +6,9 @@ function AdminServerAuth (req: express.Request, res: express.Response, next: exp
     const jtoken = req.headers.jtoken;
 
     if (jtoken !== process.env.ADMIN_API_KEY) {
-        logger.warn(`not authorized with jtoken[${jtoken}]`);
+        logger.warn(`not authorized`, {
+            jtoken: jtoken,
+        });
 
         res.status(403).json({});
         return;

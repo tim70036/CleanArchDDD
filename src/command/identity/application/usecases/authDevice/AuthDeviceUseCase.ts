@@ -36,7 +36,10 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
 
                 user = userOrError.Value;
                 user.props.deviceAuth = deviceAuthOrError.Value;
-                this.logger.info(`new user created uid[${user.id.Value}] deviceId[${request.deviceId}]`);
+                this.logger.info(`new user created`, {
+                    uid: user.id.Value,
+                    deviceId: request.deviceId,
+                });
             }
         } catch (error) {
             return new InternalServerError(`${(error as Error).stack}`);
@@ -61,7 +64,9 @@ class AuthDeviceUseCase extends UseCase<AuthDeviceCTO, Session> {
             DomainEventBus.PublishForAggregate(user);
             DomainEventBus.PublishForAggregate(session);
 
-            this.logger.info(`uid[${user.id.Value}] auth success`);
+            this.logger.info(`auth success`, {
+                uid: user.id.Value,
+            });
             return Result.Ok(session);
         } catch (error) {
             await trx.Rollback();

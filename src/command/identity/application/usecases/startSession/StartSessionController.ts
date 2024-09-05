@@ -13,7 +13,7 @@ class StartSessionController extends WsController {
             await this.useCase.Execute(clientWsEvent);
             return;
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
             return;
         }
     }

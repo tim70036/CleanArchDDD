@@ -28,7 +28,9 @@ class SetConfigUseCase extends UseCase<SetConfigCTO, void> {
 
         try {
             await this.configService.Save(config);
-            this.logger.info(`save maintenance config [${JSON.stringify(config)}]`);
+            this.logger.info(`save maintenance config`, {
+                config: JSON.stringify(config)
+            });
             return Result.Ok();
         } catch (error) {
             return new InternalServerError(`${(error as Error).stack}`);

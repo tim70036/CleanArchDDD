@@ -13,7 +13,13 @@ async function SessionAuth (req: express.Request, res: express.Response, next: e
         const sessionOrError = await sessionService.Auth(token);
 
         if (sessionOrError.IsFailure()) {
-            logger.info(`auth failed due to error[${sessionOrError}] request[${req.method} ${req.originalUrl}] from ip[${req.ips}]`);
+            logger.info(`auth failed`, {
+                ip: req.ips,
+                method: req.method,
+                url: req.originalUrl,
+                error: sessionOrError,
+            });
+
             if (sessionOrError instanceof DuplicatedError) {
                 res.sendStatus(StatusCode.PreconditionFailed);
                 return;
@@ -24,12 +30,14 @@ async function SessionAuth (req: express.Request, res: express.Response, next: e
         }
 
         const session = sessionOrError.Value;
-        logger.debug(`authorized uid[${session.id.Value}]`);
+        logger.debug(`authorized`, {
+            uid: session.id.Value,
+        });
         req.session = session;
         next();
         return;
     } catch (error) {
-        logger.error(`${(error as Error).stack}`);
+        logger.error(error);
         res.sendStatus(StatusCode.InternalServerError);
     }
 }

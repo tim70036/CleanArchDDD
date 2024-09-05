@@ -23,7 +23,9 @@ function MaintenanceBlocker (req: express.Request, res: express.Response, next: 
         return;
     }
 
-    logger.debug(`request blocked due to maintenance, ip: [${req.ip}] `);
+    logger.debug(`request blocked due to maintenance`, {
+        ip: req.ip,
+    });
     res.status(StatusCode.ServiceUnavailable).send(maintenanceMaster.Announcement);
 }
 

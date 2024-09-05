@@ -51,7 +51,7 @@ class MaintenanceMaster {
         try {
             const configOrError = await this.getConfigService.Get();
             if (configOrError.IsFailure()) {
-                this.logger.error(`get config service error[${configOrError}]`);
+                this.logger.error(`get config service`, configOrError);
                 return;
             }
 
@@ -60,15 +60,22 @@ class MaintenanceMaster {
             this.announcement = config.announcement;
             this.ipWhitelist = config.ipWhitelist;
             this.status = Number(config.status);
-            this.logger.info(`retreived config startTime[${this.startTime.format()}] status[${this.status}] ipWhitelist[${this.ipWhitelist}]`);
+            this.logger.info(`retrieved config`, {
+                startTime: this.startTime.format(),
+                status: this.status,
+                ipWhitelist: this.ipWhitelist
+            });
 
             if (this.ShouldMaintenanceStart(this.startTime) && config.status === MaintenanceStatus.Off.toString()) {
                 await this.configService.SetStatus(MaintenanceStatus.AllowWhitelist);
                 this.status = MaintenanceStatus.AllowWhitelist;
-                this.logger.info(`maintenance starts with time[${this.startTime.format()}] status[${MaintenanceStatus.AllowWhitelist}]`);
+                this.logger.info(`maintenance starts`, {
+                    startTime: this.startTime.format(),
+                    status: MaintenanceStatus.AllowWhitelist
+                });
             }
         } catch (error) {
-            this.logger.error(`${(error as Error).stack}`);
+            this.logger.error(error);
         }
     };
 
