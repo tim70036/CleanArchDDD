@@ -8,7 +8,7 @@ before_script:
   # Install Dev dependency in this docker container (Only devDependencies in package.json)
   - npm install --only=dev
 
-# Lets name our Job eslint, because that's what it's doing.
+# Let's name our Job eslint, because that's what it's doing.
 eslint:
   # tell eslint what stage it is. (This could also be build or test for example)
   stage: lint

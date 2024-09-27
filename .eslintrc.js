@@ -11,7 +11,7 @@ module.exports = {
     overrides: [{
         // An environment defines global variables that are predefined.
         env: {
-            'es2020': true,
+            'es2023': true,
             'node': true,
             'jquery': true,
         },
@@ -21,7 +21,7 @@ module.exports = {
 
         // Note when using a custom parser, the parserOptions configuration property is still required for ESLint to work properly with features not in ECMAScript 5 by default. Parsers are all passed parserOptions and may or may not use them to determine which features to enable.
         parserOptions: {
-            'ecmaVersion': 2020,
+            'ecmaVersion': 2023,
             'sourceType': 'module',
             'project': './tsconfig.json', // This option allows you to provide a path to your project's tsconfig.json. This setting is required if you want to use rules which require type information.
         },
