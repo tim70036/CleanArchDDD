@@ -282,34 +282,52 @@ For a collection of Value Object in an Entity, you can do:
     - When retrieve that Entity, must read all associated Value Objects out
 
 #### What if a single client request need to modify multiple Aggregates instead of one Aggregate?
-Use Eventual Consistency. One way to do this is using Domain Event. An Aggregate publish a Domain Event after it is modified. Each of the subscribers executes in a separate transaction, obeying the rule of Aggregates to modify just one instance per transaction. If the subscriber does not execute successfully, we try sending event to that subscriber until it execute successfully or a retry limit is reached. If still fails, there will be at least some error logs.
+
+Use Eventual Consistency. One way to do this is using Domain Event. An Aggregate publish a Domain Event after it is
+modified. Each of the subscribers executes in a separate transaction, obeying the rule of Aggregates to modify just one
+instance per transaction. If the subscriber does not execute successfully, we try sending event to that subscriber until
+it execute successfully or a retry limit is reached. If still fails, there will be at least some error logs.
 
 #### How can an Aggregate reference another Aggregate in the same bounded context?
+
 There are 3 ways
 
 1. An Aggregate A holds references to the Root of other Aggregate B.
-  - Note that this does not place Aggregate B into the Consistent Boundary of Aggregate A.
-  - This approach could cause memory consumption, when you get Aggregate A from repository. You’ll have to read Aggregate B into memory when getting A.
+
+- Note that this does not place Aggregate B into the Consistent Boundary of Aggregate A.
+- This approach could cause memory consumption, when you get Aggregate A from repository. You’ll have to read Aggregate
+  B into memory when getting A.
+
 2. Dependency Injection of a Repository or Domain Service into an Aggregate.
-  - Not perfect.
-  - Has some overhead and makes Aggregate more complex.
+
+- Not perfect.
+- Has some overhead and makes Aggregate more complex.
+
 3. An Aggregate A holds the unique identity of other Aggregate B.
-  - Way better.
-  - You can use a Repository or Domain Service to look up dependent objects ahead of invoking the Aggregate behavior.
+
+- Way better.
+- You can use a Repository or Domain Service to look up dependent objects ahead of invoking the Aggregate behavior.
 
 #### How can an Aggregate get data from a different bounded context?
+
 Write a Domain Service and implement it in Infrastructure Layer.
 
 #### What if an Aggregate grows out of scope and hurt DB performance?
+
 Dude, that probably means your Aggregate is too large!
 
 #### When updating an Aggregate, do we have to load all data from DB?
+
 No.
 
 #### What if we want to query some portion of an Aggregate or multiple Aggregates in a query request?
+
 - CQRS
 - Use Case Optimal Query
 
 #### Can an Usecase execute more than 1 transaction?
+
 - Yes, but make sure 1 transaction only modify 1 aggregate.
-- Initially, we didn’t allow this, so Usecase can only have 1 transaction. However, later on we found it’s too troublesome for development. We would need to use domain event to seperate Usecase logic. That created ugly code and was also hard to read.
+- Initially, we didn’t allow this, so Usecase can only have 1 transaction. However, later on we found it’s too
+  troublesome for development. We would need to use domain event to seperate Usecase logic. That created ugly code and
+  was also hard to read.
