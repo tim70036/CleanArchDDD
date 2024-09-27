@@ -1,5 +1,5 @@
 interface AuthLineCTO {
-    accessToken: string;
+  accessToken: string;
 }
 
 export { AuthLineCTO };

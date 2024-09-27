@@ -1,19 +1,15 @@
-import { BaseModel } from '../../../../infra/database/BaseModel';
+import { BaseModel } from "../../../../infra/database/BaseModel";
 
 class DeviceAuthModel extends BaseModel {
-    public uid!: Buffer;
+  public uid!: Buffer;
 
-    public deviceId!: string;
+  public deviceId!: string;
 
-    public isValid!: number;
+  public isValid!: number;
 
-    public static get tableName (): string {
-        return 'DeviceAuth';
-    }
+  public static readonly tableName = "DeviceAuth";
 
-    public static get idColumn (): string {
-        return 'uid';
-    }
+  public static readonly idColumn = "uid";
 }
 
 export { DeviceAuthModel };

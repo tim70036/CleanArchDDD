@@ -1,8 +1,7 @@
 interface SetConfigCTO {
-    startTime: string;
-    announcement: string;
-    ipWhitelist: string[];
+  startTime: string;
+  announcement: string;
+  ipWhitelist: string[];
 }
 
 export { SetConfigCTO };
-

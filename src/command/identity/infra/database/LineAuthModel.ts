@@ -1,19 +1,19 @@
-import { BaseModel } from '../../../../infra/database/BaseModel';
+import { BaseModel } from "../../../../infra/database/BaseModel";
 
 class LineAuthModel extends BaseModel {
-    public uid!: Buffer;
+  public uid!: Buffer;
 
-    public lineId!: string;
+  public lineId!: string;
 
-    public isValid!: number;
+  public isValid!: number;
 
-    public static get tableName (): string {
-        return 'LineAuth';
-    }
+  public static get tableName(): string {
+    return "LineAuth";
+  }
 
-    public static get idColumn (): string {
-        return 'uid';
-    }
+  public static get idColumn(): string {
+    return "uid";
+  }
 }
 
 export { LineAuthModel };

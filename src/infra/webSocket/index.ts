@@ -1,4 +1,4 @@
-import { WsApp } from './WsApp';
+import { WsApp } from "./WsApp";
 
 const wsApp = new WsApp();
 

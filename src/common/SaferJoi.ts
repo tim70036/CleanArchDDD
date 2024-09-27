@@ -1,5 +1,7 @@
-import Joi from 'joi';
+import Joi from "joi";
 
-const saferJoi = Joi.defaults((schema) => schema.options({ convert: false, presence: 'required' }));
+const saferJoi = Joi.defaults((schema) =>
+  schema.options({ convert: false, presence: "required" }),
+);
 
 export { saferJoi };

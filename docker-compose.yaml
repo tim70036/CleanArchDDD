@@ -2,32 +2,32 @@ services:
   server:
     build: .
     environment:
-        NODE_ENV: ${NODE_ENV:?err}
-        PORT_HTTP: ${PORT_HTTP:?err}
-        PORT_WS: ${PORT_WS:?err}
+      NODE_ENV: ${NODE_ENV:?err}
+      PORT_HTTP: ${PORT_HTTP:?err}
+      PORT_WS: ${PORT_WS:?err}
 
-        DB_HOST: ${DB_HOST:?err}
-        DB_REPLICA_HOST: ${DB_REPLICA_HOST:?err}
-        DB_NAME: ${DB_NAME:?err}
-        DB_PWD: ${DB_PWD:?err}
-        DB_USER: ${DB_USER:?err}
+      DB_HOST: ${DB_HOST:?err}
+      DB_REPLICA_HOST: ${DB_REPLICA_HOST:?err}
+      DB_NAME: ${DB_NAME:?err}
+      DB_PWD: ${DB_PWD:?err}
+      DB_USER: ${DB_USER:?err}
 
-        REDIS_DB: ${REDIS_DB:?err}
-        REDIS_HOST: ${REDIS_HOST:?err}
-        REDIS_PORT: ${REDIS_PORT:?err}
+      REDIS_DB: ${REDIS_DB:?err}
+      REDIS_HOST: ${REDIS_HOST:?err}
+      REDIS_PORT: ${REDIS_PORT:?err}
 
-        JWT_KEY: ${JWT_KEY:?err}
-        API_KEY: ${API_KEY:?err}
+      JWT_KEY: ${JWT_KEY:?err}
+      API_KEY: ${API_KEY:?err}
 
-        ENABLE_API_DOCS: ${ENABLE_API_DOCS:?err}
+      ENABLE_API_DOCS: ${ENABLE_API_DOCS:?err}
 
-        LOG_LEVEL: ${LOG_LEVEL:?err}
-        LOG_FORMAT: ${LOG_FORMAT:?err}
+      LOG_LEVEL: ${LOG_LEVEL:?err}
+      LOG_FORMAT: ${LOG_FORMAT:?err}
     network_mode: host
     restart: unless-stopped
     logging:
       driver: json-file
       options:
         max-size: 10m
-        max-file: '5'
-        compress: 'true'
+        max-file: "5"
+        compress: "true"

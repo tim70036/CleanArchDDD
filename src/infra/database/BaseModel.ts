@@ -1,17 +1,11 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 
+import { Model } from "objection";
+import { knexReplicaClient } from "./Database";
 
-import { Model } from 'objection';
-import { knexReplicaClient } from './Database';
+class BaseModel extends Model {}
 
-class BaseModel extends Model {
-
-}
-
-BaseModel.tableName = 'Base';
+BaseModel.tableName = "Base";
 const ReadOnlyModel = BaseModel.bindKnex(knexReplicaClient);
 
-export {
-    BaseModel,
-    ReadOnlyModel,
-};
+export { BaseModel, ReadOnlyModel };

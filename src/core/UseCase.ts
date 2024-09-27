@@ -1,26 +1,26 @@
-import { ErrOr } from './Result';
-import { CreateLogger } from '../common/Logger';
+import { ErrOr } from "./Result";
+import { CreateLogger } from "../common/Logger";
 
 // UseCase acts as huge a mediator that controls the dance of each component.
 // It's either command or query.
 abstract class UseCase<TRequest, TResponse> {
-    protected logger;
+  protected logger;
 
-    public constructor () {
-        this.logger = CreateLogger(this.constructor.name);
-    }
+  public constructor() {
+    this.logger = CreateLogger(this.constructor.name);
+  }
 
-    // Exposed method for Controllers to call.
-    // It's separate from actual implementation of UseCase, since we want have some hook and control in this parent class.
-    public async Execute (request?: TRequest): Promise<ErrOr<TResponse>> {
-        const response = await this.Run(request);
-        return response;
-    }
+  // Exposed method for Controllers to call.
+  // It's separate from actual implementation of UseCase, since we want have some hook and control in this parent class.
+  public async Execute(request?: TRequest): Promise<ErrOr<TResponse>> {
+    const response = await this.Run(request);
+    return response;
+  }
 
-    // The actual implementation goes into this method.
-    protected abstract Run(request?: TRequest): Promise<ErrOr<TResponse>> | ErrOr<TResponse>;
+  // The actual implementation goes into this method.
+  protected abstract Run(
+    request?: TRequest,
+  ): Promise<ErrOr<TResponse>> | ErrOr<TResponse>;
 }
 
-export {
-    UseCase,
-};
+export { UseCase };

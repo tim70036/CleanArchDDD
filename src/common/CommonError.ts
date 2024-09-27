@@ -1,82 +1,82 @@
-import { Err } from '../core/Result';
-import { StatusCode } from './StatusCode';
+import { Err } from "../core/Result";
+import { StatusCode } from "./StatusCode";
 
 class InvalidDataError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.BadRequest;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.BadRequest;
+  }
 }
 
 class NotAuthenticatedError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Unauthorized;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Unauthorized;
+  }
 }
 
 class NotAuthorizedError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Forbidden;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Forbidden;
+  }
 }
 
 class InvalidOperationError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Forbidden;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Forbidden;
+  }
 }
 
 class NotExistError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.NotFound;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.NotFound;
+  }
 }
 
 class DuplicatedError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Conflict;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Conflict;
+  }
 }
 
 class InternalServerError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.InternalServerError;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.InternalServerError;
+  }
 }
 
 class IgnoreError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.NotAcceptable;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.NotAcceptable;
+  }
 }
 
 class ExpireError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Expired;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Expired;
+  }
 }
 
 class GoneError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.Gone;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.Gone;
+  }
 }
 
 class UnavailableError extends Err {
-    public ToStatusCode (): StatusCode {
-        return StatusCode.ServiceUnavailable;
-    }
+  public ToStatusCode(): StatusCode {
+    return StatusCode.ServiceUnavailable;
+  }
 }
 
 export {
-    InvalidDataError,
-    NotAuthorizedError,
-    NotAuthenticatedError,
-    InvalidOperationError,
-    NotExistError,
-    DuplicatedError,
-    InternalServerError,
-    IgnoreError,
-    ExpireError,
-    GoneError,
-    UnavailableError
+  InvalidDataError,
+  NotAuthorizedError,
+  NotAuthenticatedError,
+  InvalidOperationError,
+  NotExistError,
+  DuplicatedError,
+  InternalServerError,
+  IgnoreError,
+  ExpireError,
+  GoneError,
+  UnavailableError,
 };

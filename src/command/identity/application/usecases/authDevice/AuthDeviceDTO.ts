@@ -1,5 +1,5 @@
 interface AuthDeviceCTO {
-    deviceId: string;
+  deviceId: string;
 }
 
 export { AuthDeviceCTO };

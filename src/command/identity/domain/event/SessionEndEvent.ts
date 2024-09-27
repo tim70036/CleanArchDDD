@@ -1,13 +1,13 @@
-import { DomainEvent } from '../../../../core/DomainEvent';
-import { EntityId } from '../../../../core/EntityId';
+import { DomainEvent } from "../../../../core/DomainEvent";
+import { EntityId } from "../../../../core/EntityId";
 
 class SessionEndEvent extends DomainEvent {
-    public readonly uid: EntityId;
+  public readonly uid: EntityId;
 
-    public constructor (uid: EntityId) {
-        super();
-        this.uid = uid;
-    }
+  public constructor(uid: EntityId) {
+    super();
+    this.uid = uid;
+  }
 }
 
 export { SessionEndEvent };
