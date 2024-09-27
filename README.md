@@ -53,7 +53,6 @@ Run the build using `npm run build` and `npm run start`.
 | **node_modules**   | Contains all your npm dependencies                                                           |
 | **src**            | Contains your source code that will be compiled to the build dir                             |
 | **src/App.ts**     | Entry point to your express app                                                              |
-| .vscode            | Contains VS Code specific settings                                                           |
 | .gitlab-ci.yml     | Used to configure Gitlab CI/CD build                                                         |
 | .gitignore         | File to exclude from git version control                                                     |
 | package.json       | File that contains npm dependencies as                                                       |

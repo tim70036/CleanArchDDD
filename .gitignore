@@ -33,3 +33,7 @@ benchmarks/graphs
 
 # Typescript
 build/**/*
+
+# IDE
+.idea
+.vscode
