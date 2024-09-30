@@ -1,9 +1,31 @@
 # clean-arch-ddd
 
 Illustrate Clean Architecture and Domain Driven Design through TypeScript implementation. Can be used as starter
-template for future application. The design is inspired from the book “Implementing Domain Driven Design by Vaughn
+template for backend application. The design is inspired from the book “Implementing Domain Driven Design by Vaughn
 Vernon” and “Clean
 Architecture by Robert Martin”. It’s recommend to first read those books before you start using this template.
+
+Highlights of the project:
+
+- **Clean Architecture**: horizontal slicing into different layers of abstraction. Namely, Domain Layer, Application
+  Layer,
+  Infrastructure Layer.
+- **Tactical Domain Driven Design**: vertical slicing into different Bounded Contexts. Each Bounded Context has its own
+  Domain Model, Repository, Service, Usecase, Controller.
+- **CQRS**: Command Query Responsibility Segregation in the codebase (`src/command` and `src/query`). Enable different
+  code logic for read and write. ([reference](https://enterprisecraftsmanship.com/posts/types-of-cqrs/))
+- **Result Monad**: Use [Result Monad](src/core/Result.ts) to enforce explicit error handling and to handle error in a
+  functional style. This also allow propagating HTTP errors to client in a nicer way (
+  See [this](src/common/CommonError.ts) in project).
+- **Dependency Injection**: Use [trsyringe](https://www.npmjs.com/package/tsyringe) for IOC container. Each Bounded
+  Context has its
+  own container and allows Infrastructure Layer implementation to be swapped out easily.
+- **Eventual Consistency**: Use Eventbus and Domain Event to maintain consistency between Aggregates in different
+  Bounded Contexts.
+- Combine [Objection.js](https://www.npmjs.com/package/objection) ORM with Repository Pattern for storage logic.
+- Support HTTP with [Express.js](https://www.npmjs.com/package/express).
+- Support WebSocket with Node.js [websocket](https://www.npmjs.com/package/websocket).
+- Structure logging with  [winston](https://www.npmjs.com/package/winston).
 
 ## Prerequisites
 
@@ -14,9 +36,10 @@ First, ensure that you are using a machine meeting the following requirements:
 - Have a keyboard for you to type command.
 - Chill enough.
 
-## Configure Environment Variables
+## Basic Configuration
 
-The project uses the [dotenv](https://www.npmjs.com/package/dotenv) package to manage environment variables.
+The project configuration are from environment variable. It uses the [dotenv](https://www.npmjs.com/package/dotenv)
+package to manage environment variables.
 This package looks for a file named `.env` in the root of the project and loads the environment variables from it.
 This file is not committed to the repository and is used to store sensitive information such as API keys and secrets.
 You can find a sample of the `.env` file in the `.env.example` file.
@@ -329,5 +352,5 @@ No.
 
 - Yes, but make sure 1 transaction only modify 1 aggregate.
 - Initially, we didn’t allow this, so Usecase can only have 1 transaction. However, later on we found it’s too
-  troublesome for development. We would need to use domain event to seperate Usecase logic. That created ugly code and
+  troublesome for development. We would need to use domain event to separate Usecase logic. That created ugly code and
   was also hard to read.
