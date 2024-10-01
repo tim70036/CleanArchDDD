@@ -5,7 +5,7 @@ template for backend application. The design is inspired from the book “Implem
 Vernon” and “Clean
 Architecture by Robert Martin”. It’s recommend to first read those books before you start using this template.
 
-Highlights of the project:
+## Highlights
 
 - **Clean Architecture**: horizontal slicing into different layers of abstraction. Namely, Domain Layer, Application
   Layer,
@@ -14,13 +14,13 @@ Highlights of the project:
   Domain Model, Repository, Service, Usecase, Controller.
 - **CQRS**: Command Query Responsibility Segregation in the codebase (`src/command` and `src/query`). Enable different
   code logic for read and write. ([reference](https://enterprisecraftsmanship.com/posts/types-of-cqrs/))
-- **Result Monad**: Use [Result Monad](src/core/Result.ts) to enforce explicit error handling and to handle error in a
-  functional style. This also allow propagating HTTP errors to client in a nicer way (
-  See [this](src/common/CommonError.ts) in project).
 - **Dependency Injection**: Use [trsyringe](https://www.npmjs.com/package/tsyringe) for IOC container. Each Bounded
   Context has its
   own container and allows Infrastructure Layer implementation to be swapped out easily.
 - **Eventual Consistency**: Use Eventbus and Domain Event to maintain consistency between Aggregates in different
+- **Result Monad**: Use [Result Monad](src/core/Result.ts) to enforce explicit error handling and to handle error in a
+  functional style. This also allow propagating HTTP errors to client in a nicer way (
+  See [this](src/common/CommonError.ts) in project).
   Bounded Contexts.
 - Combine [Objection.js](https://www.npmjs.com/package/objection) ORM with Repository Pattern for storage logic.
 - Support HTTP with [Express.js](https://www.npmjs.com/package/express).
