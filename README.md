@@ -17,11 +17,11 @@ Architecture by Robert Martin”. It’s recommend to first read those books bef
 - **Dependency Injection**: Use [trsyringe](https://www.npmjs.com/package/tsyringe) for IOC container. Each Bounded
   Context has its
   own container and allows Infrastructure Layer implementation to be swapped out easily.
-- **Eventual Consistency**: Use Eventbus and Domain Event to maintain consistency between Aggregates in different
+- **Eventual Consistency**: Use Event Bus and Domain Event to maintain data consistency between Aggregates in different Bounded
+  Contexts.
 - **Result Monad**: Use [Result Monad](src/core/Result.ts) to enforce explicit error handling and to handle error in a
   functional style. This also allow propagating HTTP errors to client in a nicer way (
   See [this](src/common/CommonError.ts) in project).
-  Bounded Contexts.
 - Combine [Objection.js](https://www.npmjs.com/package/objection) ORM with Repository Pattern for storage logic.
 - Support HTTP with [Express.js](https://www.npmjs.com/package/express).
 - Support WebSocket with Node.js [websocket](https://www.npmjs.com/package/websocket).
@@ -38,7 +38,8 @@ First, ensure that you are using a machine meeting the following requirements:
 
 ## Basic Configuration
 
-The project configuration are from environment variable. It uses the [dotenv](https://www.npmjs.com/package/dotenv)
+Create a file `.env` in the root of the project. The project configuration are defined by environment variable. It uses
+the [dotenv](https://www.npmjs.com/package/dotenv)
 package to manage environment variables.
 This package looks for a file named `.env` in the root of the project and loads the environment variables from it.
 This file is not committed to the repository and is used to store sensitive information such as API keys and secrets.

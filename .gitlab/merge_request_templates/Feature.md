@@ -15,7 +15,7 @@ Briefly list the affected domain of this feature change.
 ## API Changes
 
 - [ ] No api change in this mr
-- [ ] [There are api changes in this mr, and I have make sure it follows the api vesion guideline.](https://game-soul-technology.atlassian.net/wiki/spaces/GAM/pages/1213956097/API+Versioning+Guideline)
+- [ ] [There are api changes in this mr, and I have make sure it follows the api version guideline.](https://game-soul-technology.atlassian.net/wiki/spaces/GAM/pages/1213956097/API+Versioning+Guideline)
 
 ## List all changed apis, including new add or version change.
 
